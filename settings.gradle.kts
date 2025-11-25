@@ -18,7 +18,8 @@ plugins {
 
 rootProject.name = "kotlin-game-example"
 
-include(":00.main")
-include(":01.ui")
-include(":02.app")
-include(":03.game")
+include("00.main")
+include("01.ui")
+include("02.app")
+include("03.game")
+include("10.common")
