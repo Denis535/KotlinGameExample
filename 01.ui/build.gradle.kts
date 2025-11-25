@@ -15,9 +15,9 @@ kotlin {
 }
 
 dependencies {
-    this.implementation(this.project(":02.app"))
-    this.implementation(this.project(":03.game"))
-    this.implementation(this.project(":10.common"))
+    this.implementation(this.project(":app"))
+    this.implementation(this.project(":game"))
+    this.implementation(this.project(":common"))
 }
 
 publishing {

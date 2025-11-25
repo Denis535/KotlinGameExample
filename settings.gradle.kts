@@ -18,8 +18,14 @@ plugins {
 
 rootProject.name = "kotlin-game-example"
 
-include("00.main")
-include("01.ui")
-include("02.app")
-include("03.game")
-include("10.common")
+include("main")
+include("ui")
+include("app")
+include("game")
+include("common")
+
+project(":main").projectDir = File("00.main")
+project(":ui").projectDir = File("01.ui")
+project(":app").projectDir = File("02.app")
+project(":game").projectDir = File("03.game")
+project(":common").projectDir = File("10.common")

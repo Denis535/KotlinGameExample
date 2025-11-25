@@ -15,7 +15,7 @@ kotlin {
 }
 
 dependencies {
-    this.implementation(this.project(":10.common"))
+    this.implementation(this.project(":common"))
 }
 
 publishing {
