@@ -25,6 +25,7 @@ tasks.jar {
     this.archiveClassifier = ""
     this.manifest {
         this.attributes["Main-Class"] = "com.denis535.kotlin_game_example.ProgramKt"
+        this.attributes["Class-Path"] = configurations.runtimeClasspath.get().filter { it.name.endsWith(".jar") }.joinToString(" ") { it.name }
     }
 }
 
