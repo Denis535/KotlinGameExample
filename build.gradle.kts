@@ -2,15 +2,15 @@ plugins {}
 
 tasks.register("dist") {
     this.dependsOn(tasks.named("clean-dist"), tasks.named("copy-to-dist"))
+    val launcherFilePath = layout.projectDirectory.dir("dist").asFile.resolve("Launcher.bat")
+    val launcherContent = """
+        @echo off
+        cd /d "%~dp0"
+        java -jar ${project(":main").tasks.named<Jar>("jar").get().archiveBaseName.get()}.jar
+        pause
+        """.trimIndent()
     this.doLast {
-        layout.projectDirectory.dir("dist").asFile.resolve("Launch.bat").writeText(
-            """
-            @echo off
-            cd /d "%~dp0"
-            java -jar kotlin-game-example.jar
-            pause
-            """.trimIndent()
-        )
+        launcherFilePath.writeText(launcherContent)
     }
 }
 
