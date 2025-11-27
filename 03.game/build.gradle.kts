@@ -1,5 +1,6 @@
 plugins {
     this.id("org.jetbrains.kotlin.jvm") version "2.2.21"
+    this.id("com.github.ben-manes.versions") version "0.53.0"
 }
 
 kotlin {
@@ -11,9 +12,6 @@ kotlin {
 
 dependencies {
     this.implementation(this.project(":common"))
-    this.implementation("io.github.denis535:game-framework-pro:1.0.0")
-    this.implementation("io.github.denis535:game-framework-pro-extensions:1.0.0")
-    this.testImplementation(this.kotlin("test"))
 }
 
 tasks.jar {

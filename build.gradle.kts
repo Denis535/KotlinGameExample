@@ -1,4 +1,6 @@
-plugins {}
+plugins {
+    this.id("com.github.ben-manes.versions") version "0.53.0"
+}
 
 tasks.register("dist") {
     this.dependsOn(tasks.named("clean-dist"), tasks.named("copy-to-dist"))
