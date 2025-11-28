@@ -13,11 +13,11 @@ public object Window {
 
 }
 
-// Main
+// Api
 // GLFW
 // GLFW.Functions              - Contains the function pointers loaded from the glfw SharedLibrary.
 
-// Api
+// Api/Vulkan
 // GLFWVulkan
 // GLFWVulkan.Functions        - Contains the function pointers loaded from GLFW.getLibrary().
 
