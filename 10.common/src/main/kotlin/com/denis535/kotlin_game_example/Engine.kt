@@ -118,7 +118,7 @@ public object MainWindow {
 
     public fun Destroy() {
         check(this.IsCreated)
-       check(!MainLoop.IsRunning)
+        check(!MainLoop.IsRunning)
         GLFW.glfwDestroyWindow(this.Id).also { GLFW2.ThrowErrorIfNeeded() }
         this.Id = 0L
     }
