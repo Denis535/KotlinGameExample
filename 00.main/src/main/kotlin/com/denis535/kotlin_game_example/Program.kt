@@ -17,11 +17,13 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Screen = Screen()
         this.Theme = Theme()
         MainWindow.Create("Kotlin Game Example")
+        MainWindow.Show()
         MainLoop.Run()
-        MainWindow.Destroy()
     }
 
     protected override fun OnClose() {
+        MainWindow.Hide()
+        MainWindow.Destroy()
         this.Theme!!.close()
         this.Screen!!.close()
         this.Router!!.close()
