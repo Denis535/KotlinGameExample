@@ -29,10 +29,10 @@ public object MainWindow {
             return this.Id != 0L
         }
 
-    public val IsVisible: Boolean
+    public val IsShown: Boolean
         get() {
             check(this.IsCreated)
-            return GLFW.glfwGetWindowAttrib(this.Id, GLFW.GLFW_VISIBLE) == GLFW.GLFW_TRUE
+            return GLFW.glfwGetWindowAttrib(this.Id, GLFW.GLFW_VISIBLE) == GLFW.GLFW_TRUE && GLFW.glfwGetWindowAttrib(this.Id, GLFW.GLFW_ICONIFIED) == GLFW.GLFW_FALSE
         }
 
     public val IsFocused: Boolean
@@ -151,11 +151,11 @@ public object MainLoop {
         this.NumberOfFrame = 0
         while (!MainWindow.IsClosing) {
             GLFW.glfwPollEvents().also { GLFW2.ThrowErrorIfNeeded() }
-//            if (GLFW.glfwGetKey(Engine.Window, GLFW.GLFW_KEY_LEFT_ALT) == GLFW.GLFW_PRESS || GLFW.glfwGetKey(Engine.Window, GLFW.GLFW_KEY_RIGHT_ALT) == GLFW.GLFW_PRESS) {
-//                if (GLFW.glfwGetKey(Engine.Window, GLFW.GLFW_KEY_ENTER) == GLFW.GLFW_PRESS) {
-//                    MainWindow.SetIsWindowFullscreen(!Engine.IsWindowFullscreen)
-//                }
-//            }
+            if (GLFW.glfwGetKey(MainWindow.Id, GLFW.GLFW_KEY_LEFT_ALT) == GLFW.GLFW_PRESS || GLFW.glfwGetKey(MainWindow.Id, GLFW.GLFW_KEY_RIGHT_ALT) == GLFW.GLFW_PRESS) {
+                if (GLFW.glfwGetKey(MainWindow.Id, GLFW.GLFW_KEY_ENTER) == GLFW.GLFW_PRESS) {
+                    MainWindow.IsFullscreen = !MainWindow.IsFullscreen
+                }
+            }
             // Update()
             // Draw()
             GLFW.glfwSwapBuffers(MainWindow.Id).also { GLFW2.ThrowErrorIfNeeded() }
