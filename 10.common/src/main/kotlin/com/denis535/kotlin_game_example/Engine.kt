@@ -113,7 +113,7 @@ public object Engine {
             GLFW.glfwPollEvents().also { GLFW2.ThrowErrorIfNeeded() }
             if (GLFW.glfwGetKey(this.Window, GLFW.GLFW_KEY_LEFT_ALT) == GLFW.GLFW_PRESS || GLFW.glfwGetKey(this.Window, GLFW.GLFW_KEY_RIGHT_ALT) == GLFW.GLFW_PRESS) {
                 if (GLFW.glfwGetKey(this.Window, GLFW.GLFW_KEY_ENTER) == GLFW.GLFW_PRESS) {
-                    this.SetIsWindowFullscreen(true)
+                    this.SetIsWindowFullscreen(!this.IsWindowFullscreen)
                 }
             }
             // Update()
