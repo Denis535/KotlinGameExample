@@ -16,8 +16,9 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Router = Router()
         this.Screen = Screen()
         this.Theme = Theme()
-        Engine.ShowWindow("Kotlin Game Example")
-        Engine.Run()
+        Engine.CreateWindow("Kotlin Game Example")
+        MainLoop.Run()
+        Engine.DestroyWindow()
     }
 
     protected override fun OnClose() {
