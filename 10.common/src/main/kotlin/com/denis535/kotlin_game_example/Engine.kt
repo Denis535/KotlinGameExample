@@ -88,6 +88,7 @@ public object MainWindow {
 
     public fun Create(title: String, width: Int = 1280, height: Int = 720) {
         check(!this.IsCreated)
+        check(!MainLoop.IsRunning)
         this.Id = run {
             val monitor = GLFW.glfwGetPrimaryMonitor().also { GLFW2.ThrowErrorIfNeeded() }
             val videoMode = GLFW.glfwGetVideoMode(monitor)!!.also { GLFW2.ThrowErrorIfNeeded() }
@@ -117,6 +118,7 @@ public object MainWindow {
 
     public fun Destroy() {
         check(this.IsCreated)
+       check(!MainLoop.IsRunning)
         GLFW.glfwDestroyWindow(this.Id).also { GLFW2.ThrowErrorIfNeeded() }
         this.Id = 0L
     }
@@ -127,7 +129,6 @@ public object MainLoop {
 
     public var IsRunning: Boolean = false
         get() {
-            check(MainWindow.IsCreated)
             return field
         }
         private set(value) {
