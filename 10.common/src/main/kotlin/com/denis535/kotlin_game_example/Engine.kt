@@ -50,7 +50,7 @@ public class Engine : AutoCloseable {
 //            }
             // Update()
             // Draw()
-            GLFW.glfwSwapBuffers(this.MainWindow.NativePointer).also { GLFW2.ThrowErrorIfNeeded() }
+            GLFW.glfwSwapBuffers(this.MainWindow.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
             this.NumberOfFrame++
         }
         this.IsRunning = false
