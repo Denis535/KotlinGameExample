@@ -12,7 +12,7 @@ public class Engine : AutoCloseable {
             field = value
         }
 
-    public var Tick: Int = 0
+    public var FixedTickCount: Int = 0
         get() {
             check(this.IsRunning)
             return field
@@ -22,7 +22,7 @@ public class Engine : AutoCloseable {
             field = value
         }
 
-    public var FixedTick: Int = 0
+    public var TickCount: Int = 0
         get() {
             check(this.IsRunning)
             return field
@@ -53,8 +53,8 @@ public class Engine : AutoCloseable {
 
     public fun Run() {
         this.IsRunning = true
-        this.Tick = 0
-        this.FixedTick = 0
+        this.FixedTickCount = 0
+        this.TickCount = 0
         this.Fps = 0.0
         var time = 0.0
         var deltaTime = 0.0
@@ -78,41 +78,32 @@ public class Engine : AutoCloseable {
     }
 
     private fun OnFrame(time: Double, deltaTime: Double) {
-        if (this.FixedTick == 0) {
+        if (this.FixedTickCount == 0) {
             this.OnFixedUpdate(0.0)
-            this.FixedTick++
         } else {
             val fixedDeltaTime = 1.0 / 25.0
-            val desiredFixedTicks = (time / fixedDeltaTime).toInt()
-            while (this.FixedTick < desiredFixedTicks) {
+            while (this.FixedTickCount * fixedDeltaTime < time) {
                 this.OnFixedUpdate(fixedDeltaTime)
-                this.FixedTick++
             }
         }
         this.OnUpdate(deltaTime)
-        this.OnDraw(deltaTime)
-        this.Tick++
-    }
-
-    private fun OnFrameEnd() {
-        GLFW.glfwSwapBuffers(this.Window.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
     }
 
     private fun OnFixedUpdate(deltaTime: Double) {
-//        println("OnFixedUpdate")
+        this.FixedTickCount++
     }
 
     private fun OnUpdate(deltaTime: Double) {
-//        println("OnUpdate")
         if (GLFW.glfwGetKey(this.Window.NativeWindowPointer, GLFW.GLFW_KEY_LEFT_ALT) == GLFW.GLFW_PRESS || GLFW.glfwGetKey(this.Window.NativeWindowPointer, GLFW.GLFW_KEY_RIGHT_ALT) == GLFW.GLFW_PRESS) {
             if (GLFW.glfwGetKey(this.Window.NativeWindowPointer, GLFW.GLFW_KEY_ENTER) == GLFW.GLFW_PRESS) {
                 this.Window.IsFullscreen = !this.Window.IsFullscreen
             }
         }
+        this.TickCount++
     }
 
-    private fun OnDraw(deltaTime: Double) {
-
+    private fun OnFrameEnd() {
+        GLFW.glfwSwapBuffers(this.Window.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
     }
 
 }
