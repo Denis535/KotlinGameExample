@@ -17,51 +17,6 @@ public class MainWindow : AutoCloseable {
             return this._NativeWindowPointer
         }
 
-    public var IsClosingRequested: Boolean
-        get() {
-            check(!this.IsClosed)
-            return GLFW.glfwWindowShouldClose(this.NativeWindowPointer)
-        }
-        set(value) {
-            check(!this.IsClosed)
-            GLFW.glfwSetWindowShouldClose(this.NativeWindowPointer, value)
-        }
-
-    public val IsVisible: Boolean
-        get() {
-            check(!this.IsClosed)
-            return GLFW.glfwGetWindowAttrib(this.NativeWindowPointer, GLFW.GLFW_VISIBLE) == GLFW.GLFW_TRUE
-        }
-
-    public val IsIconified: Boolean
-        get() {
-            check(!this.IsClosed)
-            return GLFW.glfwGetWindowAttrib(this.NativeWindowPointer, GLFW.GLFW_ICONIFIED) == GLFW.GLFW_TRUE
-        }
-
-    public val IsFocused: Boolean
-        get() {
-            check(!this.IsClosed)
-            return GLFW.glfwGetWindowAttrib(this.NativeWindowPointer, GLFW.GLFW_FOCUSED) == GLFW.GLFW_TRUE
-        }
-
-    public var IsFullscreen: Boolean
-        get() {
-            check(!this.IsClosed)
-            val monitor = GLFW.glfwGetWindowMonitor(this.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
-            return monitor != 0L
-        }
-        set(value) {
-            check(!this.IsClosed)
-            val monitor = GLFW.glfwGetPrimaryMonitor().also { GLFW2.ThrowErrorIfNeeded() }
-            val videoMode = GLFW.glfwGetVideoMode(monitor)!!.also { GLFW2.ThrowErrorIfNeeded() }
-            if (value) {
-                GLFW.glfwSetWindowMonitor(this.NativeWindowPointer, monitor, 0, 0, videoMode.width(), videoMode.height(), videoMode.refreshRate()).also { GLFW2.ThrowErrorIfNeeded() }
-            } else {
-                GLFW.glfwSetWindowMonitor(this.NativeWindowPointer, 0, (videoMode.width() - 1280) / 2, (videoMode.height() - 720) / 2, 1280, 720, 0).also { GLFW2.ThrowErrorIfNeeded() }
-            }
-        }
-
     public var Title: String = ""
         get() {
             check(!this.IsClosed)
@@ -99,6 +54,51 @@ public class MainWindow : AutoCloseable {
             check(!this.IsClosed)
             val (width, height) = value
             GLFW.glfwSetWindowSize(this.NativeWindowPointer, width, height).also { GLFW2.ThrowErrorIfNeeded() }
+        }
+
+    public val IsVisible: Boolean
+        get() {
+            check(!this.IsClosed)
+            return GLFW.glfwGetWindowAttrib(this.NativeWindowPointer, GLFW.GLFW_VISIBLE) == GLFW.GLFW_TRUE
+        }
+
+    public val IsIconified: Boolean
+        get() {
+            check(!this.IsClosed)
+            return GLFW.glfwGetWindowAttrib(this.NativeWindowPointer, GLFW.GLFW_ICONIFIED) == GLFW.GLFW_TRUE
+        }
+
+    public val IsFocused: Boolean
+        get() {
+            check(!this.IsClosed)
+            return GLFW.glfwGetWindowAttrib(this.NativeWindowPointer, GLFW.GLFW_FOCUSED) == GLFW.GLFW_TRUE
+        }
+
+    public var IsFullscreen: Boolean
+        get() {
+            check(!this.IsClosed)
+            val monitor = GLFW.glfwGetWindowMonitor(this.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
+            return monitor != 0L
+        }
+        set(value) {
+            check(!this.IsClosed)
+            val monitor = GLFW.glfwGetPrimaryMonitor().also { GLFW2.ThrowErrorIfNeeded() }
+            val videoMode = GLFW.glfwGetVideoMode(monitor)!!.also { GLFW2.ThrowErrorIfNeeded() }
+            if (value) {
+                GLFW.glfwSetWindowMonitor(this.NativeWindowPointer, monitor, 0, 0, videoMode.width(), videoMode.height(), videoMode.refreshRate()).also { GLFW2.ThrowErrorIfNeeded() }
+            } else {
+                GLFW.glfwSetWindowMonitor(this.NativeWindowPointer, 0, (videoMode.width() - 1280) / 2, (videoMode.height() - 720) / 2, 1280, 720, 0).also { GLFW2.ThrowErrorIfNeeded() }
+            }
+        }
+
+    public var IsClosingRequested: Boolean
+        get() {
+            check(!this.IsClosed)
+            return GLFW.glfwWindowShouldClose(this.NativeWindowPointer)
+        }
+        set(value) {
+            check(!this.IsClosed)
+            GLFW.glfwSetWindowShouldClose(this.NativeWindowPointer, value)
         }
 
     public constructor(title: String, width: Int = 1280, height: Int = 720) {
