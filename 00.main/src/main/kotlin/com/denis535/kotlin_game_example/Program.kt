@@ -10,24 +10,37 @@ fun Main(args: Array<String>) {
 
 public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
+    private val MainWindow: MainWindow
+    private val Engine: Engine
+
     public constructor() {
+        this.MainWindow = MainWindow("Kotlin Game Example")
+        this.Engine = Engine(this.MainWindow)
         this.Application = Application()
         this.Router = Router()
         this.Screen = Screen()
         this.Theme = Theme()
-        MainWindow.Create("Kotlin Game Example")
-        MainWindow.Show()
-        Engine.Run()
+        run {
+            this.MainWindow.Show()
+            this.Engine.Run()
+        }
     }
 
     protected override fun OnClose() {
-        MainWindow.Hide()
-        MainWindow.Destroy()
+        run {
+            this.MainWindow.Hide()
+        }
         this.Theme!!.close()
         this.Screen!!.close()
         this.Router!!.close()
         this.Application!!.close()
+        this.Engine.close()
+        this.MainWindow.close()
         super.OnClose()
+    }
+
+    public override fun GetDependency(clazz: kotlin.reflect.KClass<*>, argument: Any?): Any? {
+        return super.GetDependency(clazz, argument)
     }
 
 }
