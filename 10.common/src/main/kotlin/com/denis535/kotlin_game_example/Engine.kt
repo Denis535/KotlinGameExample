@@ -76,10 +76,11 @@ public class Engine : AutoCloseable {
                 this.OnFrameEnd()
             }
             val endTime = this.Window.Time
+            val deltaTime = endTime - startTime
             this.Tick++
-            this.Time += endTime - startTime
-            this.DeltaTime = endTime - startTime
-            deltaTimeAccumulator += this.DeltaTime
+            this.Time += deltaTime
+            this.DeltaTime = deltaTime
+            deltaTimeAccumulator += deltaTime
         }
         this.IsRunning = false
     }
