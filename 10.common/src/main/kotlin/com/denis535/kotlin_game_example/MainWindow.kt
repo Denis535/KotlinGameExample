@@ -17,6 +17,12 @@ public class MainWindow : AutoCloseable {
             return this._NativeWindowPointer
         }
 
+    public val Time: Double
+        get() {
+            check(!this.IsClosed)
+            return GLFW.glfwGetTime().also { GLFW2.ThrowErrorIfNeeded() }
+        }
+
     public var Title: String = ""
         get() {
             check(!this.IsClosed)
