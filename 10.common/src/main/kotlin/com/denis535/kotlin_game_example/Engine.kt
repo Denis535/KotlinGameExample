@@ -62,13 +62,13 @@ public class Engine : AutoCloseable {
     }
 
     private fun OnFixedUpdate(time: Time) {
-        if (time.FixedTickCount == 0) {
+        if (time.FixedUpdateNumber == 0) {
             this.OnFixedUpdateCallback(time)
-            time.FixedTickCount++
+            time.FixedUpdateNumber++
         } else {
-            while (time.FixedTickCount * time.FixedDeltaTime < time.Time) {
+            while (time.FixedUpdateNumber * time.FixedDeltaTime < time.Time) {
                 this.OnFixedUpdateCallback(time)
-                time.FixedTickCount++
+                time.FixedUpdateNumber++
             }
         }
     }
@@ -80,7 +80,7 @@ public class Engine : AutoCloseable {
             }
         }
         this.OnUpdateCallback(time)
-        time.TickCount++
+        time.UpdateNumber++
     }
 
     private fun OnFrameEnd() {
@@ -91,10 +91,10 @@ public class Engine : AutoCloseable {
 
 public class Time {
 
-    public var FixedTickCount: Int = 0
+    public var FixedUpdateNumber: Int = 0
         internal set
 
-    public var TickCount: Int = 0
+    public var UpdateNumber: Int = 0
         internal set
 
     public var Time: Double = 0.0
@@ -106,7 +106,11 @@ public class Time {
     public var FixedDeltaTime: Double = 0.0
         internal set
 
-    public constructor() {
+    internal constructor() {
+    }
+
+    public override fun toString(): String {
+        return this.Time.toString()
     }
 
 }
