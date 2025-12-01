@@ -5,30 +5,12 @@ import org.lwjgl.glfw.GLFW
 public class Engine : AutoCloseable {
 
     private val Window: MainWindow
+    private val OnFixedUpdateCallback: ((Time) -> Unit)
+    private val OnUpdateCallback: ((Time) -> Unit)
 
     public var IsRunning: Boolean = false
         private set(value) {
             check(field != value)
-            field = value
-        }
-
-    public var FixedTickCount: Int = 0
-        get() {
-            check(this.IsRunning)
-            return field
-        }
-        private set(value) {
-            check(this.IsRunning)
-            field = value
-        }
-
-    public var TickCount: Int = 0
-        get() {
-            check(this.IsRunning)
-            return field
-        }
-        private set(value) {
-            check(this.IsRunning)
             field = value
         }
 
@@ -42,8 +24,10 @@ public class Engine : AutoCloseable {
             field = value
         }
 
-    public constructor(mainWindow: MainWindow) {
-        this.Window = mainWindow.also { require(!it.IsClosed) }
+    public constructor(window: MainWindow, onFixedUpdateCallback: ((Time) -> Unit), onUpdateCallback: ((Time) -> Unit)) {
+        this.Window = window.also { require(!it.IsClosed) }
+        this.OnFixedUpdateCallback = onFixedUpdateCallback
+        this.OnUpdateCallback = onUpdateCallback
     }
 
     public override fun close() {
@@ -51,24 +35,24 @@ public class Engine : AutoCloseable {
         check(!this.IsRunning)
     }
 
-    public fun Run() {
+    public fun Run(fixedDeltaTime: Double = 1.0 / 20.0) {
         this.IsRunning = true
-        this.FixedTickCount = 0
-        this.TickCount = 0
         this.Fps = 0.0
-        var time = 0.0
-        var deltaTime = 0.0
+        val time = Time()
         while (!this.Window.IsClosingRequested) {
-            deltaTime = run {
+            val deltaTime = run {
                 val startTime = this.Window.Time
                 this.OnFrameBegin()
-                this.OnFrame(time, deltaTime)
+                this.OnFixedUpdate(time)
+                this.OnUpdate(time)
                 this.OnFrameEnd()
                 val endTime = this.Window.Time
                 endTime - startTime
             }
-            time += deltaTime
             this.Fps = 1.0 / deltaTime
+            time.Time += deltaTime
+            time.DeltaTime = deltaTime
+            time.FixedDeltaTime = fixedDeltaTime
         }
         this.IsRunning = false
     }
@@ -77,33 +61,52 @@ public class Engine : AutoCloseable {
         GLFW.glfwPollEvents().also { GLFW2.ThrowErrorIfNeeded() }
     }
 
-    private fun OnFrame(time: Double, deltaTime: Double) {
-        if (this.FixedTickCount == 0) {
-            this.OnFixedUpdate(0.0)
+    private fun OnFixedUpdate(time: Time) {
+        if (time.FixedTickCount == 0) {
+            this.OnFixedUpdateCallback(time)
+            time.FixedTickCount++
         } else {
-            val fixedDeltaTime = 1.0 / 25.0
-            while (this.FixedTickCount * fixedDeltaTime < time) {
-                this.OnFixedUpdate(fixedDeltaTime)
+            while (time.FixedTickCount * time.FixedDeltaTime < time.Time) {
+                this.OnFixedUpdateCallback(time)
+                time.FixedTickCount++
             }
         }
-        this.OnUpdate(deltaTime)
     }
 
-    private fun OnFixedUpdate(deltaTime: Double) {
-        this.FixedTickCount++
-    }
-
-    private fun OnUpdate(deltaTime: Double) {
+    private fun OnUpdate(time: Time) {
         if (GLFW.glfwGetKey(this.Window.NativeWindowPointer, GLFW.GLFW_KEY_LEFT_ALT) == GLFW.GLFW_PRESS || GLFW.glfwGetKey(this.Window.NativeWindowPointer, GLFW.GLFW_KEY_RIGHT_ALT) == GLFW.GLFW_PRESS) {
             if (GLFW.glfwGetKey(this.Window.NativeWindowPointer, GLFW.GLFW_KEY_ENTER) == GLFW.GLFW_PRESS) {
                 this.Window.IsFullscreen = !this.Window.IsFullscreen
             }
         }
-        this.TickCount++
+        this.OnUpdateCallback(time)
+        time.TickCount++
     }
 
     private fun OnFrameEnd() {
         GLFW.glfwSwapBuffers(this.Window.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
+    }
+
+}
+
+public class Time {
+
+    public var FixedTickCount: Int = 0
+        internal set
+
+    public var TickCount: Int = 0
+        internal set
+
+    public var Time: Double = 0.0
+        internal set
+
+    public var DeltaTime: Double = 0.0
+        internal set
+
+    public var FixedDeltaTime: Double = 0.0
+        internal set
+
+    public constructor() {
     }
 
 }

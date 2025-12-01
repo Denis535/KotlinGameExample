@@ -15,7 +15,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     public constructor() {
         this.MainWindow = MainWindow("Kotlin Game Example")
-        this.Engine = Engine(this.MainWindow)
+        this.Engine = Engine(this.MainWindow, this::OnFixedUpdate, this::OnUpdate)
         this.Application = Application()
         this.Router = Router()
         this.Screen = Screen()
@@ -37,6 +37,14 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Engine.close()
         this.MainWindow.close()
         super.OnClose()
+    }
+
+    private fun OnFixedUpdate(time: Time) {
+        println("OnFixedUpdate: " + time.Time)
+    }
+
+    private fun OnUpdate(time: Time) {
+        println("OnUpdate: " + time.Time)
     }
 
     public override fun GetDependency(clazz: kotlin.reflect.KClass<*>, argument: Any?): Any? {
