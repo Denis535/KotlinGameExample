@@ -51,8 +51,8 @@ public class Engine : AutoCloseable {
             }
             this.Fps = 1.0 / deltaTime
             time.Time += deltaTime
-            time.DeltaTime = deltaTime
             time.FixedDeltaTime = fixedDeltaTime
+            time.DeltaTime = deltaTime
         }
         this.IsRunning = false
     }
@@ -100,10 +100,10 @@ public class Time {
     public var Time: Double = 0.0
         internal set
 
-    public var DeltaTime: Double = 0.0
+    public var FixedDeltaTime: Double = 0.0
         internal set
 
-    public var FixedDeltaTime: Double = 0.0
+    public var DeltaTime: Double = 0.0
         internal set
 
     internal constructor() {
