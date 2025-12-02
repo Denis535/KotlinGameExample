@@ -50,9 +50,9 @@ public class Engine : AutoCloseable {
                 endTime - startTime
             }
             this.Fps = 1.0 / deltaTime
-            time.FrameTime += deltaTime
-            time.FixedDeltaTime = fixedDeltaTime
-            time.DeltaTime = deltaTime
+            time.Fixed.DeltaTime = fixedDeltaTime
+            time.Real.FrameTime += deltaTime
+            time.Real.DeltaTime = deltaTime
         }
         this.IsRunning = false
     }
@@ -62,13 +62,13 @@ public class Engine : AutoCloseable {
     }
 
     private fun OnFixedUpdate(time: Time) {
-        if (time.FixedFrameNumber == 0) {
+        if (time.Fixed.FrameNumber == 0) {
             this.OnFixedUpdateCallback(time)
-            time.FixedFrameNumber++
+            time.Fixed.FrameNumber++
         } else {
-            while (time.FixedFrameTime <= time.FrameTime) {
+            while (time.Fixed.FrameTime <= time.Real.FrameTime) {
                 this.OnFixedUpdateCallback(time)
-                time.FixedFrameNumber++
+                time.Fixed.FrameNumber++
             }
         }
     }
@@ -80,7 +80,7 @@ public class Engine : AutoCloseable {
             }
         }
         this.OnUpdateCallback(time)
-        time.FrameNumber++
+        time.Real.FrameNumber++
     }
 
     private fun OnFrameEnd() {
@@ -91,21 +91,42 @@ public class Engine : AutoCloseable {
 
 public class Time {
 
-    public var FixedFrameNumber: Int = 0
-        internal set
+    public val Fixed: FixedTime = FixedTime()
+    public val Real: RealTime = RealTime()
+
+    internal constructor() {
+    }
+
+}
+
+public class FixedTime {
 
     public var FrameNumber: Int = 0
         internal set
 
-    public val FixedFrameTime: Double
+    public val FrameTime: Double
         get() {
-            return this.FixedFrameNumber * this.FixedDeltaTime
+            return this.FrameNumber * this.DeltaTime
         }
 
-    public var FrameTime: Double = 0.0
+    public var DeltaTime: Double = 0.0
         internal set
 
-    public var FixedDeltaTime: Double = 0.0
+    internal constructor() {
+    }
+
+    public override fun toString(): String {
+        return this.FrameTime.toString()
+    }
+
+}
+
+public class RealTime {
+
+    public var FrameNumber: Int = 0
+        internal set
+
+    public var FrameTime: Double = 0.0
         internal set
 
     public var DeltaTime: Double = 0.0
