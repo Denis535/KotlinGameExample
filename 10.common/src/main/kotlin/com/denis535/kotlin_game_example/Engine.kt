@@ -50,9 +50,9 @@ public class Engine : AutoCloseable {
                 endTime - startTime
             }
             this.Fps = 1.0 / deltaTime
-            time.Fixed.DeltaTime = fixedDeltaTime
-            time.Real.FrameTime += deltaTime
-            time.Real.DeltaTime = deltaTime
+            time.FixedTime.DeltaTime = fixedDeltaTime
+            time.RealTime.FrameTime += deltaTime
+            time.RealTime.DeltaTime = deltaTime
         }
         this.IsRunning = false
     }
@@ -62,13 +62,13 @@ public class Engine : AutoCloseable {
     }
 
     private fun OnFixedUpdate(time: Time) {
-        if (time.Fixed.FrameNumber == 0) {
+        if (time.FixedTime.FrameNumber == 0) {
             this.OnFixedUpdateCallback(time)
-            time.Fixed.FrameNumber++
+            time.FixedTime.FrameNumber++
         } else {
-            while (time.Fixed.FrameTime <= time.Real.FrameTime) {
+            while (time.FixedTime.FrameTime <= time.RealTime.FrameTime) {
                 this.OnFixedUpdateCallback(time)
-                time.Fixed.FrameNumber++
+                time.FixedTime.FrameNumber++
             }
         }
     }
@@ -80,7 +80,7 @@ public class Engine : AutoCloseable {
             }
         }
         this.OnUpdateCallback(time)
-        time.Real.FrameNumber++
+        time.RealTime.FrameNumber++
     }
 
     private fun OnFrameEnd() {
@@ -91,8 +91,8 @@ public class Engine : AutoCloseable {
 
 public class Time {
 
-    public val Fixed: FixedTime = FixedTime()
-    public val Real: RealTime = RealTime()
+    public val FixedTime: FixedTime = FixedTime()
+    public val RealTime: RealTime = RealTime()
 
     internal constructor() {
     }
@@ -116,7 +116,7 @@ public class FixedTime {
     }
 
     public override fun toString(): String {
-        return this.FrameTime.toString()
+        return "FixedTime: $this.FrameNumber, $this.FrameTime"
     }
 
 }
@@ -136,7 +136,7 @@ public class RealTime {
     }
 
     public override fun toString(): String {
-        return this.FrameTime.toString()
+        return "FixedTime: $this.FrameNumber, $this.FrameTime"
     }
 
 }
