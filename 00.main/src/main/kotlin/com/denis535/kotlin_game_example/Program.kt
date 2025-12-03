@@ -46,8 +46,8 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         println("RealFrame: ${frame.RealFrame.Time}")
     }
 
-    public override fun GetDependency(clazz: kotlin.reflect.KClass<*>, argument: Any?): Any? {
-        return super.GetDependency(clazz, argument)
+    public override fun GetDependencyInternal(clazz: kotlin.reflect.KClass<*>, argument: Any?): Any? {
+        return super.GetDependencyInternal(clazz, argument)
     }
 
 }
