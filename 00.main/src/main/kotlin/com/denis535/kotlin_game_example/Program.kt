@@ -1,5 +1,6 @@
 package com.denis535.kotlin_game_example
 
+import kotlin.reflect.KClass
 import com.denis535.engine.*
 import com.denis535.game_framework_pro.*
 
@@ -47,7 +48,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         println("OnUpdate: ${info.Time}")
     }
 
-    public override fun GetDependencyInternal(clazz: kotlin.reflect.KClass<*>, argument: Any?): Any? {
+    public override fun GetDependencyInternal(clazz: KClass<*>, argument: Any?): Any? {
         return super.GetDependencyInternal(clazz, argument)
     }
 
