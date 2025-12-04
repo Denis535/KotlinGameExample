@@ -6,7 +6,7 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    this.repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    this.repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     this.repositories {
         this.mavenCentral()
     }
