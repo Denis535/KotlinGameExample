@@ -1,4 +1,4 @@
-package com.denis535.kotlin_game_example
+package com.denis535.engine
 
 import org.lwjgl.glfw.GLFW
 
