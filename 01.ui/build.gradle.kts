@@ -7,8 +7,8 @@ kotlin {
     this.mingwX64("windows")
     this.sourceSets {
         val main by this.creating {
-            this.kotlin.srcDir("src/main/kotlin")
-            this.resources.srcDir("src/main/resources")
+            this.kotlin.srcDir("sources")
+            this.resources.srcDir("resources")
             this.dependencies {
                 this.implementation(this.project(":app"))
                 this.implementation(this.project(":game"))
