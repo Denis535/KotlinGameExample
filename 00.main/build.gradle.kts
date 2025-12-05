@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC2"
-    this.id("com.github.ben-manes.versions") version "0.53.0"
 }
 
 kotlin {
