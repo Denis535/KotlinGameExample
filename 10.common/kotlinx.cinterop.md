@@ -4,7 +4,7 @@
 
 NativePtr - typealias NativePtr = kotlin.native.internal.NativePtr
 
-###### Base/Heap
+###### Heap
 
 NativePlacement - interface NativePlacement
 NativeFreeablePlacement - interface NativeFreeablePlacement : NativePlacement
@@ -57,7 +57,7 @@ CPointerVar - typealias CPointerVar<T> = CPointerVarOf<CPointer<T>>
 COpaquePointerVar - typealias COpaquePointerVar = CPointerVarOf<COpaquePointer>
 CArrayPointerVar - typealias CArrayPointerVar<T> = CPointerVar<T>
 
-###### Types/CPrimitiveVar
+###### Types/CVariable/Primitive
 
 BooleanVarOf - class BooleanVarOf<T : Boolean>(rawPtr: NativePtr) : CPrimitiveVar
 ByteVarOf - class ByteVarOf<T : Byte>(rawPtr: NativePtr) : CPrimitiveVar
@@ -72,7 +72,7 @@ FloatVarOf - class FloatVarOf<T : Float>(rawPtr: NativePtr) : CPrimitiveVar
 DoubleVarOf - class DoubleVarOf<T : Double>(rawPtr: NativePtr) : CPrimitiveVar
 CEnumVar - abstract class CEnumVar(rawPtr: NativePtr) : CPrimitiveVar
 
-###### Types/CPrimitiveVar
+###### Types/CVariable/Primitive
 
 BooleanVar - typealias BooleanVar = BooleanVarOf<Boolean>
 ByteVar - typealias ByteVar = ByteVarOf<Byte>
