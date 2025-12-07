@@ -1,48 +1,49 @@
-# Base
+# Types
+###### Base
 NativePtr - typealias NativePtr = kotlin.native.internal.NativePtr
-# Base/Heap
+###### Base/Heap
 NativePlacement - interface NativePlacement
 NativeFreeablePlacement - interface NativeFreeablePlacement : NativePlacement
 nativeHeap - object nativeHeap : NativeFreeablePlacement
 
-# Scope
+###### Scope
 DeferScope - open class DeferScope
 AutofreeScope - abstract class AutofreeScope : DeferScope, NativePlacement
 ArenaBase - open class ArenaBase(parent: NativeFreeablePlacement = nativeHeap) : AutofreeScope
 Arena - class Arena(parent: NativeFreeablePlacement = nativeHeap) : ArenaBase
 MemScope - class MemScope : ArenaBase
 
-# Types
+###### Types
 CEnum - interface CEnum
 Vector128 - class Vector128
 
-# Types/CPointed
+###### Types/CPointed
 NativePointed - open class NativePointed
 CPointed - abstract class CPointed(rawPtr: NativePtr) : NativePointed
 COpaque - abstract class COpaque(rawPtr: NativePtr) : CPointed
 CFunction - class CFunction<T : Function<*>>(rawPtr: NativePtr) : CPointed
 CVariable - abstract class CVariable(rawPtr: NativePtr) : CPointed
 CPrimitiveVar - sealed class CPrimitiveVar(rawPtr: NativePtr) : CVariable
-# Types/CPointer
+###### Types/CPointer
 CPointer - class CPointer<T : CPointed> : CValuesRef<T>
 COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
 CArrayPointer - typealias CArrayPointer<T> = CPointer<T>
-# Types/CValuesRef
+###### Types/CValuesRef
 CValuesRef - abstract class CValuesRef<T : CPointed>
 CValues - abstract class CValues<T : CVariable> : CValuesRef<T>
 CValue - abstract class CValue<T : CVariable> : CValues<T>
 
-# Types/CVariable
+###### Types/CVariable
 CStructVar - abstract class CStructVar(rawPtr: NativePtr) : CVariable
 Vector128VarOf - class Vector128VarOf<T : Vector128>(rawPtr: NativePtr) : CVariable
 CPointerVarOf - class CPointerVarOf<T : CPointer<*>>(rawPtr: NativePtr) : CVariable
-# Types/CVariable
+###### Types/CVariable
 Vector128Var - typealias Vector128Var = Vector128VarOf<Vector128>
 CPointerVar - typealias CPointerVar<T> = CPointerVarOf<CPointer<T>>
 COpaquePointerVar - typealias COpaquePointerVar = CPointerVarOf<COpaquePointer>
 CArrayPointerVar - typealias CArrayPointerVar<T> = CPointerVar<T>
 
-# Types/CPrimitiveVar
+###### Types/CPrimitiveVar
 BooleanVarOf - class BooleanVarOf<T : Boolean>(rawPtr: NativePtr) : CPrimitiveVar
 ByteVarOf - class ByteVarOf<T : Byte>(rawPtr: NativePtr) : CPrimitiveVar
 ShortVarOf - class ShortVarOf<T : Short>(rawPtr: NativePtr) : CPrimitiveVar
@@ -55,7 +56,7 @@ ULongVarOf - class ULongVarOf<T : ULong>(rawPtr: NativePtr) : CPrimitiveVar
 FloatVarOf - class FloatVarOf<T : Float>(rawPtr: NativePtr) : CPrimitiveVar
 DoubleVarOf - class DoubleVarOf<T : Double>(rawPtr: NativePtr) : CPrimitiveVar
 CEnumVar - abstract class CEnumVar(rawPtr: NativePtr) : CPrimitiveVar
-# Types/CPrimitiveVar
+###### Types/CPrimitiveVar
 BooleanVar - typealias BooleanVar = BooleanVarOf<Boolean>
 ByteVar - typealias ByteVar = ByteVarOf<Byte>
 ShortVar - typealias ShortVar = ShortVarOf<Short>
@@ -68,29 +69,29 @@ ULongVar - typealias ULongVar = ULongVarOf<ULong>
 FloatVar - typealias FloatVar = FloatVarOf<Float>
 DoubleVar - typealias DoubleVar = DoubleVarOf<Double>
 
-# Types/Objective-C
+###### Types/Objective-C
 ObjCObject - interface ObjCObject
 ObjCObjectMeta - typealias ObjCObjectMeta = ObjCClass
 ObjCClass - interface ObjCClass : ObjCObject
 ObjCClassOf - interface ObjCClassOf<T : ObjCObject> : ObjCClass
 ObjCProtocol - interface ObjCProtocol : ObjCObject
-# Types/Objective-C
+###### Types/Objective-C
 ObjCObjectBase - abstract class ObjCObjectBase : ObjCObject
 ObjCObjectBaseMeta - abstract class ObjCObjectBaseMeta : ObjCObjectBase, ObjCClass
-# Types/Objective-C
+###### Types/Objective-C
 ObjCNotImplementedVar - class ObjCNotImplementedVar<T>(rawPtr: NativePtr) : CVariable
 ObjCBlockVar - typealias ObjCBlockVar<T> = ObjCNotImplementedVar<T>
 ObjCStringVarOf - typealias ObjCStringVarOf<T> = ObjCNotImplementedVar<T>
 ObjCObjectVar - class ObjCObjectVar<T>(rawPtr: NativePtr) : CVariable
 
-# Utils
+###### Utils
 Pinned - class Pinned<T : Any>
 StableRef - @JvmInline value class StableRef<out T : Any>
 
-# Exceptions
+###### Exceptions
 ForeignException - class ForeignException : Exception
 
-# Annotations/Interop
+###### Annotations/Interop
 @Target(allowedTargets = [AnnotationTarget.FILE])
 annotation class InteropStubs
 
@@ -103,18 +104,18 @@ annotation class ExperimentalForeignApi
 @Target(allowedTargets = [AnnotationTarget.TYPEALIAS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY])
 annotation class UnsafeNumber(val actualPlatformTypes: Array<String>)
 
-# Annotations/Objective-C/Classes
+###### Annotations/Objective-C/Classes
 @Target(allowedTargets = [AnnotationTarget.CLASS])
 annotation class ExportObjCClass(val name: String = "")
 
 @Target(allowedTargets = [AnnotationTarget.CLASS])
 annotation class ExternalObjCClass(val protocolGetter: String = "", val binaryName: String = "")
 
-# Annotations/Objective-C/Properties
+###### Annotations/Objective-C/Properties
 @Target(allowedTargets = [AnnotationTarget.PROPERTY])
 annotation class ObjCOutlet
 
-# Annotations/Objective-C/Functions
+###### Annotations/Objective-C/Functions
 @Target(allowedTargets = [AnnotationTarget.CONSTRUCTOR])
 annotation class ObjCConstructor(val initSelector: String, val designated: Boolean)
 
