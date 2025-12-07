@@ -24,14 +24,14 @@ COpaque - abstract class COpaque(rawPtr: NativePtr) : CPointed
 CFunction - class CFunction<T : Function<*>>(rawPtr: NativePtr) : CPointed
 CVariable - abstract class CVariable(rawPtr: NativePtr) : CPointed
 CPrimitiveVar - sealed class CPrimitiveVar(rawPtr: NativePtr) : CVariable
-###### Types/CPointer
-CPointer - class CPointer<T : CPointed> : CValuesRef<T>
-COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
-CArrayPointer - typealias CArrayPointer<T> = CPointer<T>
 ###### Types/CValuesRef
 CValuesRef - abstract class CValuesRef<T : CPointed>
 CValues - abstract class CValues<T : CVariable> : CValuesRef<T>
 CValue - abstract class CValue<T : CVariable> : CValues<T>
+###### Types/CPointer
+CPointer - class CPointer<T : CPointed> : CValuesRef<T>
+COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
+CArrayPointer - typealias CArrayPointer<T> = CPointer<T>
 
 ###### Types/CVariable
 CStructVar - abstract class CStructVar(rawPtr: NativePtr) : CVariable
