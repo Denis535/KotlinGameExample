@@ -1,5 +1,4 @@
 # Base
-NativePointed - open class NativePointed
 NativePtr - typealias NativePtr = kotlin.native.internal.NativePtr
 # Base/Heap
 NativePlacement - interface NativePlacement
@@ -16,29 +15,34 @@ MemScope - class MemScope : ArenaBase
 # Types
 CEnum - interface CEnum
 Vector128 - class Vector128
+
+# Types/CPointed
+NativePointed - open class NativePointed
+CPointed - abstract class CPointed(rawPtr: NativePtr) : NativePointed
+COpaque - abstract class COpaque(rawPtr: NativePtr) : CPointed
+CFunction - class CFunction<T : Function<*>>(rawPtr: NativePtr) : CPointed
+CVariable - abstract class CVariable(rawPtr: NativePtr) : CPointed
+CPrimitiveVar - sealed class CPrimitiveVar(rawPtr: NativePtr) : CVariable
+# Types/CPointer
+CPointer - class CPointer<T : CPointed> : CValuesRef<T>
+COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
+CArrayPointer - typealias CArrayPointer<T> = CPointer<T>
 # Types/CValuesRef
 CValuesRef - abstract class CValuesRef<T : CPointed>
 CValues - abstract class CValues<T : CVariable> : CValuesRef<T>
 CValue - abstract class CValue<T : CVariable> : CValues<T>
-CPointer - class CPointer<T : CPointed> : CValuesRef<T>
-COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
-CArrayPointer - typealias CArrayPointer<T> = CPointer<T>
-# Types/CPointed
-CPointed - abstract class CPointed(rawPtr: NativePtr) : NativePointed
-COpaque - abstract class COpaque(rawPtr: NativePtr) : CPointed
-CFunction - class CFunction<T : Function<*>>(rawPtr: NativePtr) : CPointed
+
 # Types/CVariable
-CVariable - abstract class CVariable(rawPtr: NativePtr) : CPointed
+CStructVar - abstract class CStructVar(rawPtr: NativePtr) : CVariable
 Vector128VarOf - class Vector128VarOf<T : Vector128>(rawPtr: NativePtr) : CVariable
 CPointerVarOf - class CPointerVarOf<T : CPointer<*>>(rawPtr: NativePtr) : CVariable
-CStructVar - abstract class CStructVar(rawPtr: NativePtr) : CVariable
 # Types/CVariable
 Vector128Var - typealias Vector128Var = Vector128VarOf<Vector128>
 CPointerVar - typealias CPointerVar<T> = CPointerVarOf<CPointer<T>>
 COpaquePointerVar - typealias COpaquePointerVar = CPointerVarOf<COpaquePointer>
 CArrayPointerVar - typealias CArrayPointerVar<T> = CPointerVar<T>
+
 # Types/CPrimitiveVar
-CPrimitiveVar - sealed class CPrimitiveVar(rawPtr: NativePtr) : CVariable
 BooleanVarOf - class BooleanVarOf<T : Boolean>(rawPtr: NativePtr) : CPrimitiveVar
 ByteVarOf - class ByteVarOf<T : Byte>(rawPtr: NativePtr) : CPrimitiveVar
 ShortVarOf - class ShortVarOf<T : Short>(rawPtr: NativePtr) : CPrimitiveVar
@@ -63,14 +67,17 @@ UIntVar - typealias UIntVar = UIntVarOf<UInt>
 ULongVar - typealias ULongVar = ULongVarOf<ULong>
 FloatVar - typealias FloatVar = FloatVarOf<Float>
 DoubleVar - typealias DoubleVar = DoubleVarOf<Double>
+
 # Types/Objective-C
 ObjCObject - interface ObjCObject
 ObjCObjectMeta - typealias ObjCObjectMeta = ObjCClass
 ObjCClass - interface ObjCClass : ObjCObject
 ObjCClassOf - interface ObjCClassOf<T : ObjCObject> : ObjCClass
 ObjCProtocol - interface ObjCProtocol : ObjCObject
+# Types/Objective-C
 ObjCObjectBase - abstract class ObjCObjectBase : ObjCObject
 ObjCObjectBaseMeta - abstract class ObjCObjectBaseMeta : ObjCObjectBase, ObjCClass
+# Types/Objective-C
 ObjCNotImplementedVar - class ObjCNotImplementedVar<T>(rawPtr: NativePtr) : CVariable
 ObjCBlockVar - typealias ObjCBlockVar<T> = ObjCNotImplementedVar<T>
 ObjCStringVarOf - typealias ObjCStringVarOf<T> = ObjCNotImplementedVar<T>
