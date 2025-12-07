@@ -16,6 +16,13 @@ MemScope - class MemScope : ArenaBase
 # Types
 CEnum - interface CEnum
 Vector128 - class Vector128
+# Types/CValuesRef
+CValuesRef - abstract class CValuesRef<T : CPointed>
+CValues - abstract class CValues<T : CVariable> : CValuesRef<T>
+CValue - abstract class CValue<T : CVariable> : CValues<T>
+CPointer - class CPointer<T : CPointed> : CValuesRef<T>
+COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
+CArrayPointer - typealias CArrayPointer<T> = CPointer<T>
 # Types/CPointed
 CPointed - abstract class CPointed(rawPtr: NativePtr) : NativePointed
 COpaque - abstract class COpaque(rawPtr: NativePtr) : CPointed
@@ -56,13 +63,6 @@ UIntVar - typealias UIntVar = UIntVarOf<UInt>
 ULongVar - typealias ULongVar = ULongVarOf<ULong>
 FloatVar - typealias FloatVar = FloatVarOf<Float>
 DoubleVar - typealias DoubleVar = DoubleVarOf<Double>
-# Types/CValuesRef
-CValuesRef - abstract class CValuesRef<T : CPointed>
-CValues - abstract class CValues<T : CVariable> : CValuesRef<T>
-CValue - abstract class CValue<T : CVariable> : CValues<T>
-CPointer - class CPointer<T : CPointed> : CValuesRef<T>
-COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
-CArrayPointer - typealias CArrayPointer<T> = CPointer<T>
 # Types/Objective-C
 ObjCObject - interface ObjCObject
 ObjCObjectMeta - typealias ObjCObjectMeta = ObjCClass
