@@ -30,10 +30,10 @@ NativePointed - open class NativePointed
 ###### Types/CPointed
 
 CPointed - abstract class CPointed(rawPtr: NativePtr) : NativePointed
-COpaque - abstract class COpaque(rawPtr: NativePtr) : CPointed
-CFunction - class CFunction<T : Function<*>>(rawPtr: NativePtr) : CPointed
 CVariable - abstract class CVariable(rawPtr: NativePtr) : CPointed
 CPrimitiveVar - sealed class CPrimitiveVar(rawPtr: NativePtr) : CVariable
+CFunction - class CFunction<T : Function<*>>(rawPtr: NativePtr) : CPointed
+COpaque - abstract class COpaque(rawPtr: NativePtr) : CPointed
 
 ###### Types/CValuesRef
 
@@ -41,8 +41,8 @@ CValuesRef - abstract class CValuesRef<T : CPointed>
 CValues - abstract class CValues<T : CVariable> : CValuesRef<T>
 CValue - abstract class CValue<T : CVariable> : CValues<T>
 CPointer - class CPointer<T : CPointed> : CValuesRef<T>
-COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
 CArrayPointer - typealias CArrayPointer<T> = CPointer<T>
+COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
 
 ###### Types/CVariable
 
@@ -54,8 +54,8 @@ CPointerVarOf - class CPointerVarOf<T : CPointer<*>>(rawPtr: NativePtr) : CVaria
 
 Vector128Var - typealias Vector128Var = Vector128VarOf<Vector128>
 CPointerVar - typealias CPointerVar<T> = CPointerVarOf<CPointer<T>>
-COpaquePointerVar - typealias COpaquePointerVar = CPointerVarOf<COpaquePointer>
 CArrayPointerVar - typealias CArrayPointerVar<T> = CPointerVar<T>
+COpaquePointerVar - typealias COpaquePointerVar = CPointerVarOf<COpaquePointer>
 
 ###### Types/CVariable/Primitive
 
@@ -163,7 +163,9 @@ annotation class ObjCMethod(val selector: String, val encoding: String, val isSt
 annotation class ObjCSignatureOverride
 
 # Methods
-###### Allocation
+
+###### Memory
+
 alloc
 allocArray
 allocArrayOf
@@ -171,70 +173,57 @@ allocArrayOfPointersTo
 allocPointerTo
 free
 
-###### Access
-get
-set
-plus
-memberAt
-arrayMemberAt
+###### NativePtr
 
-###### Access
-getRawValue
+interpretPointed
+interpretNullablePointed
+interpretOpaquePointed
+interpretNullableOpaquePointed
+interpretCPointer
+
+###### CPointed
+
 getRawPointer
 
-###### Info
-typeOf
-addressOf
+###### CVariable
+
 sizeOf
 alignOf
 
-###### Construction
+###### CPointer
+
+getRawValue
+get
+set
+memberAt
+arrayMemberAt
+plus
+
+###### Utils
+
+convert
+copy
+getBytes
+zeroValue
 vectorOf
 cValuesOf
 cValue
 createValues
-
-###### Referencing & Placement
+narrow
+reinterpret
+staticCFunction
+invoke
 refTo
 placeTo
 
-###### Pointer Conversion / Casting
-narrow
-reinterpret
+###### Utils/Scope
 
-###### Interpretation
-interpretPointed
-interpretOpaquePointed
-interpretNullablePointed
-interpretNullableOpaquePointed
-interpretCPointer
-interpretObjCPointer
-interpretObjCPointerOrNull
-
-###### Copying & Zeroing
-copy
-getBytes
-zeroValue
-
-###### Scoped Memory
 memScoped
+usePinned
+useContents
 
-###### Reading
-readBits
-readBytes
-readValue
-readValues
+###### Utils/Conversion
 
-###### Writing
-write
-writeBits
-
-###### Conversion
-convert
-bitsToFloat
-bitsToDouble
-
-###### Conversions
 toBoolean
 toByte
 toLong
@@ -246,31 +235,55 @@ toCValues
 toCStringArray
 toCPointer
 
-###### Pinning & Stable Refs
-pin
-asStableRef
-usePinned
+###### Utils/Conversion
 
-###### Kotlin Object
+bitsToFloat
+bitsToDouble
+
+###### Utils/Reading
+
+readBits
+readBytes
+readValue
+readValues
+
+###### Utils/Writing
+
+write
+writeBits
+
+###### Kotlin/Wrapper
+
 createKotlinObjectHolder
-getOriginalKotlinClass
 unwrapKotlinObjectHolder
-initBy
-invoke
+getOriginalKotlinClass
 
-###### Objective-C Interop
-autoreleasepool
+###### Kotlin/PinnedRef
+
+pin
+addressOf
+
+###### Kotlin/StableRef
+
+asStableRef
+
+###### Objective-C
+
 objcPtr
-optional
-staticCFunction
-signExtend
 
-###### Objective-C Runtime
+###### Objective-C/Memory
+
+objc_retain
+objc_release
+objc_retainAutoreleaseReturnValue
+
+###### Objective-C/Memory
+
+autoreleasepool
 objc_autoreleasePoolPush
 objc_autoreleasePoolPop
-objc_retain
-objc_retainAutoreleaseReturnValue
-objc_release
 
-###### Utils
-useContents
+###### Objective-C/Interpret
+
+interpretObjCPointer
+interpretObjCPointerOrNull
