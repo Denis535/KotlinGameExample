@@ -201,20 +201,35 @@ plus
 
 ###### Utils
 
-convert
-copy
-getBytes
-zeroValue
 vectorOf
 cValuesOf
 cValue
 createValues
-narrow
-reinterpret
-staticCFunction
-invoke
+
+###### Utils
+
 refTo
 placeTo
+s
+###### Utils
+
+copy
+getBytes
+zeroValue
+
+###### Utils
+
+reinterpret
+narrow
+
+###### Utils
+
+staticCFunction
+invoke
+
+###### Utils
+
+convert
 
 ###### Utils/Scope
 
