@@ -161,3 +161,116 @@ annotation class ObjCMethod(val selector: String, val encoding: String, val isSt
 
 @Target(allowedTargets = [AnnotationTarget.FUNCTION])
 annotation class ObjCSignatureOverride
+
+# Methods
+###### Allocation
+alloc
+allocArray
+allocArrayOf
+allocArrayOfPointersTo
+allocPointerTo
+free
+
+###### Access
+get
+set
+plus
+memberAt
+arrayMemberAt
+
+###### Access
+getRawValue
+getRawPointer
+
+###### Info
+typeOf
+addressOf
+sizeOf
+alignOf
+
+###### Construction
+vectorOf
+cValuesOf
+cValue
+createValues
+
+###### Referencing & Placement
+refTo
+placeTo
+
+###### Pointer Conversion / Casting
+narrow
+reinterpret
+
+###### Interpretation
+interpretPointed
+interpretOpaquePointed
+interpretNullablePointed
+interpretNullableOpaquePointed
+interpretCPointer
+interpretObjCPointer
+interpretObjCPointerOrNull
+
+###### Copying & Zeroing
+copy
+getBytes
+zeroValue
+
+###### Scoped Memory
+memScoped
+
+###### Reading
+readBits
+readBytes
+readValue
+readValues
+
+###### Writing
+write
+writeBits
+
+###### Conversion
+convert
+bitsToFloat
+bitsToDouble
+
+###### Conversions
+toBoolean
+toByte
+toLong
+toKString
+toKStringFromUtf8
+toKStringFromUtf16
+toKStringFromUtf32
+toCValues
+toCStringArray
+toCPointer
+
+###### Pinning & Stable Refs
+pin
+asStableRef
+usePinned
+
+###### Kotlin Object
+createKotlinObjectHolder
+getOriginalKotlinClass
+unwrapKotlinObjectHolder
+initBy
+invoke
+
+###### Objective-C Interop
+autoreleasepool
+objcPtr
+optional
+staticCFunction
+signExtend
+
+###### Objective-C Runtime
+objc_autoreleasePoolPush
+objc_autoreleasePoolPop
+objc_retain
+objc_retainAutoreleaseReturnValue
+objc_release
+
+###### Utils
+useContents
