@@ -295,3 +295,40 @@ objc_autoreleasePoolPop
 
 interpretObjCPointer
 interpretObjCPointerOrNull
+
+# Properties
+
+val nativeNullPtr: NativePtr
+
+val NativePointed?.rawPtr: NativePtr
+val CPointer<*>?.rawValue: NativePtr
+
+val <T : CPointed> T.ptr: CPointer<T>
+
+var <T : CPointed, P : CPointer<T>> CPointerVarOf<P>.pointed: T?
+val <T : CPointed> CPointer<T>.pointed: T
+
+var <T : Boolean> BooleanVarOf<T>.value: T
+var <T : Byte> ByteVarOf<T>.value: T
+var <T : Short> ShortVarOf<T>.value: T
+var <T : Int> IntVarOf<T>.value: T
+var <T : Long> LongVarOf<T>.value: T
+var <T : UByte> UByteVarOf<T>.value: T
+var <T : UShort> UShortVarOf<T>.value: T
+var <T : UInt> UIntVarOf<T>.value: T
+var <T : ULong> ULongVarOf<T>.value: T
+var <T : Float> FloatVarOf<T>.value: T
+var <T : Double> DoubleVarOf<T>.value: T
+
+var <P : CPointer<*>> CPointerVarOf<P>.value: P?
+var <T : Vector128> Vector128VarOf<T>.value: T
+
+var <T> ObjCNotImplementedVar<T>.value: T
+var <T> ObjCObjectVar<T>.value: T
+
+val String.cstr: CValues<ByteVar>
+val String.wcstr: CValues<UShortVar>
+
+val String.utf8: CValues<ByteVar>
+val String.utf16: CValues<UShortVar>
+val String.utf32: CValues<IntVar>
