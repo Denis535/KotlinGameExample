@@ -38,8 +38,8 @@ COpaque - abstract class COpaque(rawPtr: NativePtr) : CPointed
 ###### Types/CValuesRef
 
 CValuesRef - abstract class CValuesRef<T : CPointed>
-CValues - abstract class CValues<T : CVariable> : CValuesRef<T>
 CValue - abstract class CValue<T : CVariable> : CValues<T>
+CValues - abstract class CValues<T : CVariable> : CValuesRef<T>
 CPointer - class CPointer<T : CPointed> : CValuesRef<T>
 CArrayPointer - typealias CArrayPointer<T> = CPointer<T>
 COpaquePointer - typealias COpaquePointer = CPointer<out CPointed>
@@ -173,17 +173,17 @@ allocArrayOfPointersTo
 allocPointerTo
 free
 
-###### NativePtr
-
-interpretPointed
-interpretNullablePointed
-interpretOpaquePointed
-interpretNullableOpaquePointed
-interpretCPointer
-
 ###### CPointed
 
 getRawPointer
+
+###### CValue
+
+copy
+
+###### CValues
+
+getBytes
 
 ###### CVariable
 
@@ -199,43 +199,29 @@ memberAt
 arrayMemberAt
 plus
 
-###### Utils
+###### Creation
 
-vectorOf
-cValuesOf
+zeroValue
 cValue
 createValues
-
-###### Utils
-
-refTo
-placeTo
-s
-###### Utils
-
-copy
-getBytes
-zeroValue
-
-###### Utils
-
-reinterpret
-narrow
-
-###### Utils
-
+vectorOf
+cValuesOf
 staticCFunction
-invoke
-
-###### Utils
-
-convert
 
 ###### Utils/Scope
 
 memScoped
 usePinned
 useContents
+
+###### Utils/Conversion
+
+reinterpret
+interpretPointed
+interpretNullablePointed
+interpretOpaquePointed
+interpretNullableOpaquePointed
+interpretCPointer
 
 ###### Utils/Conversion
 
@@ -249,9 +235,7 @@ toKStringFromUtf32
 toCValues
 toCStringArray
 toCPointer
-
-###### Utils/Conversion
-
+convert
 bitsToFloat
 bitsToDouble
 
@@ -267,7 +251,16 @@ readValues
 write
 writeBits
 
-###### Kotlin/Wrapper
+###### Utils/Misc
+
+refTo
+placeTo
+
+###### Utils/Misc
+
+invoke
+
+###### Kotlin
 
 createKotlinObjectHolder
 unwrapKotlinObjectHolder
@@ -298,7 +291,7 @@ autoreleasepool
 objc_autoreleasePoolPush
 objc_autoreleasePoolPop
 
-###### Objective-C/Interpret
+###### Objective-C/Conversion
 
 interpretObjCPointer
 interpretObjCPointerOrNull
