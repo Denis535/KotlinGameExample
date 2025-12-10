@@ -4,11 +4,9 @@ plugins {
 
 kotlin {
     this.mingwX64 {
-        this.compilations.getByName("main") {
-            this.cinterops {
-                val glfw by creating {
-                    this.definitionFile = file("native/glfw.def")
-                }
+        this.compilations["main"].cinterops {
+            val glfw by creating {
+                this.definitionFile = file("native/glfw.def")
             }
         }
     }
