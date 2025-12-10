@@ -9,13 +9,13 @@ dependencyResolutionManagement {
     this.repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     this.repositories {
         this.mavenCentral()
-        this.maven {
-            this.url = uri("https://maven.pkg.github.com/KotlinOpenFoundation/glfw")
-            this.credentials {
-                this.username = System.getenv("GITHUB_USERNAME") ?: System.getenv("GITHUB_ACTOR")
-                this.password = System.getenv("GITHUB_PASSWORD") ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
+//        this.maven {
+//            this.url = uri("https://maven.pkg.github.com/KotlinOpenFoundation/glfw")
+//            this.credentials {
+//                this.username = System.getenv("GITHUB_USERNAME") ?: System.getenv("GITHUB_ACTOR")
+//                this.password = System.getenv("GITHUB_PASSWORD") ?: System.getenv("GITHUB_TOKEN")
+//            }
+//        }
     }
 }
 

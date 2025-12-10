@@ -1,3 +1,0 @@
-headers = GLFW/glfw3.h
-compilerOpts = -ID:/glfw-3.4.bin.WIN64/include
-linkerOpts = -LD:/glfw-3.4.bin.WIN64/lib-mingw-w64 -lglfw3
