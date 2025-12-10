@@ -3,7 +3,15 @@ plugins {
 }
 
 kotlin {
-    this.mingwX64()
+    this.mingwX64 {
+        this.compilations.getByName("main") {
+            this.cinterops {
+                val glfw by creating {
+                    this.definitionFile = file("native/glfw.def")
+                }
+            }
+        }
+    }
     this.sourceSets {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
