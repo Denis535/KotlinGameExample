@@ -15,7 +15,7 @@ public class Engine : AutoCloseable {
             field = value
         }
 
-    public var OnFixedUpdateCallback: ((PhysicsFrameInfo) -> Unit)? = null
+    public var OnFixedUpdateCallback: ((FixedFrameInfo) -> Unit)? = null
     public var OnUpdateCallback: ((FrameInfo) -> Unit)? = null
     public var OnDrawCallback: ((FrameInfo) -> Unit)? = null
 
@@ -48,15 +48,15 @@ public class Engine : AutoCloseable {
     }
 
     private fun OnFixedUpdate(info: FrameInfo) {
-        if (info.PhysicsFrameInfo.Number == 0) {
-            this.OnFixedUpdateCallback?.invoke(info.PhysicsFrameInfo)
-            info.PhysicsFrameInfo.Number++
-            info.PhysicsFrameInfo.DeltaTime = this.FixedDeltaTime
+        if (info.FixedFrameInfo.Number == 0) {
+            this.OnFixedUpdateCallback?.invoke(info.FixedFrameInfo)
+            info.FixedFrameInfo.Number++
+            info.FixedFrameInfo.DeltaTime = this.FixedDeltaTime
         } else {
-            while (info.PhysicsFrameInfo.Time <= info.Time) {
-                this.OnFixedUpdateCallback?.invoke(info.PhysicsFrameInfo)
-                info.PhysicsFrameInfo.Number++
-                info.PhysicsFrameInfo.DeltaTime = this.FixedDeltaTime
+            while (info.FixedFrameInfo.Time <= info.Time) {
+                this.OnFixedUpdateCallback?.invoke(info.FixedFrameInfo)
+                info.FixedFrameInfo.Number++
+                info.FixedFrameInfo.DeltaTime = this.FixedDeltaTime
             }
         }
     }
@@ -83,7 +83,7 @@ public class Engine : AutoCloseable {
 
 public class FrameInfo {
 
-    public val PhysicsFrameInfo: PhysicsFrameInfo = PhysicsFrameInfo()
+    public val FixedFrameInfo: FixedFrameInfo = FixedFrameInfo()
 
     public var Number: Int = 0
         internal set
@@ -107,7 +107,7 @@ public class FrameInfo {
 
 }
 
-public class PhysicsFrameInfo {
+public class FixedFrameInfo {
 
     public var Number: Int = 0
         internal set
@@ -123,7 +123,7 @@ public class PhysicsFrameInfo {
     internal constructor()
 
     public override fun toString(): String {
-        return "PhysicsFrameInfo(Number=${this.Number}, Time=${this.Time})"
+        return "FixedFrameInfo(Number=${this.Number}, Time=${this.Time})"
     }
 
 }

@@ -61,7 +61,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         super.OnClose()
     }
 
-    private fun OnFixedUpdate(info: PhysicsFrameInfo) {
+    private fun OnFixedUpdate(info: FixedFrameInfo) {
         println("OnFixedUpdate: ${info.Time}")
     }
 
