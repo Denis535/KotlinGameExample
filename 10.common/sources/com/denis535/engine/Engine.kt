@@ -65,13 +65,14 @@ public class Engine : AutoCloseable {
         if (info.PhysicsFrameInfo.Number == 0) {
             this.OnFixedUpdateCallback(info.PhysicsFrameInfo)
             info.PhysicsFrameInfo.Number++
+            info.PhysicsFrameInfo.DeltaTime = this.FixedDeltaTime
         } else {
             while (info.PhysicsFrameInfo.Time <= info.Time) {
                 this.OnFixedUpdateCallback(info.PhysicsFrameInfo)
                 info.PhysicsFrameInfo.Number++
+                info.PhysicsFrameInfo.DeltaTime = this.FixedDeltaTime
             }
         }
-        info.PhysicsFrameInfo.DeltaTime = this.FixedDeltaTime
     }
 
     private fun OnUpdate(info: FrameInfo) {
