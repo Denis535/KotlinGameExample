@@ -8,6 +8,7 @@ kotlin {
             this.executable {
                 this.baseName = rootProject.name
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
+                this.linkerOpts("-Wl,-subsystem,windows")
             }
         }
     }
@@ -22,7 +23,6 @@ kotlin {
                 this.implementation(this.project(":common"))
             }
         }
-        val mingwX64Main by getting {
-        }
+        val mingwX64Main by getting {}
     }
 }
