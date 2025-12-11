@@ -33,7 +33,11 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     public constructor() {
         this.MainWindow = MainWindow("Kotlin Game Example")
-        this.Engine = Engine(this.MainWindow, this::OnFixedUpdate, this::OnUpdate, this::OnDraw)
+        this.Engine = Engine(this.MainWindow).apply {
+            this.OnFixedUpdateCallback = this@Program::OnFixedUpdate
+            this.OnUpdateCallback = this@Program::OnUpdate
+            this.OnDrawCallback = this@Program::OnDraw
+        }
         this.Application = Application()
         this.Router = Router()
         this.Screen = Screen()

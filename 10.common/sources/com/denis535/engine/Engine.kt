@@ -6,9 +6,6 @@ import glfw.*
 public class Engine : AutoCloseable {
 
     private val Window: MainWindow
-    private val OnFixedUpdateCallback: ((PhysicsFrameInfo) -> Unit)
-    private val OnUpdateCallback: ((FrameInfo) -> Unit)
-    private val OnDrawCallback: ((FrameInfo) -> Unit)
 
     public var FixedDeltaTime: Double = 1.0 / 20.0
 
@@ -18,21 +15,12 @@ public class Engine : AutoCloseable {
             field = value
         }
 
-    public var Fps: Double = 0.0
-        get() {
-            check(this.IsRunning)
-            return field
-        }
-        private set(value) {
-            check(this.IsRunning)
-            field = value
-        }
+    public var OnFixedUpdateCallback: ((PhysicsFrameInfo) -> Unit)? = null
+    public var OnUpdateCallback: ((FrameInfo) -> Unit)? = null
+    public var OnDrawCallback: ((FrameInfo) -> Unit)? = null
 
-    public constructor(window: MainWindow, onFixedUpdateCallback: ((PhysicsFrameInfo) -> Unit), onUpdateCallback: ((FrameInfo) -> Unit), onDrawCallback: ((FrameInfo) -> Unit)) {
+    public constructor(window: MainWindow) {
         this.Window = window.also { require(!it.IsClosed) }
-        this.OnFixedUpdateCallback = onFixedUpdateCallback
-        this.OnUpdateCallback = onUpdateCallback
-        this.OnDrawCallback = onDrawCallback
     }
 
     public override fun close() {
@@ -42,7 +30,6 @@ public class Engine : AutoCloseable {
 
     public fun Run() {
         this.IsRunning = true
-        this.Fps = 0.0
         val info = FrameInfo()
         while (!this.Window.IsClosingRequested) {
             val startTime = this.Window.Time
@@ -51,7 +38,6 @@ public class Engine : AutoCloseable {
             this.OnUpdate(info)
             this.OnDraw(info)
             this.OnFrameEnd(info, startTime)
-            this.Fps = 1.0 / info.DeltaTime
         }
         this.IsRunning = false
     }
@@ -63,12 +49,12 @@ public class Engine : AutoCloseable {
 
     private fun OnFixedUpdate(info: FrameInfo) {
         if (info.PhysicsFrameInfo.Number == 0) {
-            this.OnFixedUpdateCallback(info.PhysicsFrameInfo)
+            this.OnFixedUpdateCallback?.invoke(info.PhysicsFrameInfo)
             info.PhysicsFrameInfo.Number++
             info.PhysicsFrameInfo.DeltaTime = this.FixedDeltaTime
         } else {
             while (info.PhysicsFrameInfo.Time <= info.Time) {
-                this.OnFixedUpdateCallback(info.PhysicsFrameInfo)
+                this.OnFixedUpdateCallback?.invoke(info.PhysicsFrameInfo)
                 info.PhysicsFrameInfo.Number++
                 info.PhysicsFrameInfo.DeltaTime = this.FixedDeltaTime
             }
@@ -76,11 +62,11 @@ public class Engine : AutoCloseable {
     }
 
     private fun OnUpdate(info: FrameInfo) {
-        this.OnUpdateCallback(info)
+        this.OnUpdateCallback?.invoke(info)
     }
 
     private fun OnDraw(info: FrameInfo) {
-        this.OnDrawCallback(info)
+        this.OnDrawCallback?.invoke(info)
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -107,6 +93,11 @@ public class FrameInfo {
 
     public var DeltaTime: Double = 0.0
         internal set
+
+    public val Fps: Double
+        get() {
+            return if (this.DeltaTime > 0.0) 1.0 / this.DeltaTime else 0.0
+        }
 
     internal constructor()
 
