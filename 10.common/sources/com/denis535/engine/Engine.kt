@@ -6,8 +6,9 @@ import glfw.*
 public class Engine : AutoCloseable {
 
     private val Window: MainWindow
-    private val OnFixedUpdateCallback: ((FixedUpdateInfo) -> Unit)
-    private val OnUpdateCallback: ((UpdateInfo) -> Unit)
+    private val OnFixedUpdateCallback: ((PhysicsFrameInfo) -> Unit)
+    private val OnUpdateCallback: ((FrameInfo) -> Unit)
+    private val OnDrawCallback: ((FrameInfo) -> Unit)
 
     public var IsRunning: Boolean = false
         private set(value) {
@@ -25,10 +26,11 @@ public class Engine : AutoCloseable {
             field = value
         }
 
-    public constructor(window: MainWindow, onFixedUpdateCallback: ((FixedUpdateInfo) -> Unit), onUpdateCallback: ((UpdateInfo) -> Unit)) {
+    public constructor(window: MainWindow, onFixedUpdateCallback: ((PhysicsFrameInfo) -> Unit), onUpdateCallback: ((FrameInfo) -> Unit), onDrawCallback: ((FrameInfo) -> Unit)) {
         this.Window = window.also { require(!it.IsClosed) }
         this.OnFixedUpdateCallback = onFixedUpdateCallback
         this.OnUpdateCallback = onUpdateCallback
+        this.OnDrawCallback = onDrawCallback
     }
 
     public override fun close() {
@@ -39,19 +41,20 @@ public class Engine : AutoCloseable {
     public fun Run(fixedDeltaTime: Double = 1.0 / 20.0) {
         this.IsRunning = true
         this.Fps = 0.0
-        val info = UpdateInfo()
+        val info = FrameInfo()
         while (!this.Window.IsClosingRequested) {
             val deltaTime = run {
                 val startTime = this.Window.Time
-                this.OnFrameBegin()
+                this.OnFrameBegin(info)
                 this.OnFixedUpdate(info)
                 this.OnUpdate(info)
-                this.OnFrameEnd()
+                this.OnDraw(info)
+                this.OnFrameEnd(info)
                 val endTime = this.Window.Time
                 endTime - startTime
             }
             this.Fps = 1.0 / deltaTime
-            info.FixedUpdateInfo.DeltaTime = fixedDeltaTime
+            info.PhysicsFrameInfo.DeltaTime = fixedDeltaTime
             info.Time += deltaTime
             info.DeltaTime = deltaTime
         }
@@ -59,42 +62,41 @@ public class Engine : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun OnFrameBegin() {
+    private fun OnFrameBegin(info: FrameInfo) {
         glfwPollEvents().also { GLFW2.ThrowErrorIfNeeded() }
     }
 
-    private fun OnFixedUpdate(info: UpdateInfo) {
-        if (info.FixedUpdateInfo.Number == 0) {
-            this.OnFixedUpdateCallback(info.FixedUpdateInfo)
-            info.FixedUpdateInfo.Number++
+    private fun OnFixedUpdate(info: FrameInfo) {
+        if (info.PhysicsFrameInfo.Number == 0) {
+            this.OnFixedUpdateCallback(info.PhysicsFrameInfo)
+            info.PhysicsFrameInfo.Number++
         } else {
-            while (info.FixedUpdateInfo.Time <= info.Time) {
-                this.OnFixedUpdateCallback(info.FixedUpdateInfo)
-                info.FixedUpdateInfo.Number++
+            while (info.PhysicsFrameInfo.Time <= info.Time) {
+                this.OnFixedUpdateCallback(info.PhysicsFrameInfo)
+                info.PhysicsFrameInfo.Number++
             }
         }
     }
 
-    private fun OnUpdate(info: UpdateInfo) {
-//        if (GLFW.glfwGetKey(this.Window.NativeWindowPointer, GLFW.GLFW_KEY_LEFT_ALT) == GLFW.GLFW_PRESS || GLFW.glfwGetKey(this.Window.NativeWindowPointer, GLFW.GLFW_KEY_RIGHT_ALT) == GLFW.GLFW_PRESS) {
-//            if (GLFW.glfwGetKey(this.Window.NativeWindowPointer, GLFW.GLFW_KEY_ENTER) == GLFW.GLFW_PRESS) {
-//                this.Window.IsFullscreen = !this.Window.IsFullscreen
-//            }
-//        }
+    private fun OnUpdate(info: FrameInfo) {
         this.OnUpdateCallback(info)
-        info.Number++
+    }
+
+    private fun OnDraw(info: FrameInfo) {
+        this.OnDrawCallback(info)
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun OnFrameEnd() {
+    private fun OnFrameEnd(info: FrameInfo) {
         glfwSwapBuffers(this.Window.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
+        info.Number++
     }
 
 }
 
-public class UpdateInfo {
+public class FrameInfo {
 
-    public val FixedUpdateInfo: FixedUpdateInfo = FixedUpdateInfo()
+    public val PhysicsFrameInfo: PhysicsFrameInfo = PhysicsFrameInfo()
 
     public var Number: Int = 0
         internal set
@@ -108,12 +110,12 @@ public class UpdateInfo {
     internal constructor()
 
     public override fun toString(): String {
-        return "UpdateInfo(Number=${this.Number}, Time=${this.Time})"
+        return "FrameInfo(Number=${this.Number}, Time=${this.Time})"
     }
 
 }
 
-public class FixedUpdateInfo {
+public class PhysicsFrameInfo {
 
     public var Number: Int = 0
         internal set
@@ -129,7 +131,7 @@ public class FixedUpdateInfo {
     internal constructor()
 
     public override fun toString(): String {
-        return "FixedUpdateInfo(Number=${this.Number}, Time=${this.Time})"
+        return "PhysicsFrameInfo(Number=${this.Number}, Time=${this.Time})"
     }
 
 }

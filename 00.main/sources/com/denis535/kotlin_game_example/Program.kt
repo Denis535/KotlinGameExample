@@ -33,7 +33,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     public constructor() {
         this.MainWindow = MainWindow("Kotlin Game Example")
-        this.Engine = Engine(this.MainWindow, this::OnFixedUpdate, this::OnUpdate)
+        this.Engine = Engine(this.MainWindow, this::OnFixedUpdate, this::OnUpdate, this::OnDraw)
         this.Application = Application()
         this.Router = Router()
         this.Screen = Screen()
@@ -57,12 +57,16 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         super.OnClose()
     }
 
-    private fun OnFixedUpdate(info: FixedUpdateInfo) {
+    private fun OnFixedUpdate(info: PhysicsFrameInfo) {
         println("OnFixedUpdate: ${info.Time}")
     }
 
-    private fun OnUpdate(info: UpdateInfo) {
+    private fun OnUpdate(info: FrameInfo) {
         println("OnUpdate: ${info.Time}")
+    }
+
+    private fun OnDraw(info: FrameInfo) {
+        println("OnDraw: ${info.Time}")
     }
 
     public override fun GetDependencyInternal(clazz: KClass<*>, argument: Any?): Any? {
