@@ -10,6 +10,8 @@ public class Engine : AutoCloseable {
     private val OnUpdateCallback: ((FrameInfo) -> Unit)
     private val OnDrawCallback: ((FrameInfo) -> Unit)
 
+    public var FixedDeltaTime: Double = 1.0 / 20.0
+
     public var IsRunning: Boolean = false
         private set(value) {
             check(field != value)
@@ -38,25 +40,18 @@ public class Engine : AutoCloseable {
         check(!this.IsRunning)
     }
 
-    public fun Run(fixedDeltaTime: Double = 1.0 / 20.0) {
+    public fun Run() {
         this.IsRunning = true
         this.Fps = 0.0
         val info = FrameInfo()
         while (!this.Window.IsClosingRequested) {
-            val deltaTime = run {
-                val startTime = this.Window.Time
-                this.OnFrameBegin(info)
-                this.OnFixedUpdate(info)
-                this.OnUpdate(info)
-                this.OnDraw(info)
-                this.OnFrameEnd(info)
-                val endTime = this.Window.Time
-                endTime - startTime
-            }
-            this.Fps = 1.0 / deltaTime
-            info.PhysicsFrameInfo.DeltaTime = fixedDeltaTime
-            info.Time += deltaTime
-            info.DeltaTime = deltaTime
+            val startTime = this.Window.Time
+            this.OnFrameBegin(info)
+            this.OnFixedUpdate(info)
+            this.OnUpdate(info)
+            this.OnDraw(info)
+            this.OnFrameEnd(info, startTime)
+            this.Fps = 1.0 / info.DeltaTime
         }
         this.IsRunning = false
     }
@@ -76,6 +71,7 @@ public class Engine : AutoCloseable {
                 info.PhysicsFrameInfo.Number++
             }
         }
+        info.PhysicsFrameInfo.DeltaTime = this.FixedDeltaTime
     }
 
     private fun OnUpdate(info: FrameInfo) {
@@ -87,9 +83,13 @@ public class Engine : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun OnFrameEnd(info: FrameInfo) {
+    private fun OnFrameEnd(info: FrameInfo, startTime: Double) {
         glfwSwapBuffers(this.Window.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
+        val endTime = this.Window.Time
+        val deltaTime = endTime - startTime
         info.Number++
+        info.Time += deltaTime
+        info.DeltaTime = deltaTime
     }
 
 }
