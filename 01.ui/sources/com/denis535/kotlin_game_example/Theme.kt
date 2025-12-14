@@ -10,8 +10,7 @@ public class Theme : AbstractTheme2<Router, Application> {
     }
 
     protected override fun OnClose() {
-        this.Machine.SetRoot(null, null, null)
-        super.OnClose()
+        this.Machine.Root!!.close()
     }
 
 }

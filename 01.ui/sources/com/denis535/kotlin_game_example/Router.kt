@@ -7,7 +7,6 @@ public class Router : AbstractRouter2<Theme, Screen, Application> {
     public constructor()
 
     protected override fun OnClose() {
-        super.OnClose()
     }
 
 }

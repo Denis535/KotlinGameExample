@@ -9,8 +9,7 @@ public class Screen : AbstractScreen2<Router, Application> {
     }
 
     protected override fun OnClose() {
-        this.Machine.SetRoot(null, null, null)
-        super.OnClose()
+        this.Machine.Root!!.close()
     }
 
 }
@@ -23,7 +22,7 @@ public class RootWidget : AbstractWidget2 {
     }
 
     protected override fun OnClose() {
-        this.NodeMutable.RemoveChildren({ true }, null, null)
+        this.NodeMutable.Children.asReversed().forEach { it.close() }
     }
 
     protected override fun OnActivate(argument: Any?) {
@@ -44,7 +43,7 @@ public class MainWidget : AbstractViewableWidget2 {
     }
 
     protected override fun OnClose() {
-        this.NodeMutable.RemoveChildren({ true }, null, null)
+        this.NodeMutable.Children.asReversed().forEach { it.close() }
     }
 
     protected override fun OnActivate(argument: Any?) {
@@ -65,7 +64,7 @@ public class GameWidget : AbstractViewableWidget2 {
     }
 
     protected override fun OnClose() {
-        this.NodeMutable.RemoveChildren({ true }, null, null)
+        this.NodeMutable.Children.asReversed().forEach { it.close() }
     }
 
     protected override fun OnActivate(argument: Any?) {

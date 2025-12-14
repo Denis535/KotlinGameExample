@@ -12,7 +12,6 @@ public class Application : AbstractApplication2 {
 
     protected override fun OnClose() {
         this.Game.close()
-        super.OnClose()
     }
 
 }
