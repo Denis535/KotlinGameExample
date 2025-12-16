@@ -4,6 +4,7 @@ plugins {
 
 kotlin {
     this.mingwX64()
+    this.linuxX64()
     this.sourceSets {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
@@ -12,7 +13,7 @@ kotlin {
                 this.implementation(this.project(":common"))
             }
         }
-        val mingwX64Main by getting {
-        }
+        val mingwX64Main by getting {}
+        val linuxX64Main by getting {}
     }
 }

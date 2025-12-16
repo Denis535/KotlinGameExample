@@ -12,6 +12,14 @@ kotlin {
             }
         }
     }
+    this.linuxX64 {
+        this.binaries {
+            this.executable {
+                this.baseName = rootProject.name
+                this.entryPoint = "com.denis535.kotlin_game_example.Main"
+            }
+        }
+    }
     this.sourceSets {
         val commonMain by this.getting {
             this.kotlin.srcDir("sources")
@@ -24,5 +32,6 @@ kotlin {
             }
         }
         val mingwX64Main by getting {}
+        val linuxX64Main by getting {}
     }
 }

@@ -33,10 +33,28 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     public constructor() {
         this.MainWindow = MainWindow("Kotlin Game Example")
-        this.Engine = Engine(this.MainWindow).apply {
-            this.OnFixedUpdateCallback = this@Program::OnFixedUpdate
-            this.OnUpdateCallback = this@Program::OnUpdate
-            this.OnDrawCallback = this@Program::OnDraw
+        this.Engine = object : Engine(this.MainWindow) {
+
+            protected override fun OnFrameBegin(info: FrameInfo) {
+                super.OnFrameBegin(info)
+            }
+
+            protected override fun OnFixedUpdate(info: FrameInfo) {
+                this@Program.OnFixedUpdate(info)
+            }
+
+            protected override fun OnUpdate(info: FrameInfo) {
+                this@Program.OnUpdate(info)
+            }
+
+            protected override fun OnDraw(info: FrameInfo) {
+                this@Program.OnDraw(info)
+            }
+
+            protected override fun OnFrameEnd(info: FrameInfo) {
+                super.OnFrameEnd(info)
+            }
+
         }
         this.Application = Application()
         this.Router = Router()
