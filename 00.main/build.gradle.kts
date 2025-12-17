@@ -3,15 +3,15 @@ plugins {
 }
 
 kotlin {
-    this.mingwX64 {
-        this.binaries {
-            this.executable {
-                this.baseName = rootProject.name
-                this.entryPoint = "com.denis535.kotlin_game_example.Main"
-                this.linkerOpts("-Wl,-subsystem,windows")
-            }
-        }
-    }
+//    this.mingwX64 {
+//        this.binaries {
+//            this.executable {
+//                this.baseName = rootProject.name
+//                this.entryPoint = "com.denis535.kotlin_game_example.Main"
+//                this.linkerOpts("-Wl,-subsystem,windows")
+//            }
+//        }
+//    }
     this.linuxX64 {
         this.binaries {
             this.executable {
@@ -31,7 +31,7 @@ kotlin {
                 this.implementation(this.project(":common"))
             }
         }
-        val mingwX64Main by getting {}
+//        val mingwX64Main by getting {}
         val linuxX64Main by getting {}
     }
 }

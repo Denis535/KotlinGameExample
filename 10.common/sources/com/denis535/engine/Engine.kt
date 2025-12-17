@@ -4,10 +4,10 @@ import kotlinx.cinterop.*
 import glfw.*
 
 public abstract class AbstractEngine : AutoCloseable {
+    
+    protected val Window: MainWindow
 
-    private val Window: MainWindow
-
-    public var FixedDeltaTime: Double = 1.0 / 20.0
+    public var FixedDeltaTime: Float = 1.0f / 20.0f
 
     public var IsRunning: Boolean = false
         private set(value) {
@@ -47,7 +47,7 @@ public abstract class AbstractEngine : AutoCloseable {
                 this.OnFrameEnd(info)
             }
             val endTime = this.Window.Time
-            val deltaTime = endTime - startTime
+            val deltaTime = (endTime - startTime).toFloat()
             info.Number++
             info.Time += deltaTime
             info.DeltaTime = deltaTime
@@ -63,7 +63,7 @@ public abstract class AbstractEngine : AutoCloseable {
 
 }
 
-public open class Engine : AbstractEngine {
+public abstract class Engine : AbstractEngine {
 
     public constructor(window: MainWindow) : super(window) {
     }
@@ -78,7 +78,7 @@ public open class Engine : AbstractEngine {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    protected override fun OnFrameEnd(info: FrameInfo, startTime: Double) {
+    protected override fun OnFrameEnd(info: FrameInfo) {
         glfwSwapBuffers(this.Window.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
     }
 
