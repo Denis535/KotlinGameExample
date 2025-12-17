@@ -35,20 +35,28 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.MainWindow = MainWindow("Kotlin Game Example")
         this.Engine = object : Engine(this.MainWindow) {
 
+            protected override fun OnStart() {
+                println("OnStart")
+            }
+
+            protected override fun OnStop() {
+                println("OnStop")
+            }
+
             protected override fun OnFrameBegin(info: FrameInfo) {
                 super.OnFrameBegin(info)
             }
 
             protected override fun OnFixedUpdate(info: FrameInfo) {
-                this@Program.OnFixedUpdate(info)
+                println("OnFixedUpdate: ${info.Time}")
             }
 
             protected override fun OnUpdate(info: FrameInfo) {
-                this@Program.OnUpdate(info)
+                println("OnUpdate: ${info.Time}")
             }
 
             protected override fun OnDraw(info: FrameInfo) {
-                this@Program.OnDraw(info)
+                println("OnDraw: ${info.Time}")
             }
 
             protected override fun OnFrameEnd(info: FrameInfo) {
@@ -77,18 +85,6 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Engine.close()
         this.MainWindow.close()
         super.OnClose()
-    }
-
-    private fun OnFixedUpdate(info: FixedFrameInfo) {
-        println("OnFixedUpdate: ${info.Time}")
-    }
-
-    private fun OnUpdate(info: FrameInfo) {
-        println("OnUpdate: ${info.Time}")
-    }
-
-    private fun OnDraw(info: FrameInfo) {
-        println("OnDraw: ${info.Time}")
     }
 
     public override fun GetDependencyInternal(clazz: KClass<*>, argument: Any?): Any? {

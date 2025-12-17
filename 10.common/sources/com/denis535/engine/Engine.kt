@@ -27,6 +27,7 @@ public abstract class AbstractEngine : AutoCloseable {
     public fun Run() {
         this.IsRunning = true
         val info = FrameInfo()
+        this.OnStart()
         while (!this.Window.IsClosingRequested) {
             val startTime = this.Window.Time
             run {
@@ -52,8 +53,12 @@ public abstract class AbstractEngine : AutoCloseable {
             info.Time += deltaTime
             info.DeltaTime = deltaTime
         }
+        this.OnStop()
         this.IsRunning = false
     }
+
+    protected abstract fun OnStart()
+    protected abstract fun OnStop()
 
     protected abstract fun OnFrameBegin(info: FrameInfo)
     protected abstract fun OnFixedUpdate(info: FrameInfo)
