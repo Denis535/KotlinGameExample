@@ -1,4 +1,4 @@
-package com.denis535.engine
+package com.denis535.game_engine_pro
 
 import kotlinx.cinterop.*
 import glfw.*
@@ -22,14 +22,13 @@ public class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public var Title: String = ""
+    public var Title: String
         get() {
             check(!this.IsClosed)
-            return field
+            error("Not implemented")
         }
         set(value) {
             check(!this.IsClosed)
-            field = value
             glfwSetWindowTitle(this.NativeWindow, value)
         }
 
@@ -109,7 +108,7 @@ public class MainWindow : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public var IsCursorEnabled: Boolean
         get() {
-            return glfwGetInputMode(this@MainWindow.NativeWindow, GLFW_CURSOR) == GLFW_CURSOR_NORMAL
+            return glfwGetInputMode(this@MainWindow.NativeWindow, GLFW_CURSOR) != GLFW_CURSOR_DISABLED
         }
         set(value) {
             glfwSetInputMode(this@MainWindow.NativeWindow, GLFW_CURSOR, if (value) GLFW_CURSOR_NORMAL else GLFW_CURSOR_DISABLED)
@@ -155,7 +154,6 @@ public class MainWindow : AutoCloseable {
             glfwSetWindowPos(window, (videoMode.pointed.width - width) / 2, (videoMode.pointed.height - height) / 2).also { GLFW2.ThrowErrorIfNeeded() }
             window
         }
-        this.Title = title
     }
 
     @OptIn(ExperimentalForeignApi::class)

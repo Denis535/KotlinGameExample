@@ -1,7 +1,7 @@
 package com.denis535.kotlin_game_example
 
 import kotlin.reflect.*
-import com.denis535.engine.*
+import com.denis535.game_engine_pro.*
 import com.denis535.game_framework_pro.*
 
 public fun Main(args: Array<String>) {

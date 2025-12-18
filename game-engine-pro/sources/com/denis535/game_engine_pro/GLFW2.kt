@@ -1,4 +1,4 @@
-package com.denis535.engine
+package com.denis535.game_engine_pro
 
 import kotlinx.cinterop.*
 import glfw.*
