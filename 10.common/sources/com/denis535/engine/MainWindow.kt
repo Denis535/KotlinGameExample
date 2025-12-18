@@ -106,12 +106,14 @@ public class MainWindow : AutoCloseable {
             return glfwGetWindowAttrib(this.NativeWindow, GLFW_FOCUSED) == GLFW_TRUE
         }
 
-//    @OptIn(ExperimentalForeignApi::class)
-//    public var IsCursorVisible
-//        get() {
-//        }
-//        set(value) {
-//        }
+    @OptIn(ExperimentalForeignApi::class)
+    public var IsCursorEnabled: Boolean
+        get() {
+            return glfwGetInputMode(this@MainWindow.NativeWindow, GLFW_CURSOR) == GLFW_CURSOR_NORMAL
+        }
+        set(value) {
+            glfwSetInputMode(this@MainWindow.NativeWindow, GLFW_CURSOR, if (value) GLFW_CURSOR_NORMAL else GLFW_CURSOR_DISABLED)
+        }
 
     @OptIn(ExperimentalForeignApi::class)
     public val Time: Double
@@ -132,7 +134,7 @@ public class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(title: String, width: Int = 1280, height: Int = 720) {
+    public constructor (title: String, width: Int = 1280, height: Int = 720) {
         glfwInit().also { GLFW2.ThrowErrorIfNeeded() }
         this._NativeWindow = run {
             val monitor = glfwGetPrimaryMonitor()!!.also { GLFW2.ThrowErrorIfNeeded() }

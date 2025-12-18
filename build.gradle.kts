@@ -38,7 +38,7 @@ if (System.getProperty("os.name").lowercase().contains("windows")) {
         this.dependsOn(main.tasks.named("linkReleaseExecutableLinuxX64"))
         this.from(main.layout.buildDirectory.dir("bin/linuxX64/releaseExecutable")) {
             include("*.kexe")
-            rename { "Launcher" } // без .exe на Linux
+            rename { "Launcher" }
         }
         this.into(layout.projectDirectory.dir("dist"))
     }
