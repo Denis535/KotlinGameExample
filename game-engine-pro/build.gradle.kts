@@ -3,13 +3,13 @@ plugins {
 }
 
 kotlin {
-//    this.mingwX64 {
-//        this.compilations["main"].cinterops {
-//            val glfw by creating {
-//                this.definitionFile = file("sources/nativeInterop/cinterop/glfw.def")
-//            }
-//        }
-//    }
+    this.mingwX64 {
+        this.compilations["main"].cinterops {
+            val glfw by creating {
+                this.definitionFile = file("sources/nativeInterop/cinterop/glfw.def")
+            }
+        }
+    }
     this.linuxX64 {
         this.compilations["main"].cinterops {
             val glfw by creating {
@@ -22,7 +22,7 @@ kotlin {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
         }
-//        val mingwX64Main by getting {}
+        val mingwX64Main by getting {}
         val linuxX64Main by getting {}
     }
 }

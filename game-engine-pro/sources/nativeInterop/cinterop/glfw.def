@@ -1,8 +1,8 @@
 package = glfw
 headers = GLFW/glfw3.h
 
-compilerOpts.mingw = -IC:/glfw-3.4.bin.WIN64/include
-linkerOpts.mingw = -LC:/glfw-3.4.bin.WIN64/lib-mingw-w64 -lglfw3 -lgdi32 -luser32 -lkernel32 -lshell32 -ladvapi32 -lwinmm -lopenGL32
+compilerOpts.mingw = -I/home/denis/IdeaProjects/KotlinGameExample/game-engine-pro/glfw-3.3.10.bin.WIN64/include
+linkerOpts.mingw = -L/home/denis/IdeaProjects/KotlinGameExample/game-engine-pro/glfw-3.3.10.bin.WIN64/lib-mingw-w64 -lglfw3 -lgdi32 -luser32 -lkernel32 -lshell32 -ladvapi32 -lwinmm -lopenGL32
 
 compilerOpts.linux = -I/usr/include -I/usr/include/x86_64-linux-gnu
 linkerOpts.linux = -L/usr/lib/x86_64-linux-gnu -lglfw
