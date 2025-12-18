@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/02.app" />
             <option value="$PROJECT_DIR$/03.game" />
             <option value="$PROJECT_DIR$/10.common" />
+            <option value="$PROJECT_DIR$/game-engine-pro" />
           </set>
         </option>
       </GradleProjectSettings>
