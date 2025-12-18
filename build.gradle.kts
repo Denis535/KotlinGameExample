@@ -10,7 +10,7 @@ if (System.getProperty("os.name").lowercase().contains("windows")) {
     tasks.register<Exec>("run") {
         val main = project(":main")
         this.dependsOn(main.tasks.named("linkDebugExecutableLinuxX64"))
-        this.commandLine(main.layout.buildDirectory.file("bin/linuxX64/debugExecutable/${rootProject.name}").get())
+        this.commandLine(main.layout.buildDirectory.file("bin/linuxX64/debugExecutable/${rootProject.name}.kexe").get())
     }
 }
 

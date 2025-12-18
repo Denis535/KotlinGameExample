@@ -29,17 +29,19 @@ public fun Main(args: Array<String>) {
 public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     private val MainWindow: MainWindow
-    private val Engine: Engine
+    private val Engine: AbstractEngine2
 
     public constructor() {
         this.MainWindow = MainWindow("Kotlin Game Example")
-        this.Engine = object : Engine(this.MainWindow) {
+        this.Engine = object : AbstractEngine2(this.MainWindow) {
 
             protected override fun OnStart() {
+                super.OnStart()
                 println("OnStart")
             }
 
             protected override fun OnStop() {
+                super.OnStop()
                 println("OnStop")
             }
 

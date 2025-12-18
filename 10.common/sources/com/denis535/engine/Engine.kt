@@ -4,7 +4,7 @@ import kotlinx.cinterop.*
 import glfw.*
 
 public abstract class AbstractEngine : AutoCloseable {
-    
+
     protected val Window: MainWindow
 
     public var FixedDeltaTime: Float = 1.0f / 20.0f
@@ -68,13 +68,22 @@ public abstract class AbstractEngine : AutoCloseable {
 
 }
 
-public abstract class Engine : AbstractEngine {
+public abstract class AbstractEngine2 : AbstractEngine {
 
-    public constructor(window: MainWindow) : super(window) {
-    }
+    public constructor(window: MainWindow) : super(window)
 
     public override fun close() {
         super.close()
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected override fun OnStart() {
+        glfwMakeContextCurrent(this.Window.NativeWindow).also { GLFW2.ThrowErrorIfNeeded() }
+        glfwSwapInterval(1).also { GLFW2.ThrowErrorIfNeeded() }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected override fun OnStop() {
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -84,7 +93,7 @@ public abstract class Engine : AbstractEngine {
 
     @OptIn(ExperimentalForeignApi::class)
     protected override fun OnFrameEnd(info: FrameInfo) {
-        glfwSwapBuffers(this.Window.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
+        glfwSwapBuffers(this.Window.NativeWindow).also { GLFW2.ThrowErrorIfNeeded() }
     }
 
 }

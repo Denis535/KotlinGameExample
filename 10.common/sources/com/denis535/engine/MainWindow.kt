@@ -6,26 +6,19 @@ import glfw.*
 public class MainWindow : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
-    private var _NativeWindowPointer: CPointer<cnames.structs.GLFWwindow>? = null
+    private var _NativeWindow: CPointer<cnames.structs.GLFWwindow>? = null
 
     @OptIn(ExperimentalForeignApi::class)
     public val IsClosed: Boolean
         get() {
-            return this._NativeWindowPointer == null
+            return this._NativeWindow == null
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val NativeWindowPointer: CPointer<cnames.structs.GLFWwindow>
+    public val NativeWindow: CPointer<cnames.structs.GLFWwindow>
         get() {
             check(!this.IsClosed)
-            return this._NativeWindowPointer!!
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val Time: Double
-        get() {
-            check(!this.IsClosed)
-            return glfwGetTime().also { GLFW2.ThrowErrorIfNeeded() }
+            return this._NativeWindow!!
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -37,7 +30,7 @@ public class MainWindow : AutoCloseable {
         set(value) {
             check(!this.IsClosed)
             field = value
-            glfwSetWindowTitle(this.NativeWindowPointer, value)
+            glfwSetWindowTitle(this.NativeWindow, value)
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -47,14 +40,14 @@ public class MainWindow : AutoCloseable {
             return memScoped {
                 val posX = this.alloc<IntVar>()
                 val posY = this.alloc<IntVar>()
-                glfwGetWindowPos(this@MainWindow.NativeWindowPointer, posX.ptr, posY.ptr).also { GLFW2.ThrowErrorIfNeeded() }
+                glfwGetWindowPos(this@MainWindow.NativeWindow, posX.ptr, posY.ptr).also { GLFW2.ThrowErrorIfNeeded() }
                 Pair(posX.value, posY.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
             val (x, y) = value
-            glfwSetWindowPos(this.NativeWindowPointer, x, y).also { GLFW2.ThrowErrorIfNeeded() }
+            glfwSetWindowPos(this.NativeWindow, x, y).also { GLFW2.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -64,42 +57,21 @@ public class MainWindow : AutoCloseable {
             return memScoped {
                 val width = this.alloc<IntVar>()
                 val height = this.alloc<IntVar>()
-                glfwGetWindowSize(this@MainWindow.NativeWindowPointer, width.ptr, height.ptr).also { GLFW2.ThrowErrorIfNeeded() }
+                glfwGetWindowSize(this@MainWindow.NativeWindow, width.ptr, height.ptr).also { GLFW2.ThrowErrorIfNeeded() }
                 Pair(width.value, height.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
             val (width, height) = value
-            glfwSetWindowSize(this.NativeWindowPointer, width, height).also { GLFW2.ThrowErrorIfNeeded() }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val IsVisible: Boolean
-        get() {
-            check(!this.IsClosed)
-            return glfwGetWindowAttrib(this.NativeWindowPointer, GLFW_VISIBLE) == GLFW_TRUE
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val IsIconified: Boolean
-        get() {
-            check(!this.IsClosed)
-            return glfwGetWindowAttrib(this.NativeWindowPointer, GLFW_ICONIFIED) == GLFW_TRUE
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val IsFocused: Boolean
-        get() {
-            check(!this.IsClosed)
-            return glfwGetWindowAttrib(this.NativeWindowPointer, GLFW_FOCUSED) == GLFW_TRUE
+            glfwSetWindowSize(this.NativeWindow, width, height).also { GLFW2.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsFullscreen: Boolean
         get() {
             check(!this.IsClosed)
-            val monitor = glfwGetWindowMonitor(this.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
+            val monitor = glfwGetWindowMonitor(this.NativeWindow).also { GLFW2.ThrowErrorIfNeeded() }
             return monitor != null
         }
         set(value) {
@@ -107,32 +79,65 @@ public class MainWindow : AutoCloseable {
             val monitor = glfwGetPrimaryMonitor().also { GLFW2.ThrowErrorIfNeeded() }
             val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW2.ThrowErrorIfNeeded() }
             if (value) {
-                glfwSetWindowMonitor(this.NativeWindowPointer, monitor, 0, 0, videoMode.pointed.width, videoMode.pointed.height, videoMode.pointed.refreshRate).also { GLFW2.ThrowErrorIfNeeded() }
+                glfwSetWindowMonitor(this.NativeWindow, monitor, 0, 0, videoMode.pointed.width, videoMode.pointed.height, videoMode.pointed.refreshRate).also { GLFW2.ThrowErrorIfNeeded() }
             } else {
-                glfwSetWindowMonitor(this.NativeWindowPointer, null, (videoMode.pointed.width - 1280) / 2, (videoMode.pointed.height - 720) / 2, 1280, 720, 0).also { GLFW2.ThrowErrorIfNeeded() }
+                glfwSetWindowMonitor(this.NativeWindow, null, (videoMode.pointed.width - 1280) / 2, (videoMode.pointed.height - 720) / 2, 1280, 720, 0).also { GLFW2.ThrowErrorIfNeeded() }
             }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val IsVisible: Boolean
+        get() {
+            check(!this.IsClosed)
+            return glfwGetWindowAttrib(this.NativeWindow, GLFW_VISIBLE) == GLFW_TRUE
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val IsIconified: Boolean
+        get() {
+            check(!this.IsClosed)
+            return glfwGetWindowAttrib(this.NativeWindow, GLFW_ICONIFIED) == GLFW_TRUE
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val IsFocused: Boolean
+        get() {
+            check(!this.IsClosed)
+            return glfwGetWindowAttrib(this.NativeWindow, GLFW_FOCUSED) == GLFW_TRUE
+        }
+
+//    @OptIn(ExperimentalForeignApi::class)
+//    public var IsCursorVisible
+//        get() {
+//        }
+//        set(value) {
+//        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val Time: Double
+        get() {
+            check(!this.IsClosed)
+            return glfwGetTime().also { GLFW2.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsClosingRequested: Boolean
         get() {
             check(!this.IsClosed)
-            return glfwWindowShouldClose(this.NativeWindowPointer) == GLFW_TRUE
+            return glfwWindowShouldClose(this.NativeWindow) == GLFW_TRUE
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetWindowShouldClose(this.NativeWindowPointer, if (value) GLFW_TRUE else GLFW_FALSE)
+            glfwSetWindowShouldClose(this.NativeWindow, if (value) GLFW_TRUE else GLFW_FALSE)
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(title: String, width: Int = 1280, height: Int = 720) {
         glfwInit().also { GLFW2.ThrowErrorIfNeeded() }
-        this._NativeWindowPointer = run {
+        this._NativeWindow = run {
             val monitor = glfwGetPrimaryMonitor()!!.also { GLFW2.ThrowErrorIfNeeded() }
             val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW2.ThrowErrorIfNeeded() }
             glfwDefaultWindowHints().also { GLFW2.ThrowErrorIfNeeded() }
-            glfwWindowHint(GLFW_POSITION_X, (videoMode.pointed.width - width) / 2)
-            glfwWindowHint(GLFW_POSITION_Y, (videoMode.pointed.height - height) / 2)
             glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
@@ -144,7 +149,9 @@ public class MainWindow : AutoCloseable {
             glfwWindowHint(GLFW_ALPHA_BITS, 8)
             glfwWindowHint(GLFW_DEPTH_BITS, 24)
             glfwWindowHint(GLFW_STENCIL_BITS, 8)
-            glfwCreateWindow(width, height, title, null, null).also { GLFW2.ThrowErrorIfNeeded() }
+            val window = glfwCreateWindow(width, height, title, null, null).also { GLFW2.ThrowErrorIfNeeded() }
+            glfwSetWindowPos(window, (videoMode.pointed.width - width) / 2, (videoMode.pointed.height - height) / 2).also { GLFW2.ThrowErrorIfNeeded() }
+            window
         }
         this.Title = title
     }
@@ -152,8 +159,8 @@ public class MainWindow : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
-        this._NativeWindowPointer = run {
-            glfwDestroyWindow(this.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
+        this._NativeWindow = run {
+            glfwDestroyWindow(this.NativeWindow).also { GLFW2.ThrowErrorIfNeeded() }
             null
         }
         glfwTerminate()
@@ -162,16 +169,14 @@ public class MainWindow : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public fun Show() {
         check(!this.IsClosed)
-        glfwMakeContextCurrent(this.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
-        glfwSwapInterval(1).also { GLFW2.ThrowErrorIfNeeded() }
-        glfwShowWindow(this.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
-        glfwFocusWindow(this.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
+        glfwShowWindow(this.NativeWindow).also { GLFW2.ThrowErrorIfNeeded() }
+        glfwFocusWindow(this.NativeWindow).also { GLFW2.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public fun Hide() {
         check(!this.IsClosed)
-        glfwHideWindow(this.NativeWindowPointer).also { GLFW2.ThrowErrorIfNeeded() }
+        glfwHideWindow(this.NativeWindow).also { GLFW2.ThrowErrorIfNeeded() }
     }
 
 }
