@@ -2,7 +2,8 @@ package = glfw
 headers = GLFW/glfw3.h
 
 compilerOpts.mingw = -Iglfw-3.3.10.bin.WIN64/include
-linkerOpts.mingw = -Lglfw-3.3.10.bin.WIN64/lib-mingw-w64 -lglfw3
+staticLibraries.mingw = libglfw3.a
+libraryPaths.mingw = glfw-3.3.10.bin.WIN64/lib-mingw-w64
 
 compilerOpts.linux = -I/usr/include -I/usr/include/x86_64-linux-gnu
 linkerOpts.linux = -L/usr/lib/x86_64-linux-gnu -lglfw
