@@ -99,10 +99,12 @@ public class MainWindow : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public var IsCursorEnabled: Boolean
         get() {
-            return glfwGetInputMode(this@MainWindow.NativeWindow, GLFW_CURSOR) != GLFW_CURSOR_DISABLED
+            check(!this.IsClosed)
+            return glfwGetInputMode(this.NativeWindow, GLFW_CURSOR) != GLFW_CURSOR_DISABLED
         }
         set(value) {
-            glfwSetInputMode(this@MainWindow.NativeWindow, GLFW_CURSOR, if (value) GLFW_CURSOR_NORMAL else GLFW_CURSOR_DISABLED)
+            check(!this.IsClosed)
+            glfwSetInputMode(this.NativeWindow, GLFW_CURSOR, if (value) GLFW_CURSOR_NORMAL else GLFW_CURSOR_DISABLED)
         }
 
     @OptIn(ExperimentalForeignApi::class)
