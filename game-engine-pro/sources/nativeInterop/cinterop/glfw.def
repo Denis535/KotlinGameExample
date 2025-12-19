@@ -5,6 +5,6 @@ compilerOpts.mingw = -Iglfw-3.4.bin.WIN64/include
 staticLibraries.mingw = libglfw3.a
 libraryPaths.mingw = glfw-3.4.bin.WIN64/lib-mingw-w64
 
-compilerOpts.linux = -Iglfw-3.4.bin.LINUX64/include -I/usr/include -I/usr/include/x86_64-linux-gnu -I/usr/include/GL
+compilerOpts.linux = -Iglfw-3.4.bin.LINUX64/include -I/usr/include -I/usr/include/x86_64-linux-gnu
 staticLibraries.linux = libglfw3.a
 libraryPaths.linux = glfw-3.4.bin.LINUX64/lib_x11

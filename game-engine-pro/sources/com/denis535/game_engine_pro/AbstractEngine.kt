@@ -1,7 +1,7 @@
 package com.denis535.game_engine_pro
 
-import kotlinx.cinterop.*
 import glfw.*
+import kotlinx.cinterop.*
 
 public abstract class AbstractEngine : AutoCloseable {
 
@@ -78,8 +78,8 @@ public abstract class AbstractEngine2 : AbstractEngine {
 
     @OptIn(ExperimentalForeignApi::class)
     protected override fun OnStart() {
-        glfwMakeContextCurrent(this.Window.NativeWindow).also { GLFW2.ThrowErrorIfNeeded() }
-        glfwSwapInterval(1).also { GLFW2.ThrowErrorIfNeeded() }
+        glfwMakeContextCurrent(this.Window.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSwapInterval(1).also { GLFW.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -88,12 +88,12 @@ public abstract class AbstractEngine2 : AbstractEngine {
 
     @OptIn(ExperimentalForeignApi::class)
     protected override fun OnFrameBegin(info: FrameInfo) {
-        glfwPollEvents().also { GLFW2.ThrowErrorIfNeeded() }
+        glfwPollEvents().also { GLFW.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     protected override fun OnFrameEnd(info: FrameInfo) {
-        glfwSwapBuffers(this.Window.NativeWindow).also { GLFW2.ThrowErrorIfNeeded() }
+        glfwSwapBuffers(this.Window.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
     }
 
 }

@@ -1,9 +1,8 @@
-package com.denis535.game_engine_pro
+package glfw
 
 import kotlinx.cinterop.*
-import glfw.*
 
-internal object GLFW2 {
+public object GLFW {
 
     public fun ThrowErrorIfNeeded() {
         val (error, desc) = this.GetError()
@@ -22,7 +21,7 @@ internal object GLFW2 {
         return memScoped {
             val descPtr = this.alloc<CPointerVar<ByteVar>>()
             val error = glfwGetError(descPtr.ptr)
-            val description = descPtr.value?.toKString()  // если указатель != null → строка
+            val description = descPtr.value?.toKString()
             Pair(error, description)
         }
     }
