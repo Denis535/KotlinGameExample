@@ -28,12 +28,12 @@ public fun Main(args: Array<String>) {
 
 public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
-    private val MainWindow: MainWindow
+    private val Window: MainWindow
     private val Engine: AbstractEngine2
 
     public constructor() {
-        this.MainWindow = MainWindow("Kotlin Game Example")
-        this.Engine = object : AbstractEngine2(this.MainWindow) {
+        this.Window = MainWindow("Kotlin Game Example")
+        this.Engine = object : AbstractEngine2(this.Window) {
 
             protected override fun OnStart() {
                 super.OnStart()
@@ -71,21 +71,21 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Screen = Screen()
         this.Theme = Theme()
         run {
-            this.MainWindow.Show()
+            this.Window.Show()
             this.Engine.Run()
         }
     }
 
     protected override fun OnClose() {
         run {
-            this.MainWindow.Hide()
+            this.Window.Hide()
         }
         this.Theme!!.close()
         this.Screen!!.close()
         this.Router!!.close()
         this.Application!!.close()
         this.Engine.close()
-        this.MainWindow.close()
+        this.Window.close()
         super.OnClose()
     }
 
@@ -97,6 +97,16 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Application?.Game?.let { game ->
             if (clazz.isInstance(game)) {
                 return game
+            }
+        }
+        this.Window.let { window ->
+            if (clazz.isInstance(window)) {
+                return window
+            }
+        }
+        this.Engine.let { engine ->
+            if (clazz.isInstance(engine)) {
+                return engine
             }
         }
         return null
