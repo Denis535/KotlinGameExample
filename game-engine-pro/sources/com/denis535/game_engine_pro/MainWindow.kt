@@ -23,7 +23,7 @@ public class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val IsFullscreen: Boolean
+    public val IsFullScreen: Boolean
         get() {
             check(!this.IsClosed)
             val monitor = glfwGetWindowMonitor(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
@@ -207,7 +207,7 @@ public class MainWindow : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun SetFullscreenMode() {
+    public fun SetFullScreenMode() {
         check(!this.IsClosed)
         val monitor = glfwGetPrimaryMonitor().also { GLFW.ThrowErrorIfNeeded() }
         val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }

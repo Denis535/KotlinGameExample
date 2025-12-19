@@ -2,8 +2,7 @@
 
 package cnames.structs
 
-import kotlinx.cinterop.COpaque
-import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.*
 
 typealias GLFWmonitor = COpaque
 typealias GLFWwindow = COpaque
