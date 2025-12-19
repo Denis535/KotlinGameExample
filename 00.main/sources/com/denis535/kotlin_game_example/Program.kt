@@ -41,8 +41,8 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             }
 
             protected override fun OnStop() {
-                super.OnStop()
                 println("OnStop")
+                super.OnStop()
             }
 
             protected override fun OnFrameBegin(info: FrameInfo) {
