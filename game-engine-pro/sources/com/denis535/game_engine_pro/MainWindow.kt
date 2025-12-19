@@ -2,7 +2,7 @@ package com.denis535.game_engine_pro
 
 import glfw.*
 import kotlinx.cinterop.*
-import kotlin.experimental.ExperimentalNativeApi
+import kotlin.experimental.*
 
 public class MainWindow : AutoCloseable {
 
