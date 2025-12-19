@@ -7,8 +7,6 @@ public abstract class AbstractEngine : AutoCloseable {
 
     protected val Window: MainWindow
 
-    public var FixedDeltaTime: Float = 1.0f / 20.0f
-
     public var IsRunning: Boolean = false
         private set(value) {
             check(field != value)
@@ -24,7 +22,7 @@ public abstract class AbstractEngine : AutoCloseable {
         check(!this.IsRunning)
     }
 
-    public fun Run() {
+    public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
         this.IsRunning = true
         val info = FrameInfo()
         this.OnStart()
@@ -35,12 +33,12 @@ public abstract class AbstractEngine : AutoCloseable {
                 if (info.FixedFrameInfo.Number == 0) {
                     this.OnFixedUpdate(info)
                     info.FixedFrameInfo.Number++
-                    info.FixedFrameInfo.DeltaTime = this.FixedDeltaTime
+                    info.FixedFrameInfo.DeltaTime = fixedDeltaTime
                 } else {
                     while (info.FixedFrameInfo.Time <= info.Time) {
                         this.OnFixedUpdate(info)
                         info.FixedFrameInfo.Number++
-                        info.FixedFrameInfo.DeltaTime = this.FixedDeltaTime
+                        info.FixedFrameInfo.DeltaTime = fixedDeltaTime
                     }
                 }
                 this.OnUpdate(info)
