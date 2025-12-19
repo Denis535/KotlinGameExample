@@ -4,7 +4,7 @@ import glfw.*
 import kotlinx.cinterop.*
 import kotlin.experimental.*
 
-public class MainWindow : AutoCloseable {
+public open class MainWindow : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     private var _NativeWindow: CPointer<cnames.structs.GLFWwindow>? = null
@@ -194,14 +194,14 @@ public class MainWindow : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Show() {
+    public open fun Show() {
         check(!this.IsClosed)
         glfwShowWindow(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
         glfwFocusWindow(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Hide() {
+    public open fun Hide() {
         check(!this.IsClosed)
         glfwHideWindow(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
     }
