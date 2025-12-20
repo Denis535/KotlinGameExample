@@ -3,7 +3,7 @@ package com.denis535.game_engine_pro
 import glfw.*
 import kotlinx.cinterop.*
 
-public abstract class AbstractEngine : AutoCloseable {
+public abstract class Engine : AutoCloseable {
 
     protected val Window: MainWindow
 
@@ -66,7 +66,7 @@ public abstract class AbstractEngine : AutoCloseable {
 
 }
 
-public abstract class AbstractEngine2 : AbstractEngine {
+public abstract class Engine2 : Engine {
 
     public constructor(window: MainWindow) : super(window)
 
