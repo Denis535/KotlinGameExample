@@ -34,19 +34,25 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
     public constructor() {
         this.Window = object : MainWindow2("Kotlin Game Example") {
 
-            protected override fun OnMouseEnter() {
+            protected override fun OnMouseCursorEnter() {
             }
 
-            protected override fun OnMouseLeave() {
+            protected override fun OnMouseCursorLeave() {
             }
 
-            protected override fun OnMousePosition(posX: Double, posY: Double) {
+            protected override fun OnMouseCursorMove(posX: Double, posY: Double) {
             }
 
-            protected override fun OnMouseButton(button: Int, action: Int, mods: Int) {
+            protected override fun OnMouseButtonPress(button: MouseButton) {
             }
 
-            protected override fun OnMouseScroll(deltaX: Double, deltaY: Double) {
+            protected override fun OnMouseButtonRepeat(button: MouseButton) {
+            }
+
+            protected override fun OnMouseButtonRelease(button: MouseButton) {
+            }
+
+            protected override fun OnMouseWheelScroll(deltaX: Double, deltaY: Double) {
             }
 
         }

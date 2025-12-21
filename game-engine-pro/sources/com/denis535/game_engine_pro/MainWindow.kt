@@ -24,6 +24,12 @@ public abstract class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public val Time: Double
+        get() {
+            return glfwGetTime().also { GLFW.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public val IsFullScreen: Boolean
         get() {
             check(!this.IsClosed)
@@ -224,83 +230,5 @@ public abstract class MainWindow : AutoCloseable {
         val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
         glfwSetWindowMonitor(this.NativeWindow, null, (videoMode.pointed.width - width) / 2, (videoMode.pointed.height - height) / 2, width, height, videoMode.pointed.refreshRate).also { GLFW.ThrowErrorIfNeeded() }
     }
-
-}
-
-public abstract class MainWindow2 : MainWindow {
-
-    @OptIn(ExperimentalForeignApi::class)
-    private val OnMouseEnterCallback = staticCFunction { window: CPointer<GLFWwindow>?, isEntered: Int ->
-        if (isEntered == GLFW_TRUE) {
-            val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-            val thisRef = thisPtr.asStableRef<MainWindow2>()
-            thisRef.get().OnMouseEnter()
-        } else {
-            val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-            val thisRef = thisPtr.asStableRef<MainWindow2>()
-            thisRef.get().OnMouseLeave()
-        }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private val OnMousePositionCallback = staticCFunction { window: CPointer<GLFWwindow>?, posX: Double, posY: Double ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-        val thisRef = thisPtr.asStableRef<MainWindow2>()
-        thisRef.get().OnMousePosition(posX, posY)
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private val OnMouseButtonCallback = staticCFunction { window: CPointer<GLFWwindow>?, button: Int, action: Int, mods: Int ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-        val thisRef = thisPtr.asStableRef<MainWindow2>()
-        thisRef.get().OnMouseButton(button, action, mods)
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private val OnMouseScrollCallback = staticCFunction { window: CPointer<GLFWwindow>?, deltaX: Double, deltaY: Double ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-        val thisRef = thisPtr.asStableRef<MainWindow2>()
-        thisRef.get().OnMouseScroll(deltaX, deltaY)
-    }
-
-    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-    public constructor(title: String) : super(title) {
-        glfwSetCursorEnterCallback(this.NativeWindow, this.OnMouseEnterCallback)
-        glfwSetCursorPosCallback(this.NativeWindow, this.OnMousePositionCallback)
-        glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonCallback)
-        glfwSetScrollCallback(this.NativeWindow, this.OnMouseScrollCallback)
-    }
-
-    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-    public constructor(title: String, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) : super(title, width, height, isResizable) {
-        glfwSetCursorEnterCallback(this.NativeWindow, this.OnMouseEnterCallback)
-        glfwSetCursorPosCallback(this.NativeWindow, this.OnMousePositionCallback)
-        glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonCallback)
-        glfwSetScrollCallback(this.NativeWindow, this.OnMouseScrollCallback)
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun close() {
-        glfwSetCursorEnterCallback(this.NativeWindow, null)
-        glfwSetCursorPosCallback(this.NativeWindow, null)
-        glfwSetMouseButtonCallback(this.NativeWindow, null)
-        glfwSetScrollCallback(this.NativeWindow, null)
-        super.close()
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseEnter()
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseLeave()
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMousePosition(posX: Double, posY: Double)
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseButton(button: Int, action: Int, mods: Int)
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseScroll(deltaX: Double, deltaY: Double)
 
 }
