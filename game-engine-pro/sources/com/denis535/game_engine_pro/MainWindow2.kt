@@ -1,6 +1,5 @@
 package com.denis535.game_engine_pro
 
-import glfw.*
 import kotlinx.cinterop.*
 
 public abstract class MainWindow2 : MainWindow {

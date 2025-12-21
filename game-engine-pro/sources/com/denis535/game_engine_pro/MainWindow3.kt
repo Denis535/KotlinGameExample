@@ -3,6 +3,7 @@ package com.denis535.game_engine_pro
 import cnames.structs.*
 import glfw.*
 import kotlinx.cinterop.*
+import kotlin.experimental.*
 
 public abstract class MainWindow3 : MainWindow2 {
 
@@ -49,6 +50,29 @@ public abstract class MainWindow3 : MainWindow2 {
         thisRef.get().OnMouseWheelScroll(deltaX, deltaY)
     }
 
+    @OptIn(ExperimentalForeignApi::class)
+    private val OnKeyCallback = staticCFunction { window: CPointer<GLFWwindow>?, key: Int, scancode: Int, action: Int, mods: Int ->
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisRef = thisPtr.asStableRef<MainWindow3>()
+        if (action == GLFW_PRESS) {
+            val key2 = Key.Create(key)
+            if (key2 != null) thisRef.get().OnKeyPress(key2)
+        } else if (action == GLFW_REPEAT) {
+            val key2 = Key.Create(key)
+            if (key2 != null) thisRef.get().OnKeyRepeat(key2)
+        } else if (action == GLFW_RELEASE) {
+            val key2 = Key.Create(key)
+            if (key2 != null) thisRef.get().OnKeyRelease(key2)
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+    private val OnCharCallback = staticCFunction { window: CPointer<GLFWwindow>?, codepoint: UInt ->
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisRef = thisPtr.asStableRef<MainWindow3>()
+        thisRef.get().OnCharInput(Char.toChars(codepoint.toInt()).concatToString())
+    }
+
     public constructor(title: String) : super(title)
     public constructor(title: String, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) : super(title, width, height, isResizable)
 
@@ -69,12 +93,16 @@ public abstract class MainWindow3 : MainWindow2 {
 
     @OptIn(ExperimentalForeignApi::class)
     protected override fun OnStart() {
+        glfwMakeContextCurrent(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSwapInterval(1).also { GLFW.ThrowErrorIfNeeded() }
+
         glfwSetCursorEnterCallback(this.NativeWindow, this.OnMouseCursorEnterCallback).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetCursorPosCallback(this.NativeWindow, this.OnMouseCursorMoveCallback).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonActionCallback).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetScrollCallback(this.NativeWindow, this.OnMouseWheelScrollCallback).also { GLFW.ThrowErrorIfNeeded() }
-        glfwMakeContextCurrent(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSwapInterval(1).also { GLFW.ThrowErrorIfNeeded() }
+
+        glfwSetKeyCallback(this.NativeWindow, this.OnKeyCallback).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSetCharCallback(this.NativeWindow, this.OnCharCallback).also { GLFW.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -83,6 +111,9 @@ public abstract class MainWindow3 : MainWindow2 {
         glfwSetCursorPosCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetMouseButtonCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetScrollCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
+
+        glfwSetKeyCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSetCharCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -115,6 +146,18 @@ public abstract class MainWindow3 : MainWindow2 {
 
     @OptIn(ExperimentalForeignApi::class)
     protected abstract fun OnMouseWheelScroll(deltaX: Double, deltaY: Double)
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected abstract fun OnKeyPress(key: Key)
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected abstract fun OnKeyRepeat(key: Key)
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected abstract fun OnKeyRelease(key: Key)
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected abstract fun OnCharInput(char: String)
 
 }
 
@@ -223,30 +266,6 @@ public enum class Key(val Value: Int) {
     Digit_9(GLFW_KEY_9),
 
     @OptIn(ExperimentalForeignApi::class)
-    Left_Alt(GLFW_KEY_LEFT_ALT),
-    @OptIn(ExperimentalForeignApi::class)
-    Left_Control(GLFW_KEY_LEFT_CONTROL),
-    @OptIn(ExperimentalForeignApi::class)
-    Left_Shift(GLFW_KEY_LEFT_SHIFT),
-    @OptIn(ExperimentalForeignApi::class)
-    Space(GLFW_KEY_SPACE),
-    @OptIn(ExperimentalForeignApi::class)
-    Enter(GLFW_KEY_ENTER),
-    @OptIn(ExperimentalForeignApi::class)
-    Tab(GLFW_KEY_TAB),
-    @OptIn(ExperimentalForeignApi::class)
-    Escape(GLFW_KEY_ESCAPE),
-
-    @OptIn(ExperimentalForeignApi::class)
-    Up(GLFW_KEY_UP),
-    @OptIn(ExperimentalForeignApi::class)
-    Down(GLFW_KEY_DOWN),
-    @OptIn(ExperimentalForeignApi::class)
-    Left(GLFW_KEY_LEFT),
-    @OptIn(ExperimentalForeignApi::class)
-    Right(GLFW_KEY_RIGHT),
-
-    @OptIn(ExperimentalForeignApi::class)
     Number_0(GLFW_KEY_KP_0),
     @OptIn(ExperimentalForeignApi::class)
     Number_1(GLFW_KEY_KP_1),
@@ -266,6 +285,30 @@ public enum class Key(val Value: Int) {
     Number_8(GLFW_KEY_KP_8),
     @OptIn(ExperimentalForeignApi::class)
     Number_9(GLFW_KEY_KP_9),
+
+    @OptIn(ExperimentalForeignApi::class)
+    Up(GLFW_KEY_UP),
+    @OptIn(ExperimentalForeignApi::class)
+    Down(GLFW_KEY_DOWN),
+    @OptIn(ExperimentalForeignApi::class)
+    Left(GLFW_KEY_LEFT),
+    @OptIn(ExperimentalForeignApi::class)
+    Right(GLFW_KEY_RIGHT),
+
+    @OptIn(ExperimentalForeignApi::class)
+    Left_Alt(GLFW_KEY_LEFT_ALT),
+    @OptIn(ExperimentalForeignApi::class)
+    Left_Control(GLFW_KEY_LEFT_CONTROL),
+    @OptIn(ExperimentalForeignApi::class)
+    Left_Shift(GLFW_KEY_LEFT_SHIFT),
+    @OptIn(ExperimentalForeignApi::class)
+    Space(GLFW_KEY_SPACE),
+    @OptIn(ExperimentalForeignApi::class)
+    Enter(GLFW_KEY_ENTER),
+    @OptIn(ExperimentalForeignApi::class)
+    Tab(GLFW_KEY_TAB),
+    @OptIn(ExperimentalForeignApi::class)
+    Escape(GLFW_KEY_ESCAPE),
 
     @OptIn(ExperimentalForeignApi::class)
     F1(GLFW_KEY_F1),

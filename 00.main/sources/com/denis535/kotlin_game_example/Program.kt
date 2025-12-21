@@ -35,11 +35,11 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
             protected override fun OnStart() {
                 super.OnStart()
-                println("OnStart")
+//                println("OnStart")
             }
 
             protected override fun OnStop() {
-                println("OnStop")
+//                println("OnStop")
                 super.OnStop()
             }
 
@@ -82,6 +82,18 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             }
 
             protected override fun OnMouseWheelScroll(deltaX: Double, deltaY: Double) {
+            }
+
+            protected override fun OnKeyPress(key: Key) {
+            }
+
+            protected override fun OnKeyRepeat(key: Key) {
+            }
+
+            protected override fun OnKeyRelease(key: Key) {
+            }
+
+            protected override fun OnCharInput(char: String) {
             }
 
         }
