@@ -1,13 +1,14 @@
 package com.denis535.game_engine_pro
 
+import cnames.structs.*
 import glfw.*
 import kotlinx.cinterop.*
 import kotlin.experimental.*
 
-public open class MainWindow : AutoCloseable {
+public abstract class MainWindow : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
-    private var _NativeWindow: CPointer<cnames.structs.GLFWwindow>? = null
+    private var _NativeWindow: CPointer<GLFWwindow>? = null
 
     @OptIn(ExperimentalForeignApi::class)
     public val IsClosed: Boolean
@@ -16,7 +17,7 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val NativeWindow: CPointer<cnames.structs.GLFWwindow>
+    public val NativeWindow: CPointer<GLFWwindow>
         get() {
             check(!this.IsClosed)
             return this._NativeWindow!!
@@ -108,13 +109,6 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val Time: Double
-        get() {
-            check(!this.IsClosed)
-            return glfwGetTime().also { GLFW.ThrowErrorIfNeeded() }
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
     public var IsClosingRequested: Boolean
         get() {
             check(!this.IsClosed)
@@ -126,70 +120,79 @@ public open class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-    public constructor (title: String) {
-        glfwInit().also { GLFW.ThrowErrorIfNeeded() }
-        this._NativeWindow = run {
-            val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
-            val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
-            glfwDefaultWindowHints().also { GLFW.ThrowErrorIfNeeded() }
-            // OpenGL
-            glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
-            if (Platform.isDebugBinary) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
-            // Frame
-            glfwWindowHint(GLFW_RED_BITS, 8)
-            glfwWindowHint(GLFW_GREEN_BITS, 8)
-            glfwWindowHint(GLFW_BLUE_BITS, 8)
-            glfwWindowHint(GLFW_ALPHA_BITS, 8)
-            glfwWindowHint(GLFW_DEPTH_BITS, 24)
-            glfwWindowHint(GLFW_STENCIL_BITS, 8)
-            // Window
-            glfwWindowHint(GLFW_POSITION_X, 0)
-            glfwWindowHint(GLFW_POSITION_Y, 0)
-            glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
-            glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
-            glfwCreateWindow(videoMode.pointed.width, videoMode.pointed.height, title, monitor, null).also { GLFW.ThrowErrorIfNeeded() }
+    public constructor(nativeWindowProvider: () -> CPointer<GLFWwindow>) {
+        glfwInit()
+        this._NativeWindow = nativeWindowProvider()
+        run {
+            val thisRef = StableRef.create(this)
+            val thisPtr = thisRef.asCPointer()
+            glfwSetWindowUserPointer(this.NativeWindow, thisPtr).also { GLFW.ThrowErrorIfNeeded() }
         }
     }
 
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-    public constructor (title: String, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) {
-        glfwInit().also { GLFW.ThrowErrorIfNeeded() }
-        this._NativeWindow = run {
-            val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
-            val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
-            glfwDefaultWindowHints().also { GLFW.ThrowErrorIfNeeded() }
-            // OpenGL
-            glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
-            if (Platform.isDebugBinary) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
-            // Frame
-            glfwWindowHint(GLFW_RED_BITS, 8)
-            glfwWindowHint(GLFW_GREEN_BITS, 8)
-            glfwWindowHint(GLFW_BLUE_BITS, 8)
-            glfwWindowHint(GLFW_ALPHA_BITS, 8)
-            glfwWindowHint(GLFW_DEPTH_BITS, 24)
-            glfwWindowHint(GLFW_STENCIL_BITS, 8)
-            // Window
-            glfwWindowHint(GLFW_POSITION_X, (videoMode.pointed.width - width) / 2)
-            glfwWindowHint(GLFW_POSITION_Y, (videoMode.pointed.height - height) / 2)
-            glfwWindowHint(GLFW_RESIZABLE, if (isResizable) GLFW_TRUE else GLFW_FALSE)
-            glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
-            glfwCreateWindow(width, height, title, null, null).also { GLFW.ThrowErrorIfNeeded() }
-        }
-    }
+    public constructor(title: String) : this({
+        val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
+        val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
+        glfwDefaultWindowHints().also { GLFW.ThrowErrorIfNeeded() }
+        // OpenGL
+        glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+        if (Platform.isDebugBinary) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
+        // Frame
+        glfwWindowHint(GLFW_RED_BITS, 8)
+        glfwWindowHint(GLFW_GREEN_BITS, 8)
+        glfwWindowHint(GLFW_BLUE_BITS, 8)
+        glfwWindowHint(GLFW_ALPHA_BITS, 8)
+        glfwWindowHint(GLFW_DEPTH_BITS, 24)
+        glfwWindowHint(GLFW_STENCIL_BITS, 8)
+        // Window
+        glfwWindowHint(GLFW_POSITION_X, 0)
+        glfwWindowHint(GLFW_POSITION_Y, 0)
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
+        glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
+        glfwCreateWindow(videoMode.pointed.width, videoMode.pointed.height, title, monitor, null)!!.also { GLFW.ThrowErrorIfNeeded() }
+    })
+
+    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+    public constructor(title: String, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) : this({
+        val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
+        val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
+        glfwDefaultWindowHints().also { GLFW.ThrowErrorIfNeeded() }
+        // OpenGL
+        glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+        if (Platform.isDebugBinary) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
+        // Frame
+        glfwWindowHint(GLFW_RED_BITS, 8)
+        glfwWindowHint(GLFW_GREEN_BITS, 8)
+        glfwWindowHint(GLFW_BLUE_BITS, 8)
+        glfwWindowHint(GLFW_ALPHA_BITS, 8)
+        glfwWindowHint(GLFW_DEPTH_BITS, 24)
+        glfwWindowHint(GLFW_STENCIL_BITS, 8)
+        // Window
+        glfwWindowHint(GLFW_POSITION_X, (videoMode.pointed.width - width) / 2)
+        glfwWindowHint(GLFW_POSITION_Y, (videoMode.pointed.height - height) / 2)
+        glfwWindowHint(GLFW_RESIZABLE, if (isResizable) GLFW_TRUE else GLFW_FALSE)
+        glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
+        glfwCreateWindow(width, height, title, null, null)!!.also { GLFW.ThrowErrorIfNeeded() }
+    })
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
-        this._NativeWindow = run {
-            glfwDestroyWindow(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
-            null
+        run {
+            val thisPtr = glfwGetWindowUserPointer(this.NativeWindow)!!.also { GLFW.ThrowErrorIfNeeded() }
+            val thisRef = thisPtr.asStableRef<MainWindow>()
+            thisRef.dispose()
+            glfwSetWindowUserPointer(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
         }
+        glfwDestroyWindow(this.NativeWindow)
+        this._NativeWindow = null
         glfwTerminate()
     }
 
@@ -221,5 +224,83 @@ public open class MainWindow : AutoCloseable {
         val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
         glfwSetWindowMonitor(this.NativeWindow, null, (videoMode.pointed.width - width) / 2, (videoMode.pointed.height - height) / 2, width, height, videoMode.pointed.refreshRate).also { GLFW.ThrowErrorIfNeeded() }
     }
+
+}
+
+public abstract class MainWindow2 : MainWindow {
+
+    @OptIn(ExperimentalForeignApi::class)
+    private val OnMouseEnterCallback = staticCFunction { window: CPointer<GLFWwindow>?, isEntered: Int ->
+        if (isEntered == GLFW_TRUE) {
+            val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+            val thisRef = thisPtr.asStableRef<MainWindow2>()
+            thisRef.get().OnMouseEnter()
+        } else {
+            val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+            val thisRef = thisPtr.asStableRef<MainWindow2>()
+            thisRef.get().OnMouseLeave()
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private val OnMousePositionCallback = staticCFunction { window: CPointer<GLFWwindow>?, posX: Double, posY: Double ->
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisRef = thisPtr.asStableRef<MainWindow2>()
+        thisRef.get().OnMousePosition(posX, posY)
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private val OnMouseButtonCallback = staticCFunction { window: CPointer<GLFWwindow>?, button: Int, action: Int, mods: Int ->
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisRef = thisPtr.asStableRef<MainWindow2>()
+        thisRef.get().OnMouseButton(button, action, mods)
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private val OnMouseScrollCallback = staticCFunction { window: CPointer<GLFWwindow>?, deltaX: Double, deltaY: Double ->
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisRef = thisPtr.asStableRef<MainWindow2>()
+        thisRef.get().OnMouseScroll(deltaX, deltaY)
+    }
+
+    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+    public constructor(title: String) : super(title) {
+        glfwSetCursorEnterCallback(this.NativeWindow, this.OnMouseEnterCallback)
+        glfwSetCursorPosCallback(this.NativeWindow, this.OnMousePositionCallback)
+        glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonCallback)
+        glfwSetScrollCallback(this.NativeWindow, this.OnMouseScrollCallback)
+    }
+
+    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+    public constructor(title: String, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) : super(title, width, height, isResizable) {
+        glfwSetCursorEnterCallback(this.NativeWindow, this.OnMouseEnterCallback)
+        glfwSetCursorPosCallback(this.NativeWindow, this.OnMousePositionCallback)
+        glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonCallback)
+        glfwSetScrollCallback(this.NativeWindow, this.OnMouseScrollCallback)
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public override fun close() {
+        glfwSetCursorEnterCallback(this.NativeWindow, null)
+        glfwSetCursorPosCallback(this.NativeWindow, null)
+        glfwSetMouseButtonCallback(this.NativeWindow, null)
+        glfwSetScrollCallback(this.NativeWindow, null)
+        super.close()
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected abstract fun OnMouseEnter()
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected abstract fun OnMouseLeave()
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected abstract fun OnMousePosition(posX: Double, posY: Double)
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected abstract fun OnMouseButton(button: Int, action: Int, mods: Int)
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected abstract fun OnMouseScroll(deltaX: Double, deltaY: Double)
 
 }

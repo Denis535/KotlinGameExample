@@ -7,6 +7,12 @@ public abstract class Engine : AutoCloseable {
 
     protected val Window: MainWindow
 
+    @OptIn(ExperimentalForeignApi::class)
+    public val Time: Double
+        get() {
+            return glfwGetTime().also { GLFW.ThrowErrorIfNeeded() }
+        }
+
     public var IsRunning: Boolean = false
         private set(value) {
             check(field != value)
@@ -27,7 +33,7 @@ public abstract class Engine : AutoCloseable {
         val info = FrameInfo()
         this.OnStart()
         while (!this.Window.IsClosingRequested) {
-            val startTime = this.Window.Time
+            val startTime = this.Time
             run {
                 this.OnFrameBegin(info)
                 if (info.FixedFrameInfo.Number == 0) {
@@ -45,7 +51,7 @@ public abstract class Engine : AutoCloseable {
                 this.OnDraw(info)
                 this.OnFrameEnd(info)
             }
-            val endTime = this.Window.Time
+            val endTime = this.Time
             val deltaTime = (endTime - startTime).toFloat()
             info.Number++
             info.Time += deltaTime

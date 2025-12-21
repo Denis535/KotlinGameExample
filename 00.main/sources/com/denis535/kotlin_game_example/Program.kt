@@ -28,11 +28,28 @@ public fun Main(args: Array<String>) {
 
 public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
-    private val Window: MainWindow
+    private val Window: MainWindow2
     private val Engine: Engine2
 
     public constructor() {
-        this.Window = MainWindow("Kotlin Game Example")
+        this.Window = object : MainWindow2("Kotlin Game Example") {
+
+            protected override fun OnMouseEnter() {
+            }
+
+            protected override fun OnMouseLeave() {
+            }
+
+            protected override fun OnMousePosition(posX: Double, posY: Double) {
+            }
+
+            protected override fun OnMouseButton(button: Int, action: Int, mods: Int) {
+            }
+
+            protected override fun OnMouseScroll(deltaX: Double, deltaY: Double) {
+            }
+
+        }
         this.Engine = object : Engine2(this.Window) {
 
             protected override fun OnStart() {
