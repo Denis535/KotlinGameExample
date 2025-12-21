@@ -28,35 +28,10 @@ public fun Main(args: Array<String>) {
 
 public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
-    private val Window: MainWindow2
-    private val Engine: Engine2
+    private val Window: MainWindow3
 
     public constructor() {
-        this.Window = object : MainWindow2("Kotlin Game Example") {
-
-            protected override fun OnMouseCursorEnter() {
-            }
-
-            protected override fun OnMouseCursorLeave() {
-            }
-
-            protected override fun OnMouseCursorMove(posX: Double, posY: Double) {
-            }
-
-            protected override fun OnMouseButtonPress(button: MouseButton) {
-            }
-
-            protected override fun OnMouseButtonRepeat(button: MouseButton) {
-            }
-
-            protected override fun OnMouseButtonRelease(button: MouseButton) {
-            }
-
-            protected override fun OnMouseWheelScroll(deltaX: Double, deltaY: Double) {
-            }
-
-        }
-        this.Engine = object : Engine2(this.Window) {
+        this.Window = object : MainWindow3("Kotlin Game Example") {
 
             protected override fun OnStart() {
                 super.OnStart()
@@ -88,6 +63,27 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 super.OnFrameEnd(info)
             }
 
+            protected override fun OnMouseCursorEnter() {
+            }
+
+            protected override fun OnMouseCursorLeave() {
+            }
+
+            protected override fun OnMouseCursorMove(posX: Double, posY: Double) {
+            }
+
+            protected override fun OnMouseButtonPress(button: MouseButton) {
+            }
+
+            protected override fun OnMouseButtonRepeat(button: MouseButton) {
+            }
+
+            protected override fun OnMouseButtonRelease(button: MouseButton) {
+            }
+
+            protected override fun OnMouseWheelScroll(deltaX: Double, deltaY: Double) {
+            }
+
         }
         this.Application = Application()
         this.Router = Router()
@@ -95,7 +91,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Theme = Theme()
         run {
             this.Window.Show()
-            this.Engine.Run()
+            this.Window.Run()
         }
     }
 
@@ -107,7 +103,6 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Screen!!.close()
         this.Router!!.close()
         this.Application!!.close()
-        this.Engine.close()
         this.Window.close()
         super.OnClose()
     }
@@ -125,11 +120,6 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Window.let { window ->
             if (clazz.isInstance(window)) {
                 return window
-            }
-        }
-        this.Engine.let { engine ->
-            if (clazz.isInstance(engine)) {
-                return engine
             }
         }
         return null

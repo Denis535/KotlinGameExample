@@ -1,125 +1,112 @@
 package com.denis535.game_engine_pro
 
-import cnames.structs.*
 import glfw.*
 import kotlinx.cinterop.*
 
 public abstract class MainWindow2 : MainWindow {
 
-    @OptIn(ExperimentalForeignApi::class)
-    private val OnMouseCursorEnterCallback = staticCFunction { window: CPointer<GLFWwindow>?, isEntered: Int ->
-        if (isEntered == GLFW_TRUE) {
-            val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-            val thisRef = thisPtr.asStableRef<MainWindow2>()
-            thisRef.get().OnMouseCursorEnter()
-        } else {
-            val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-            val thisRef = thisPtr.asStableRef<MainWindow2>()
-            thisRef.get().OnMouseCursorLeave()
+    public var IsRunning: Boolean = false
+        private set(value) {
+            check(field != value)
+            field = value
         }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private val OnMouseCursorMoveCallback = staticCFunction { window: CPointer<GLFWwindow>?, posX: Double, posY: Double ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-        val thisRef = thisPtr.asStableRef<MainWindow2>()
-        thisRef.get().OnMouseCursorMove(posX, posY)
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private val OnMouseButtonActionCallback = staticCFunction { window: CPointer<GLFWwindow>?, button: Int, action: Int, mods: Int ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-        val thisRef = thisPtr.asStableRef<MainWindow2>()
-        if (action == GLFW_PRESS) {
-            thisRef.get().OnMouseButtonPress(MouseButton.Create(button))
-        } else if (action == GLFW_REPEAT) {
-            thisRef.get().OnMouseButtonRepeat(MouseButton.Create(button))
-        } else if (action == GLFW_RELEASE) {
-            thisRef.get().OnMouseButtonRelease(MouseButton.Create(button))
-        }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private val OnMouseWheelScrollCallback = staticCFunction { window: CPointer<GLFWwindow>?, deltaX: Double, deltaY: Double ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
-        val thisRef = thisPtr.asStableRef<MainWindow2>()
-        thisRef.get().OnMouseWheelScroll(deltaX, deltaY)
-    }
 
     public constructor(title: String) : super(title)
     public constructor(title: String, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) : super(title, width, height, isResizable)
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
+        check(!this.IsRunning)
         super.close()
     }
 
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun Show() {
-        super.Show()
-        glfwSetCursorEnterCallback(this.NativeWindow, this.OnMouseCursorEnterCallback)
-        glfwSetCursorPosCallback(this.NativeWindow, this.OnMouseCursorMoveCallback)
-        glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonActionCallback)
-        glfwSetScrollCallback(this.NativeWindow, this.OnMouseWheelScrollCallback)
+    public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
+        this.IsRunning = true
+        val info = FrameInfo()
+        this.OnStart()
+        while (!this.IsClosingRequested) {
+            val startTime = this.Time
+            run {
+                this.OnFrameBegin(info)
+                if (info.FixedFrameInfo.Number == 0) {
+                    this.OnFixedUpdate(info)
+                    info.FixedFrameInfo.Number++
+                    info.FixedFrameInfo.DeltaTime = fixedDeltaTime
+                } else {
+                    while (info.FixedFrameInfo.Time <= info.Time) {
+                        this.OnFixedUpdate(info)
+                        info.FixedFrameInfo.Number++
+                        info.FixedFrameInfo.DeltaTime = fixedDeltaTime
+                    }
+                }
+                this.OnUpdate(info)
+                this.OnDraw(info)
+                this.OnFrameEnd(info)
+            }
+            val endTime = this.Time
+            val deltaTime = (endTime - startTime).toFloat()
+            info.Number++
+            info.Time += deltaTime
+            info.DeltaTime = deltaTime
+        }
+        this.OnStop()
+        this.IsRunning = false
     }
 
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun Hide() {
-        glfwSetCursorEnterCallback(this.NativeWindow, null)
-        glfwSetCursorPosCallback(this.NativeWindow, null)
-        glfwSetMouseButtonCallback(this.NativeWindow, null)
-        glfwSetScrollCallback(this.NativeWindow, null)
-        super.Hide()
-    }
+    protected abstract fun OnStart()
+    protected abstract fun OnStop()
 
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseCursorEnter()
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseCursorLeave()
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseCursorMove(posX: Double, posY: Double)
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseButtonPress(button: MouseButton)
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseButtonRepeat(button: MouseButton)
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseButtonRelease(button: MouseButton)
-
-    @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnMouseWheelScroll(deltaX: Double, deltaY: Double)
+    protected abstract fun OnFrameBegin(info: FrameInfo)
+    protected abstract fun OnFixedUpdate(info: FrameInfo)
+    protected abstract fun OnUpdate(info: FrameInfo)
+    protected abstract fun OnDraw(info: FrameInfo)
+    protected abstract fun OnFrameEnd(info: FrameInfo)
 
 }
 
-public enum class MouseButton(val Value: Int) {
-    @OptIn(ExperimentalForeignApi::class)
-    Button_1(GLFW_MOUSE_BUTTON_1),
-    @OptIn(ExperimentalForeignApi::class)
-    Button_2(GLFW_MOUSE_BUTTON_2),
-    @OptIn(ExperimentalForeignApi::class)
-    Button_3(GLFW_MOUSE_BUTTON_3),
-    @OptIn(ExperimentalForeignApi::class)
-    Button_4(GLFW_MOUSE_BUTTON_4),
-    @OptIn(ExperimentalForeignApi::class)
-    Button_6(GLFW_MOUSE_BUTTON_6),
-    @OptIn(ExperimentalForeignApi::class)
-    Button_7(GLFW_MOUSE_BUTTON_7),
-    @OptIn(ExperimentalForeignApi::class)
-    Button_8(GLFW_MOUSE_BUTTON_8),
-    @OptIn(ExperimentalForeignApi::class)
-    Left(GLFW_MOUSE_BUTTON_1),
-    @OptIn(ExperimentalForeignApi::class)
-    Right(GLFW_MOUSE_BUTTON_2),
-    @OptIn(ExperimentalForeignApi::class)
-    Middle(GLFW_MOUSE_BUTTON_3);
+public class FrameInfo {
 
-    internal companion object {
-        public fun Create(value: Int): MouseButton {
-            return entries.first { it.Value == value }
+    public val FixedFrameInfo: FixedFrameInfo = FixedFrameInfo()
+
+    public var Number: Int = 0
+        internal set
+
+    public var Time: Float = 0.0f
+        internal set
+
+    public var DeltaTime: Float = 0.0f
+        internal set
+
+    public val Fps: Float
+        get() {
+            return if (this.DeltaTime > 0.0f) 1.0f / this.DeltaTime else 0.0f
         }
+
+    internal constructor()
+
+    public override fun toString(): String {
+        return "FrameInfo(Number=${this.Number}, Time=${this.Time})"
     }
+
+}
+
+public class FixedFrameInfo {
+
+    public var Number: Int = 0
+        internal set
+
+    public val Time: Float
+        get() {
+            return this.Number * this.DeltaTime
+        }
+
+    public var DeltaTime: Float = 0.0f
+        internal set
+
+    internal constructor()
+
+    public override fun toString(): String {
+        return "FixedFrameInfo(Number=${this.Number}, Time=${this.Time})"
+    }
+
 }

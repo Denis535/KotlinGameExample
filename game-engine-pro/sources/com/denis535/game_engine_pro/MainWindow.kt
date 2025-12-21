@@ -17,7 +17,7 @@ public abstract class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val NativeWindow: CPointer<GLFWwindow>
+    protected val NativeWindow: CPointer<GLFWwindow>
         get() {
             check(!this.IsClosed)
             return this._NativeWindow!!
