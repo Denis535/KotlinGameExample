@@ -256,27 +256,6 @@ public enum class Key(val Value: Int) {
     Digit_9(GLFW_KEY_9),
 
     @OptIn(ExperimentalForeignApi::class)
-    Number_0(GLFW_KEY_KP_0),
-    @OptIn(ExperimentalForeignApi::class)
-    Number_1(GLFW_KEY_KP_1),
-    @OptIn(ExperimentalForeignApi::class)
-    Number_2(GLFW_KEY_KP_2),
-    @OptIn(ExperimentalForeignApi::class)
-    Number_3(GLFW_KEY_KP_3),
-    @OptIn(ExperimentalForeignApi::class)
-    Number_4(GLFW_KEY_KP_4),
-    @OptIn(ExperimentalForeignApi::class)
-    Number_5(GLFW_KEY_KP_5),
-    @OptIn(ExperimentalForeignApi::class)
-    Number_6(GLFW_KEY_KP_6),
-    @OptIn(ExperimentalForeignApi::class)
-    Number_7(GLFW_KEY_KP_7),
-    @OptIn(ExperimentalForeignApi::class)
-    Number_8(GLFW_KEY_KP_8),
-    @OptIn(ExperimentalForeignApi::class)
-    Number_9(GLFW_KEY_KP_9),
-
-    @OptIn(ExperimentalForeignApi::class)
     Up(GLFW_KEY_UP),
     @OptIn(ExperimentalForeignApi::class)
     Down(GLFW_KEY_DOWN),
@@ -299,6 +278,41 @@ public enum class Key(val Value: Int) {
     Tab(GLFW_KEY_TAB),
     @OptIn(ExperimentalForeignApi::class)
     Escape(GLFW_KEY_ESCAPE),
+
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_0(GLFW_KEY_KP_0),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_1(GLFW_KEY_KP_1),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_2(GLFW_KEY_KP_2),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_3(GLFW_KEY_KP_3),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_4(GLFW_KEY_KP_4),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_5(GLFW_KEY_KP_5),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_6(GLFW_KEY_KP_6),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_7(GLFW_KEY_KP_7),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_8(GLFW_KEY_KP_8),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_9(GLFW_KEY_KP_9),
+
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_Add(GLFW_KEY_KP_ADD),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_Subtract(GLFW_KEY_KP_SUBTRACT),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_Multiply(GLFW_KEY_KP_MULTIPLY),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_Divide(GLFW_KEY_KP_DIVIDE),
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_Decimal(GLFW_KEY_KP_DECIMAL),
+
+    @OptIn(ExperimentalForeignApi::class)
+    Keypad_Enter(GLFW_KEY_KP_ENTER),
 
     @OptIn(ExperimentalForeignApi::class)
     F1(GLFW_KEY_F1),
