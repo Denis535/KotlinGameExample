@@ -82,16 +82,6 @@ public abstract class MainWindow3 : MainWindow2 {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override fun Show() {
-        super.Show()
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun Hide() {
-        super.Hide()
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
     protected override fun OnStart() {
         glfwMakeContextCurrent(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
         glfwSwapInterval(1).also { GLFW.ThrowErrorIfNeeded() }
