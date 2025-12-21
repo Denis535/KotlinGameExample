@@ -48,15 +48,15 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             }
 
             protected override fun OnFixedUpdate(info: FrameInfo) {
-                println("OnFixedUpdate: ${info.Time}")
+//                println("OnFixedUpdate: ${info.Time}")
             }
 
             protected override fun OnUpdate(info: FrameInfo) {
-                println("OnUpdate: ${info.Time}")
+//                println("OnUpdate: ${info.Time}")
             }
 
             protected override fun OnDraw(info: FrameInfo) {
-                println("OnDraw: ${info.Time}")
+//                println("OnDraw: ${info.Time}")
             }
 
             protected override fun OnFrameEnd(info: FrameInfo) {
