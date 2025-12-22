@@ -1,5 +1,5 @@
 plugins {
-    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0-RC3"
+    this.id("org.jetbrains.kotlin.multiplatform") version "2.3.0"
 }
 
 kotlin {
