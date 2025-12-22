@@ -89,9 +89,9 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnKeyPress(key: Key) {
                 if (key == Key.F1) {
                     if (this.IsFullScreen) {
-                        this.SetWindowMode()
+                        this.MakeWindowed()
                     } else {
-                        this.SetFullScreenMode()
+                        this.MakeFullScreen()
                     }
                 }
                 if (key == Key.F2) {

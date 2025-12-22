@@ -234,19 +234,29 @@ public abstract class MainWindow : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun SetFullScreenMode() {
+    public fun MakeFullScreen() {
         check(!this.IsClosed)
         val monitor = glfwGetPrimaryMonitor().also { GLFW.ThrowErrorIfNeeded() }
         val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetWindowMonitor(this.NativeWindow, monitor, 0, 0, videoMode.pointed.width, videoMode.pointed.height, videoMode.pointed.refreshRate).also { GLFW.ThrowErrorIfNeeded() }
+        val posX = 0
+        val posY = 0
+        val width = videoMode.pointed.width
+        val height = videoMode.pointed.height
+        val refreshRate = videoMode.pointed.refreshRate
+        glfwSetWindowAttrib(this.NativeWindow, GLFW_RESIZABLE, GLFW_FALSE).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSetWindowMonitor(this.NativeWindow, monitor, posX, posY, width, height, refreshRate).also { GLFW.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun SetWindowMode(width: Int = 1280, height: Int = 720) {
+    public fun MakeWindowed(width: Int = 1280, height: Int = 720, isResizable: Boolean = false) {
         check(!this.IsClosed)
         val monitor = glfwGetPrimaryMonitor().also { GLFW.ThrowErrorIfNeeded() }
         val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetWindowMonitor(this.NativeWindow, null, (videoMode.pointed.width - width) / 2, (videoMode.pointed.height - height) / 2, width, height, videoMode.pointed.refreshRate).also { GLFW.ThrowErrorIfNeeded() }
+        val posX = (videoMode.pointed.width - width) / 2
+        val posY = (videoMode.pointed.height - height) / 2
+        val refreshRate = videoMode.pointed.refreshRate
+        glfwSetWindowAttrib(this.NativeWindow, GLFW_RESIZABLE, if (isResizable) GLFW_TRUE else GLFW_FALSE).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSetWindowMonitor(this.NativeWindow, null, posX, posY, width, height, refreshRate).also { GLFW.ThrowErrorIfNeeded() }
     }
 
 }
