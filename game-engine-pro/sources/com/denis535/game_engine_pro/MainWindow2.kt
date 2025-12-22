@@ -95,7 +95,6 @@ public abstract class MainWindow2 : MainWindow {
         glfwSetCursorPosCallback(this.NativeWindow, this.OnMouseCursorMoveCallback).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonActionCallback).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetScrollCallback(this.NativeWindow, this.OnMouseWheelScrollCallback).also { GLFW.ThrowErrorIfNeeded() }
-
         glfwSetKeyCallback(this.NativeWindow, this.OnKeyCallback).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetCharCallback(this.NativeWindow, this.OnCharCallback).also { GLFW.ThrowErrorIfNeeded() }
     }
@@ -107,7 +106,6 @@ public abstract class MainWindow2 : MainWindow {
         glfwSetCursorPosCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetMouseButtonCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetScrollCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
-
         glfwSetKeyCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
         glfwSetCharCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
         super.Hide()
