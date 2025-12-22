@@ -149,7 +149,6 @@ public abstract class MainWindow2 : MainWindow {
 
     protected abstract fun OnStart()
     protected abstract fun OnStop()
-
     protected abstract fun OnFrameBegin(info: FrameInfo)
     protected abstract fun OnFixedUpdate(info: FrameInfo)
     protected abstract fun OnUpdate(info: FrameInfo)
@@ -167,6 +166,7 @@ public abstract class MainWindow2 : MainWindow {
     protected abstract fun OnKeyPress(key: Key)
     protected abstract fun OnKeyRepeat(key: Key)
     protected abstract fun OnKeyRelease(key: Key)
+
     protected abstract fun OnCharInput(char: UInt)
 
 }
