@@ -6,6 +6,9 @@ import kotlinx.cinterop.*
 import kotlin.experimental.*
 
 public abstract class MainWindow : AutoCloseable {
+    public companion object {
+
+    }
 
     @OptIn(ExperimentalForeignApi::class)
     private var _NativeWindow: CPointer<GLFWwindow>? = null
