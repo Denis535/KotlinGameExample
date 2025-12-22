@@ -8,10 +8,10 @@ import kotlin.experimental.*
 public abstract class MainWindow2 : MainWindow {
 
     @OptIn(ExperimentalForeignApi::class)
-    private val OnMouseCursorEnterCallback = staticCFunction { window: CPointer<GLFWwindow>?, isEntered: Int ->
+    private val OnMouseCursorEnterCallback = staticCFunction { window: CPointer<GLFWwindow>?, isEnter: Int ->
         val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindow3>().get().also { check(!it.IsClosed) }
-        if (isEntered == GLFW_TRUE) {
+        if (isEnter == GLFW_TRUE) {
             thisRef.OnMouseCursorEnter()
         } else {
             thisRef.OnMouseCursorLeave()
@@ -78,8 +78,8 @@ public abstract class MainWindow2 : MainWindow {
             field = value
         }
 
-    public constructor(title: String) : super(title)
-    public constructor(title: String, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) : super(title, width, height, isResizable)
+    @OptIn(ExperimentalForeignApi::class)
+    public constructor(nativeWindowProvider: () -> CPointer<GLFWwindow>) : super(nativeWindowProvider)
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {

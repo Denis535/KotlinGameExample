@@ -8,6 +8,62 @@ import kotlin.experimental.*
 public abstract class MainWindow : AutoCloseable {
     public companion object {
 
+        @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+        public fun FullScreen(title: String): () -> CPointer<GLFWwindow> {
+            return {
+                val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
+                val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
+                glfwDefaultWindowHints().also { GLFW.ThrowErrorIfNeeded() }
+                // OpenGL
+                glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
+                glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+                if (Platform.isDebugBinary) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
+                // Frame
+                glfwWindowHint(GLFW_RED_BITS, 8)
+                glfwWindowHint(GLFW_GREEN_BITS, 8)
+                glfwWindowHint(GLFW_BLUE_BITS, 8)
+                glfwWindowHint(GLFW_ALPHA_BITS, 8)
+                glfwWindowHint(GLFW_DEPTH_BITS, 24)
+                glfwWindowHint(GLFW_STENCIL_BITS, 8)
+                // Window
+                glfwWindowHint(GLFW_POSITION_X, 0)
+                glfwWindowHint(GLFW_POSITION_Y, 0)
+                glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
+                glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
+                glfwCreateWindow(videoMode.pointed.width, videoMode.pointed.height, title, monitor, null)!!.also { GLFW.ThrowErrorIfNeeded() }
+            }
+        }
+
+        @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+        public fun Window(title: String, width: Int = 1280, height: Int = 720, isResizable: Boolean = false): () -> CPointer<GLFWwindow> {
+            return {
+                val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
+                val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
+                glfwDefaultWindowHints().also { GLFW.ThrowErrorIfNeeded() }
+                // OpenGL
+                glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
+                glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+                if (Platform.isDebugBinary) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
+                // Frame
+                glfwWindowHint(GLFW_RED_BITS, 8)
+                glfwWindowHint(GLFW_GREEN_BITS, 8)
+                glfwWindowHint(GLFW_BLUE_BITS, 8)
+                glfwWindowHint(GLFW_ALPHA_BITS, 8)
+                glfwWindowHint(GLFW_DEPTH_BITS, 24)
+                glfwWindowHint(GLFW_STENCIL_BITS, 8)
+                // Window
+                glfwWindowHint(GLFW_POSITION_X, (videoMode.pointed.width - width) / 2)
+                glfwWindowHint(GLFW_POSITION_Y, (videoMode.pointed.height - height) / 2)
+                glfwWindowHint(GLFW_RESIZABLE, if (isResizable) GLFW_TRUE else GLFW_FALSE)
+                glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
+                glfwCreateWindow(width, height, title, null, null)!!.also { GLFW.ThrowErrorIfNeeded() }
+            }
+        }
+
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -150,58 +206,6 @@ public abstract class MainWindow : AutoCloseable {
         }
     }
 
-    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-    public constructor(title: String) : this({
-        val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
-        val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
-        glfwDefaultWindowHints().also { GLFW.ThrowErrorIfNeeded() }
-        // OpenGL
-        glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
-        if (Platform.isDebugBinary) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
-        // Frame
-        glfwWindowHint(GLFW_RED_BITS, 8)
-        glfwWindowHint(GLFW_GREEN_BITS, 8)
-        glfwWindowHint(GLFW_BLUE_BITS, 8)
-        glfwWindowHint(GLFW_ALPHA_BITS, 8)
-        glfwWindowHint(GLFW_DEPTH_BITS, 24)
-        glfwWindowHint(GLFW_STENCIL_BITS, 8)
-        // Window
-        glfwWindowHint(GLFW_POSITION_X, 0)
-        glfwWindowHint(GLFW_POSITION_Y, 0)
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
-        glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
-        glfwCreateWindow(videoMode.pointed.width, videoMode.pointed.height, title, monitor, null)!!.also { GLFW.ThrowErrorIfNeeded() }
-    })
-
-    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-    public constructor(title: String, width: Int = 1280, height: Int = 720, isResizable: Boolean = false) : this({
-        val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
-        val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
-        glfwDefaultWindowHints().also { GLFW.ThrowErrorIfNeeded() }
-        // OpenGL
-        glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
-        if (Platform.isDebugBinary) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
-        // Frame
-        glfwWindowHint(GLFW_RED_BITS, 8)
-        glfwWindowHint(GLFW_GREEN_BITS, 8)
-        glfwWindowHint(GLFW_BLUE_BITS, 8)
-        glfwWindowHint(GLFW_ALPHA_BITS, 8)
-        glfwWindowHint(GLFW_DEPTH_BITS, 24)
-        glfwWindowHint(GLFW_STENCIL_BITS, 8)
-        // Window
-        glfwWindowHint(GLFW_POSITION_X, (videoMode.pointed.width - width) / 2)
-        glfwWindowHint(GLFW_POSITION_Y, (videoMode.pointed.height - height) / 2)
-        glfwWindowHint(GLFW_RESIZABLE, if (isResizable) GLFW_TRUE else GLFW_FALSE)
-        glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
-        glfwCreateWindow(width, height, title, null, null)!!.also { GLFW.ThrowErrorIfNeeded() }
-    })
-
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
@@ -238,7 +242,7 @@ public abstract class MainWindow : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun SetWindowedMode(width: Int = 1280, height: Int = 720) {
+    public fun SetWindowMode(width: Int = 1280, height: Int = 720) {
         check(!this.IsClosed)
         val monitor = glfwGetPrimaryMonitor().also { GLFW.ThrowErrorIfNeeded() }
         val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }

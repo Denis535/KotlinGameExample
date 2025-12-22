@@ -2,6 +2,7 @@ package com.denis535.kotlin_game_example
 
 import com.denis535.game_engine_pro.*
 import com.denis535.game_framework_pro.*
+import kotlinx.cinterop.*
 import kotlin.reflect.*
 
 public fun Main(args: Array<String>) {
@@ -30,8 +31,9 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     private val Window: MainWindow3
 
+    @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Window = object : MainWindow3("Kotlin Game Example") {
+        this.Window = object : MainWindow3(this.Window("Kotlin Game Example")) {
 
             protected override fun OnStart() {
                 super.OnStart()
@@ -87,7 +89,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnKeyPress(key: Key) {
                 if (key == Key.F1) {
                     if (this.IsFullScreen) {
-                        this.SetWindowedMode(1280, 720)
+                        this.SetWindowMode()
                     } else {
                         this.SetFullScreenMode()
                     }
