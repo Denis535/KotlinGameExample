@@ -70,7 +70,7 @@ public abstract class MainWindow3 : MainWindow2 {
     private val OnCharCallback = staticCFunction { window: CPointer<GLFWwindow>?, codepoint: UInt ->
         val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindow3>()
-        thisRef.get().OnCharInput(Char.toChars(codepoint.toInt()).concatToString())
+        thisRef.get().OnCharInput(codepoint)
     }
 
     public constructor(title: String) : super(title)
@@ -147,7 +147,7 @@ public abstract class MainWindow3 : MainWindow2 {
     protected abstract fun OnKeyRelease(key: Key)
 
     @OptIn(ExperimentalForeignApi::class)
-    protected abstract fun OnCharInput(char: String)
+    protected abstract fun OnCharInput(char: UInt)
 
 }
 

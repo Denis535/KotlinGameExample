@@ -106,7 +106,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnKeyRelease(key: Key) {
             }
 
-            protected override fun OnCharInput(char: String) {
+            protected override fun OnCharInput(char: UInt) {
             }
 
         }
