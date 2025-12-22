@@ -115,6 +115,17 @@ public abstract class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public var IsCursorVisible: Boolean
+        get() {
+            check(!this.IsClosed)
+            return glfwGetInputMode(this.NativeWindow, GLFW_CURSOR) != GLFW_CURSOR_HIDDEN
+        }
+        set(value) {
+            check(!this.IsClosed)
+            glfwSetInputMode(this.NativeWindow, GLFW_CURSOR, if (value) GLFW_CURSOR_NORMAL else GLFW_CURSOR_HIDDEN)
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public var IsClosingRequested: Boolean
         get() {
             check(!this.IsClosed)

@@ -85,6 +85,19 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             }
 
             protected override fun OnKeyPress(key: Key) {
+                if (key == Key.F1) {
+                    if (this.IsFullScreen) {
+                        this.SetWindowedMode(1280, 720)
+                    } else {
+                        this.SetFullScreenMode()
+                    }
+                }
+                if (key == Key.F2) {
+                    this.IsCursorEnabled = !this.IsCursorEnabled
+                }
+                if (key == Key.F3) {
+                    this.IsCursorVisible = !this.IsCursorVisible
+                }
             }
 
             protected override fun OnKeyRepeat(key: Key) {

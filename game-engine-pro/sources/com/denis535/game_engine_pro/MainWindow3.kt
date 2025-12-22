@@ -265,6 +265,15 @@ public enum class Key(val Value: Int) {
     Right(GLFW_KEY_RIGHT),
 
     @OptIn(ExperimentalForeignApi::class)
+    Space(GLFW_KEY_SPACE),
+    @OptIn(ExperimentalForeignApi::class)
+    Backspace(GLFW_KEY_BACKSPACE),
+    @OptIn(ExperimentalForeignApi::class)
+    Delete(GLFW_KEY_DELETE),
+    @OptIn(ExperimentalForeignApi::class)
+    Enter(GLFW_KEY_ENTER),
+
+    @OptIn(ExperimentalForeignApi::class)
     Left_Alt(GLFW_KEY_LEFT_ALT),
     @OptIn(ExperimentalForeignApi::class)
     Left_Control(GLFW_KEY_LEFT_CONTROL),
@@ -279,13 +288,11 @@ public enum class Key(val Value: Int) {
     Right_Shift(GLFW_KEY_RIGHT_SHIFT),
 
     @OptIn(ExperimentalForeignApi::class)
-    Space(GLFW_KEY_SPACE),
-    @OptIn(ExperimentalForeignApi::class)
-    Enter(GLFW_KEY_ENTER),
-    @OptIn(ExperimentalForeignApi::class)
-    Escape(GLFW_KEY_ESCAPE),
+    CapsLock(GLFW_KEY_CAPS_LOCK),
     @OptIn(ExperimentalForeignApi::class)
     Tab(GLFW_KEY_TAB),
+    @OptIn(ExperimentalForeignApi::class)
+    Escape(GLFW_KEY_ESCAPE),
 
     @OptIn(ExperimentalForeignApi::class)
     Keypad_0(GLFW_KEY_KP_0),
