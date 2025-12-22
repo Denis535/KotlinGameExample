@@ -167,14 +167,24 @@ public abstract class MainWindow2 : MainWindow {
 
     protected abstract fun OnCharInput(char: UInt)
 
+//    @OptIn(ExperimentalForeignApi::class)
+//    public fun IsMouseMotionSupported(): Boolean {
+//        return glfwRawMouseMotionSupported().also { GLFW.ThrowErrorIfNeeded() } == GLFW_TRUE
+//    }
+
     @OptIn(ExperimentalForeignApi::class)
-    public fun GetCursorPosition(): Pair<Double, Double> {
+    public fun GetMouseCursorPosition(): Pair<Double, Double> {
         memScoped {
             val posX = this.alloc<DoubleVar>()
             val posY = this.alloc<DoubleVar>()
             glfwGetCursorPos(this@MainWindow2.NativeWindow, posX.ptr, posY.ptr).also { GLFW.ThrowErrorIfNeeded() }
             return Pair(posX.value, posY.value)
         }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun SetMouseCursorPosition(pos: Pair<Double, Double>) {
+        glfwSetCursorPos(this@MainWindow2.NativeWindow, pos.first, pos.second).also { GLFW.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
