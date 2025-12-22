@@ -29,11 +29,11 @@ public fun Main(args: Array<String>) {
 
 public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
-    private val Window: MainWindow3
+    private val Window: MainWindowImpl2
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Window = object : MainWindow3(this.Window("Kotlin Game Example")) {
+        this.Window = object : MainWindowImpl2(this.Window("Kotlin Game Example")) {
 
             protected override fun OnStart() {
                 super.OnStart()

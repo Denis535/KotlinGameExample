@@ -4,7 +4,7 @@ import cnames.structs.*
 import glfw.*
 import kotlinx.cinterop.*
 
-public abstract class MainWindow3 : MainWindow2 {
+public abstract class MainWindowImpl2 : MainWindowImpl {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(nativeWindowProvider: () -> CPointer<GLFWwindow>) : super(nativeWindowProvider)
