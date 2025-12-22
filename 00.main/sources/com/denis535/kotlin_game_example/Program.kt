@@ -71,7 +71,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnMouseCursorLeave() {
             }
 
-            protected override fun OnMouseCursorMove(posX: Double, posY: Double) {
+            protected override fun OnMouseCursorMove(pos: Pair<Double, Double>) {
             }
 
             protected override fun OnMouseButtonPress(button: MouseButton) {
@@ -83,7 +83,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnMouseButtonRelease(button: MouseButton) {
             }
 
-            protected override fun OnMouseWheelScroll(deltaX: Double, deltaY: Double) {
+            protected override fun OnMouseWheelScroll(delta: Pair<Double, Double>) {
             }
 
             protected override fun OnKeyPress(key: Key) {

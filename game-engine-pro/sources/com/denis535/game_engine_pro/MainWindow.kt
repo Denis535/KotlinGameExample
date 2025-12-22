@@ -111,11 +111,11 @@ public abstract class MainWindow : AutoCloseable {
     public var Position: Pair<Int, Int>
         get() {
             check(!this.IsClosed)
-            return memScoped {
+            memScoped {
                 val posX = this.alloc<IntVar>()
                 val posY = this.alloc<IntVar>()
                 glfwGetWindowPos(this@MainWindow.NativeWindow, posX.ptr, posY.ptr).also { GLFW.ThrowErrorIfNeeded() }
-                Pair(posX.value, posY.value)
+                return Pair(posX.value, posY.value)
             }
         }
         set(value) {
@@ -128,11 +128,11 @@ public abstract class MainWindow : AutoCloseable {
     public var Size: Pair<Int, Int>
         get() {
             check(!this.IsClosed)
-            return memScoped {
+            memScoped {
                 val width = this.alloc<IntVar>()
                 val height = this.alloc<IntVar>()
                 glfwGetWindowSize(this@MainWindow.NativeWindow, width.ptr, height.ptr).also { GLFW.ThrowErrorIfNeeded() }
-                Pair(width.value, height.value)
+                return Pair(width.value, height.value)
             }
         }
         set(value) {

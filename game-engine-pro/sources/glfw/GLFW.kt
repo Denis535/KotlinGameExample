@@ -18,11 +18,11 @@ public object GLFW {
 
     @OptIn(ExperimentalForeignApi::class)
     private fun GetError(): Pair<Int, String?> {
-        return memScoped {
+        memScoped {
             val descPtr = this.alloc<CPointerVar<ByteVar>>()
             val error = glfwGetError(descPtr.ptr)
             val description = descPtr.value?.toKString()
-            Pair(error, description)
+            return Pair(error, description)
         }
     }
 

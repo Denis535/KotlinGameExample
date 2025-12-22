@@ -22,7 +22,7 @@ public abstract class MainWindow2 : MainWindow {
     private val OnMouseCursorMoveCallback = staticCFunction { window: CPointer<GLFWwindow>?, posX: Double, posY: Double ->
         val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindow3>().get().also { check(!it.IsClosed) }
-        thisRef.OnMouseCursorMove(posX, posY)
+        thisRef.OnMouseCursorMove(Pair(posX, posY))
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -45,7 +45,7 @@ public abstract class MainWindow2 : MainWindow {
     private val OnMouseWheelScrollCallback = staticCFunction { window: CPointer<GLFWwindow>?, deltaX: Double, deltaY: Double ->
         val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindow3>().get().also { check(!it.IsClosed) }
-        thisRef.OnMouseWheelScroll(deltaX, deltaY)
+        thisRef.OnMouseWheelScroll(Pair(deltaX, deltaY))
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -155,17 +155,37 @@ public abstract class MainWindow2 : MainWindow {
 
     protected abstract fun OnMouseCursorEnter()
     protected abstract fun OnMouseCursorLeave()
-    protected abstract fun OnMouseCursorMove(posX: Double, posY: Double)
+    protected abstract fun OnMouseCursorMove(pos: Pair<Double, Double>)
     protected abstract fun OnMouseButtonPress(button: MouseButton)
     protected abstract fun OnMouseButtonRepeat(button: MouseButton)
     protected abstract fun OnMouseButtonRelease(button: MouseButton)
-    protected abstract fun OnMouseWheelScroll(deltaX: Double, deltaY: Double)
+    protected abstract fun OnMouseWheelScroll(delta: Pair<Double, Double>)
 
     protected abstract fun OnKeyPress(key: Key)
     protected abstract fun OnKeyRepeat(key: Key)
     protected abstract fun OnKeyRelease(key: Key)
 
     protected abstract fun OnCharInput(char: UInt)
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun GetCursorPosition(): Pair<Double, Double> {
+        memScoped {
+            val posX = this.alloc<DoubleVar>()
+            val posY = this.alloc<DoubleVar>()
+            glfwGetCursorPos(this@MainWindow2.NativeWindow, posX.ptr, posY.ptr).also { GLFW.ThrowErrorIfNeeded() }
+            return Pair(posX.value, posY.value)
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun GetMouseButtonPressed(button: MouseButton): Boolean {
+        return glfwGetMouseButton(this@MainWindow2.NativeWindow, button.Value).also { GLFW.ThrowErrorIfNeeded() } == GLFW_PRESS
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun GetKeyPressed(key: Key): Boolean {
+        return glfwGetKey(this@MainWindow2.NativeWindow, key.Value).also { GLFW.ThrowErrorIfNeeded() } == GLFW_PRESS
+    }
 
 }
 
@@ -226,17 +246,20 @@ public enum class MouseButton(val Value: Int) {
     @OptIn(ExperimentalForeignApi::class)
     Button_4(GLFW_MOUSE_BUTTON_4),
     @OptIn(ExperimentalForeignApi::class)
+    Button_5(GLFW_MOUSE_BUTTON_5),
+    @OptIn(ExperimentalForeignApi::class)
     Button_6(GLFW_MOUSE_BUTTON_6),
     @OptIn(ExperimentalForeignApi::class)
     Button_7(GLFW_MOUSE_BUTTON_7),
     @OptIn(ExperimentalForeignApi::class)
     Button_8(GLFW_MOUSE_BUTTON_8),
+
     @OptIn(ExperimentalForeignApi::class)
-    Left(GLFW_MOUSE_BUTTON_1),
+    Left(GLFW_MOUSE_BUTTON_LEFT),
     @OptIn(ExperimentalForeignApi::class)
-    Right(GLFW_MOUSE_BUTTON_2),
+    Right(GLFW_MOUSE_BUTTON_RIGHT),
     @OptIn(ExperimentalForeignApi::class)
-    Middle(GLFW_MOUSE_BUTTON_3);
+    Middle(GLFW_MOUSE_BUTTON_MIDDLE);
 
     internal companion object {
         public fun Create(value: Int): MouseButton? {
