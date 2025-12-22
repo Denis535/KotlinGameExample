@@ -35,11 +35,6 @@ public abstract class MainWindow : AutoCloseable {
 
     public constructor()
 
-    public override fun close() {
-        check(this.IsClosed)
-        check(!this.IsRunning)
-    }
-
     public abstract fun Show()
     public abstract fun Hide()
 
@@ -108,6 +103,11 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract fun GetKeyPressed(key: Key): Boolean
 
+}
+
+public sealed class MainWindowDesc(public val Title: String) {
+    public class FullScreen(title: String) : MainWindowDesc(title)
+    public class Window(title: String, public val Width: Int = 1280, public val Height: Int = 720, public val IsResizable: Boolean = false) : MainWindowDesc(title)
 }
 
 public class FrameInfo {

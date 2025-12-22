@@ -17,6 +17,8 @@
           <package name="kotlin" alias="false" withSubpackages="true" />
         </value>
       </option>
+      <option name="LINE_BREAK_AFTER_MULTILINE_WHEN_ENTRY" value="false" />
+      <option name="INDENT_BEFORE_ARROW_ON_NEW_LINE" value="false" />
       <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="1" />
       <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="1" />
       <option name="BLANK_LINES_BEFORE_DECLARATION_WITH_COMMENT_OR_ANNOTATION_ON_SEPARATE_LINE" value="0" />

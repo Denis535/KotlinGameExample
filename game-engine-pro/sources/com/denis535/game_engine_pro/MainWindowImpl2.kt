@@ -1,13 +1,12 @@
 package com.denis535.game_engine_pro
 
-import cnames.structs.*
 import glfw.*
 import kotlinx.cinterop.*
 
 public abstract class MainWindowImpl2 : MainWindowImpl {
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(nativeWindowProvider: () -> CPointer<GLFWwindow>) : super(nativeWindowProvider)
+    public constructor(desc: MainWindowDesc) : super(desc)
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
