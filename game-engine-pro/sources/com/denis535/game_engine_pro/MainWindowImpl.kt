@@ -9,7 +9,7 @@ public abstract class MainWindowImpl : MainWindow {
 
     @OptIn(ExperimentalForeignApi::class)
     private val OnMouseCursorEnterCallback = staticCFunction { window: CPointer<GLFWwindow>?, isEnter: Int ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
         if (isEnter == GLFW_TRUE) {
             thisRef.OnMouseCursorEnter()
@@ -20,14 +20,14 @@ public abstract class MainWindowImpl : MainWindow {
 
     @OptIn(ExperimentalForeignApi::class)
     private val OnMouseCursorMoveCallback = staticCFunction { window: CPointer<GLFWwindow>?, posX: Double, posY: Double ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
         thisRef.OnMouseCursorMove(Pair(posX, posY))
     }
 
     @OptIn(ExperimentalForeignApi::class)
     private val OnMouseButtonActionCallback = staticCFunction { window: CPointer<GLFWwindow>?, button: Int, action: Int, mods: Int ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
         if (action == GLFW_PRESS) {
             val button2 = button.ToMouseButton()
@@ -43,14 +43,14 @@ public abstract class MainWindowImpl : MainWindow {
 
     @OptIn(ExperimentalForeignApi::class)
     private val OnMouseWheelScrollCallback = staticCFunction { window: CPointer<GLFWwindow>?, deltaX: Double, deltaY: Double ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
         thisRef.OnMouseWheelScroll(Pair(deltaX, deltaY))
     }
 
     @OptIn(ExperimentalForeignApi::class)
     private val OnKeyActionCallback = staticCFunction { window: CPointer<GLFWwindow>?, key: Int, scancode: Int, action: Int, mods: Int ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
         if (action == GLFW_PRESS) {
             val key2 = key.ToKey()
@@ -66,7 +66,7 @@ public abstract class MainWindowImpl : MainWindow {
 
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
     private val OnCharActionCallback = staticCFunction { window: CPointer<GLFWwindow>?, codepoint: UInt ->
-        val thisPtr = glfwGetWindowUserPointer(window)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
         val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
         thisRef.OnCharInput(codepoint)
     }
@@ -90,14 +90,14 @@ public abstract class MainWindowImpl : MainWindow {
     @OptIn(ExperimentalForeignApi::class)
     public override val Time: Double
         get() {
-            return glfwGetTime().also { GLFW.ThrowErrorIfNeeded() }
+            return glfwGetTime().also { Glfw.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override val IsFullScreen: Boolean
         get() {
             check(!this.IsClosed)
-            val monitor = glfwGetWindowMonitor(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
+            val monitor = glfwGetWindowMonitor(this.NativeWindow).also { Glfw.ThrowErrorIfNeeded() }
             return monitor != null
         }
 
@@ -109,7 +109,7 @@ public abstract class MainWindowImpl : MainWindow {
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetWindowTitle(this.NativeWindow, value).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetWindowTitle(this.NativeWindow, value).also { Glfw.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -119,13 +119,13 @@ public abstract class MainWindowImpl : MainWindow {
             memScoped {
                 val posX = this.alloc<IntVar>()
                 val posY = this.alloc<IntVar>()
-                glfwGetWindowPos(this@MainWindowImpl.NativeWindow, posX.ptr, posY.ptr).also { GLFW.ThrowErrorIfNeeded() }
+                glfwGetWindowPos(this@MainWindowImpl.NativeWindow, posX.ptr, posY.ptr).also { Glfw.ThrowErrorIfNeeded() }
                 return Pair(posX.value, posY.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetWindowPos(this.NativeWindow, value.first, value.second).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetWindowPos(this.NativeWindow, value.first, value.second).also { Glfw.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -135,65 +135,65 @@ public abstract class MainWindowImpl : MainWindow {
             memScoped {
                 val width = this.alloc<IntVar>()
                 val height = this.alloc<IntVar>()
-                glfwGetWindowSize(this@MainWindowImpl.NativeWindow, width.ptr, height.ptr).also { GLFW.ThrowErrorIfNeeded() }
+                glfwGetWindowSize(this@MainWindowImpl.NativeWindow, width.ptr, height.ptr).also { Glfw.ThrowErrorIfNeeded() }
                 return Pair(width.value, height.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetWindowSize(this.NativeWindow, value.first, value.second).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetWindowSize(this.NativeWindow, value.first, value.second).also { Glfw.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override val IsVisible: Boolean
         get() {
             check(!this.IsClosed)
-            return glfwGetWindowAttrib(this.NativeWindow, GLFW_VISIBLE).also { GLFW.ThrowErrorIfNeeded() } == GLFW_TRUE
+            return glfwGetWindowAttrib(this.NativeWindow, GLFW_VISIBLE).also { Glfw.ThrowErrorIfNeeded() } == GLFW_TRUE
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override val IsIconified: Boolean
         get() {
             check(!this.IsClosed)
-            return glfwGetWindowAttrib(this.NativeWindow, GLFW_ICONIFIED).also { GLFW.ThrowErrorIfNeeded() } == GLFW_TRUE
+            return glfwGetWindowAttrib(this.NativeWindow, GLFW_ICONIFIED).also { Glfw.ThrowErrorIfNeeded() } == GLFW_TRUE
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override val IsFocused: Boolean
         get() {
             check(!this.IsClosed)
-            return glfwGetWindowAttrib(this.NativeWindow, GLFW_FOCUSED).also { GLFW.ThrowErrorIfNeeded() } == GLFW_TRUE
+            return glfwGetWindowAttrib(this.NativeWindow, GLFW_FOCUSED).also { Glfw.ThrowErrorIfNeeded() } == GLFW_TRUE
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override var CursorMode: CursorMode
         get() {
             check(!this.IsClosed)
-            return glfwGetInputMode(this.NativeWindow, GLFW_CURSOR).also { GLFW.ThrowErrorIfNeeded() }.ToCursorMode()
+            return glfwGetInputMode(this.NativeWindow, GLFW_CURSOR).also { Glfw.ThrowErrorIfNeeded() }.ToCursorMode()
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetInputMode(this.NativeWindow, GLFW_CURSOR, value.ToNativeValue()).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetInputMode(this.NativeWindow, GLFW_CURSOR, value.ToNativeValue()).also { Glfw.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override var IsClosingRequested: Boolean
         get() {
             check(!this.IsClosed)
-            return glfwWindowShouldClose(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() } == GLFW_TRUE
+            return glfwWindowShouldClose(this.NativeWindow).also { Glfw.ThrowErrorIfNeeded() } == GLFW_TRUE
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetWindowShouldClose(this.NativeWindow, if (value) GLFW_TRUE else GLFW_FALSE).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetWindowShouldClose(this.NativeWindow, if (value) GLFW_TRUE else GLFW_FALSE).also { Glfw.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
     public constructor(desc: MainWindowDesc) {
-        glfwInit().also { GLFW.ThrowErrorIfNeeded() }
+        glfwInit().also { Glfw.ThrowErrorIfNeeded() }
         this._NativeWindow = run {
-            val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
-            val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
-            glfwDefaultWindowHints().also { GLFW.ThrowErrorIfNeeded() }
+            val monitor = glfwGetPrimaryMonitor()!!.also { Glfw.ThrowErrorIfNeeded() }
+            val videoMode = glfwGetVideoMode(monitor)!!.also { Glfw.ThrowErrorIfNeeded() }
+            glfwDefaultWindowHints().also { Glfw.ThrowErrorIfNeeded() }
             // OpenGL
             glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
@@ -213,21 +213,21 @@ public abstract class MainWindowImpl : MainWindow {
                     glfwWindowHint(GLFW_POSITION_Y, 0)
                     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE)
                     glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
-                    glfwCreateWindow(videoMode.pointed.width, videoMode.pointed.height, desc.Title, monitor, null)!!.also { GLFW.ThrowErrorIfNeeded() }
+                    glfwCreateWindow(videoMode.pointed.width, videoMode.pointed.height, desc.Title, monitor, null)!!.also { Glfw.ThrowErrorIfNeeded() }
                 }
                 is MainWindowDesc.Window -> {
                     glfwWindowHint(GLFW_POSITION_X, (videoMode.pointed.width - desc.Width) / 2)
                     glfwWindowHint(GLFW_POSITION_Y, (videoMode.pointed.height - desc.Height) / 2)
                     glfwWindowHint(GLFW_RESIZABLE, if (desc.IsResizable) GLFW_TRUE else GLFW_FALSE)
                     glfwWindowHint(GLFW_REFRESH_RATE, videoMode.pointed.refreshRate)
-                    glfwCreateWindow(desc.Width, desc.Height, desc.Title, null, null)!!.also { GLFW.ThrowErrorIfNeeded() }
+                    glfwCreateWindow(desc.Width, desc.Height, desc.Title, null, null)!!.also { Glfw.ThrowErrorIfNeeded() }
                 }
             }
         }
         run {
             val thisRef = StableRef.create(this)
             val thisPtr = thisRef.asCPointer()
-            glfwSetWindowUserPointer(this.NativeWindow, thisPtr).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetWindowUserPointer(this.NativeWindow, thisPtr).also { Glfw.ThrowErrorIfNeeded() }
         }
     }
 
@@ -236,67 +236,67 @@ public abstract class MainWindowImpl : MainWindow {
         check(!this.IsClosed)
         check(!this.IsRunning)
         run {
-            val thisPtr = glfwGetWindowUserPointer(this.NativeWindow)!!.also { GLFW.ThrowErrorIfNeeded() }
+            val thisPtr = glfwGetWindowUserPointer(this.NativeWindow)!!.also { Glfw.ThrowErrorIfNeeded() }
             val thisRef = thisPtr.asStableRef<MainWindow>()
             thisRef.dispose()
-            glfwSetWindowUserPointer(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetWindowUserPointer(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
         }
         this._NativeWindow = run {
-            glfwDestroyWindow(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
+            glfwDestroyWindow(this.NativeWindow).also { Glfw.ThrowErrorIfNeeded() }
             null
         }
-        glfwTerminate().also { GLFW.ThrowErrorIfNeeded() }
+        glfwTerminate().also { Glfw.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun Show() {
         check(!this.IsClosed)
-        glfwSetCursorEnterCallback(this.NativeWindow, this.OnMouseCursorEnterCallback).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetCursorPosCallback(this.NativeWindow, this.OnMouseCursorMoveCallback).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonActionCallback).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetScrollCallback(this.NativeWindow, this.OnMouseWheelScrollCallback).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetKeyCallback(this.NativeWindow, this.OnKeyActionCallback).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetCharCallback(this.NativeWindow, this.OnCharActionCallback).also { GLFW.ThrowErrorIfNeeded() }
-        glfwShowWindow(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
-        glfwFocusWindow(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSetCursorEnterCallback(this.NativeWindow, this.OnMouseCursorEnterCallback).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetCursorPosCallback(this.NativeWindow, this.OnMouseCursorMoveCallback).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonActionCallback).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetScrollCallback(this.NativeWindow, this.OnMouseWheelScrollCallback).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetKeyCallback(this.NativeWindow, this.OnKeyActionCallback).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetCharCallback(this.NativeWindow, this.OnCharActionCallback).also { Glfw.ThrowErrorIfNeeded() }
+        glfwShowWindow(this.NativeWindow).also { Glfw.ThrowErrorIfNeeded() }
+        glfwFocusWindow(this.NativeWindow).also { Glfw.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun Hide() {
         check(!this.IsClosed)
-        glfwHideWindow(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetCursorEnterCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetCursorPosCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetMouseButtonCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetScrollCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetKeyCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetCharCallback(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
+        glfwHideWindow(this.NativeWindow).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetCursorEnterCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetCursorPosCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetMouseButtonCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetScrollCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetKeyCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetCharCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun MakeFullScreen() {
         check(!this.IsClosed)
-        val monitor = glfwGetPrimaryMonitor().also { GLFW.ThrowErrorIfNeeded() }
-        val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val monitor = glfwGetPrimaryMonitor().also { Glfw.ThrowErrorIfNeeded() }
+        val videoMode = glfwGetVideoMode(monitor)!!.also { Glfw.ThrowErrorIfNeeded() }
         val posX = 0
         val posY = 0
         val width = videoMode.pointed.width
         val height = videoMode.pointed.height
         val refreshRate = videoMode.pointed.refreshRate
-        glfwSetWindowAttrib(this.NativeWindow, GLFW_RESIZABLE, GLFW_FALSE).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetWindowMonitor(this.NativeWindow, monitor, posX, posY, width, height, refreshRate).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSetWindowAttrib(this.NativeWindow, GLFW_RESIZABLE, GLFW_FALSE).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetWindowMonitor(this.NativeWindow, monitor, posX, posY, width, height, refreshRate).also { Glfw.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun MakeWindowed(width: Int, height: Int, isResizable: Boolean) {
         check(!this.IsClosed)
-        val monitor = glfwGetPrimaryMonitor().also { GLFW.ThrowErrorIfNeeded() }
-        val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
+        val monitor = glfwGetPrimaryMonitor().also { Glfw.ThrowErrorIfNeeded() }
+        val videoMode = glfwGetVideoMode(monitor)!!.also { Glfw.ThrowErrorIfNeeded() }
         val posX = (videoMode.pointed.width - width) / 2
         val posY = (videoMode.pointed.height - height) / 2
         val refreshRate = videoMode.pointed.refreshRate
-        glfwSetWindowAttrib(this.NativeWindow, GLFW_RESIZABLE, if (isResizable) GLFW_TRUE else GLFW_FALSE).also { GLFW.ThrowErrorIfNeeded() }
-        glfwSetWindowMonitor(this.NativeWindow, null, posX, posY, width, height, refreshRate).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSetWindowAttrib(this.NativeWindow, GLFW_RESIZABLE, if (isResizable) GLFW_TRUE else GLFW_FALSE).also { Glfw.ThrowErrorIfNeeded() }
+        glfwSetWindowMonitor(this.NativeWindow, null, posX, posY, width, height, refreshRate).also { Glfw.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -305,7 +305,7 @@ public abstract class MainWindowImpl : MainWindow {
         memScoped {
             val posX = this.alloc<DoubleVar>()
             val posY = this.alloc<DoubleVar>()
-            glfwGetCursorPos(this@MainWindowImpl.NativeWindow, posX.ptr, posY.ptr).also { GLFW.ThrowErrorIfNeeded() }
+            glfwGetCursorPos(this@MainWindowImpl.NativeWindow, posX.ptr, posY.ptr).also { Glfw.ThrowErrorIfNeeded() }
             return Pair(posX.value, posY.value)
         }
     }
@@ -313,19 +313,19 @@ public abstract class MainWindowImpl : MainWindow {
     @OptIn(ExperimentalForeignApi::class)
     public override fun SetMouseCursorPosition(pos: Pair<Double, Double>) {
         check(!this.IsClosed)
-        glfwSetCursorPos(this@MainWindowImpl.NativeWindow, pos.first, pos.second).also { GLFW.ThrowErrorIfNeeded() }
+        glfwSetCursorPos(this@MainWindowImpl.NativeWindow, pos.first, pos.second).also { Glfw.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun GetMouseButtonPressed(button: MouseButton): Boolean {
         check(!this.IsClosed)
-        return glfwGetMouseButton(this@MainWindowImpl.NativeWindow, button.ToNativeValue()).also { GLFW.ThrowErrorIfNeeded() } == GLFW_PRESS
+        return glfwGetMouseButton(this@MainWindowImpl.NativeWindow, button.ToNativeValue()).also { Glfw.ThrowErrorIfNeeded() } == GLFW_PRESS
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun GetKeyPressed(key: Key): Boolean {
         check(!this.IsClosed)
-        return glfwGetKey(this@MainWindowImpl.NativeWindow, key.ToNativeValue()).also { GLFW.ThrowErrorIfNeeded() } == GLFW_PRESS
+        return glfwGetKey(this@MainWindowImpl.NativeWindow, key.ToNativeValue()).also { Glfw.ThrowErrorIfNeeded() } == GLFW_PRESS
     }
 
 }

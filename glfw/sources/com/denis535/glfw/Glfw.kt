@@ -2,7 +2,7 @@ package com.denis535.glfw
 
 import kotlinx.cinterop.*
 
-public object GLFW {
+public object Glfw {
 
     public fun ThrowErrorIfNeeded() {
         val (error, desc) = this.GetError()
