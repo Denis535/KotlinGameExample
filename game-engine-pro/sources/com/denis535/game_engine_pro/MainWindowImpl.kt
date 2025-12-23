@@ -88,6 +88,12 @@ public abstract class MainWindowImpl : MainWindow {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public override val Time: Double
+        get() {
+            return glfwGetTime().also { GLFW.ThrowErrorIfNeeded() }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public override val IsFullScreen: Boolean
         get() {
             check(!this.IsClosed)
@@ -103,7 +109,7 @@ public abstract class MainWindowImpl : MainWindow {
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetWindowTitle(this.NativeWindow, value)
+            glfwSetWindowTitle(this.NativeWindow, value).also { GLFW.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -119,8 +125,7 @@ public abstract class MainWindowImpl : MainWindow {
         }
         set(value) {
             check(!this.IsClosed)
-            val (x, y) = value
-            glfwSetWindowPos(this.NativeWindow, x, y).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetWindowPos(this.NativeWindow, value.first, value.second).also { GLFW.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -136,73 +141,55 @@ public abstract class MainWindowImpl : MainWindow {
         }
         set(value) {
             check(!this.IsClosed)
-            val (width, height) = value
-            glfwSetWindowSize(this.NativeWindow, width, height).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetWindowSize(this.NativeWindow, value.first, value.second).also { GLFW.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override val IsVisible: Boolean
         get() {
             check(!this.IsClosed)
-            return glfwGetWindowAttrib(this.NativeWindow, GLFW_VISIBLE) == GLFW_TRUE
+            return glfwGetWindowAttrib(this.NativeWindow, GLFW_VISIBLE).also { GLFW.ThrowErrorIfNeeded() } == GLFW_TRUE
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override val IsIconified: Boolean
         get() {
             check(!this.IsClosed)
-            return glfwGetWindowAttrib(this.NativeWindow, GLFW_ICONIFIED) == GLFW_TRUE
+            return glfwGetWindowAttrib(this.NativeWindow, GLFW_ICONIFIED).also { GLFW.ThrowErrorIfNeeded() } == GLFW_TRUE
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override val IsFocused: Boolean
         get() {
             check(!this.IsClosed)
-            return glfwGetWindowAttrib(this.NativeWindow, GLFW_FOCUSED) == GLFW_TRUE
+            return glfwGetWindowAttrib(this.NativeWindow, GLFW_FOCUSED).also { GLFW.ThrowErrorIfNeeded() } == GLFW_TRUE
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override var IsCursorEnabled: Boolean
+    public override var CursorMode: CursorMode
         get() {
             check(!this.IsClosed)
-            return glfwGetInputMode(this.NativeWindow, GLFW_CURSOR) != GLFW_CURSOR_DISABLED
+            return glfwGetInputMode(this.NativeWindow, GLFW_CURSOR).also { GLFW.ThrowErrorIfNeeded() }.ToCursorMode()
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetInputMode(this.NativeWindow, GLFW_CURSOR, if (value) GLFW_CURSOR_NORMAL else GLFW_CURSOR_DISABLED)
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override var IsCursorVisible: Boolean
-        get() {
-            check(!this.IsClosed)
-            return glfwGetInputMode(this.NativeWindow, GLFW_CURSOR) != GLFW_CURSOR_HIDDEN
-        }
-        set(value) {
-            check(!this.IsClosed)
-            glfwSetInputMode(this.NativeWindow, GLFW_CURSOR, if (value) GLFW_CURSOR_NORMAL else GLFW_CURSOR_HIDDEN)
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override val Time: Double
-        get() {
-            return glfwGetTime().also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetInputMode(this.NativeWindow, GLFW_CURSOR, value.ToOriginal()).also { GLFW.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override var IsClosingRequested: Boolean
         get() {
             check(!this.IsClosed)
-            return glfwWindowShouldClose(this.NativeWindow) == GLFW_TRUE
+            return glfwWindowShouldClose(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() } == GLFW_TRUE
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetWindowShouldClose(this.NativeWindow, if (value) GLFW_TRUE else GLFW_FALSE)
+            glfwSetWindowShouldClose(this.NativeWindow, if (value) GLFW_TRUE else GLFW_FALSE).also { GLFW.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
     public constructor(desc: MainWindowDesc) {
-        glfwInit()
+        glfwInit().also { GLFW.ThrowErrorIfNeeded() }
         this._NativeWindow = run {
             val monitor = glfwGetPrimaryMonitor()!!.also { GLFW.ThrowErrorIfNeeded() }
             val videoMode = glfwGetVideoMode(monitor)!!.also { GLFW.ThrowErrorIfNeeded() }
@@ -255,10 +242,10 @@ public abstract class MainWindowImpl : MainWindow {
             glfwSetWindowUserPointer(this.NativeWindow, null).also { GLFW.ThrowErrorIfNeeded() }
         }
         this._NativeWindow = run {
-            glfwDestroyWindow(this.NativeWindow)
+            glfwDestroyWindow(this.NativeWindow).also { GLFW.ThrowErrorIfNeeded() }
             null
         }
-        glfwTerminate()
+        glfwTerminate().also { GLFW.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -341,6 +328,16 @@ public abstract class MainWindowImpl : MainWindow {
         return glfwGetKey(this@MainWindowImpl.NativeWindow, key.ToOriginal()).also { GLFW.ThrowErrorIfNeeded() } == GLFW_PRESS
     }
 
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun Int.ToCursorMode(): CursorMode {
+    return when (this) {
+        GLFW_CURSOR_NORMAL -> CursorMode.Normal
+        GLFW_CURSOR_HIDDEN -> CursorMode.Hidden
+        GLFW_CURSOR_DISABLED -> CursorMode.Disabled
+        else -> error("CursorMode $this is not supported")
+    }
 }
 
 @OptIn(ExperimentalForeignApi::class)
@@ -453,6 +450,15 @@ private fun Int.ToKey(): Key? {
         GLFW_KEY_F12 -> Key.F12
 
         else -> null
+    }
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun CursorMode.ToOriginal(): Int {
+    return when (this) {
+        CursorMode.Normal -> GLFW_CURSOR_NORMAL
+        CursorMode.Hidden -> GLFW_CURSOR_HIDDEN
+        CursorMode.Disabled -> GLFW_CURSOR_DISABLED
     }
 }
 

@@ -5,6 +5,8 @@ import com.denis535.game_framework_pro.*
 import kotlinx.cinterop.*
 import kotlin.reflect.*
 
+typealias ECursorMode = CursorMode
+
 public fun Main(args: Array<String>) {
     Program().use {
 //        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
@@ -95,10 +97,10 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                     }
                 }
                 if (key == Key.F2) {
-                    this.IsCursorEnabled = !this.IsCursorEnabled
+                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Hidden
                 }
                 if (key == Key.F3) {
-                    this.IsCursorVisible = !this.IsCursorVisible
+                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Disabled
                 }
             }
 

@@ -4,6 +4,8 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract val IsClosed: Boolean
 
+    public abstract val Time: Double
+
     public abstract val IsFullScreen: Boolean
 
     public abstract var Title: String
@@ -18,11 +20,7 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract val IsFocused: Boolean
 
-    public abstract var IsCursorEnabled: Boolean
-
-    public abstract var IsCursorVisible: Boolean
-
-    public abstract val Time: Double
+    public abstract var CursorMode: CursorMode
 
     public abstract var IsClosingRequested: Boolean
 
@@ -108,6 +106,12 @@ public abstract class MainWindow : AutoCloseable {
 public sealed class MainWindowDesc(public val Title: String) {
     public class FullScreen(title: String) : MainWindowDesc(title)
     public class Window(title: String, public val Width: Int = 1280, public val Height: Int = 720, public val IsResizable: Boolean = false) : MainWindowDesc(title)
+}
+
+public enum class CursorMode {
+    Normal,
+    Hidden,
+    Disabled,
 }
 
 public class FrameInfo {
