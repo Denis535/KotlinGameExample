@@ -1,7 +1,7 @@
 package com.denis535.game_engine_pro
 
 import cnames.structs.*
-import glfw.*
+import com.denis535.glfw.*
 import kotlinx.cinterop.*
 import kotlin.experimental.*
 

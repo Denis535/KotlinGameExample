@@ -1,4 +1,4 @@
-package glfw
+package com.denis535.glfw
 
 import kotlinx.cinterop.*
 

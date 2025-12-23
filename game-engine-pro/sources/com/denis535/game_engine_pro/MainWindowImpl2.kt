@@ -1,6 +1,6 @@
 package com.denis535.game_engine_pro
 
-import glfw.*
+import com.denis535.glfw.*
 import kotlinx.cinterop.*
 
 public abstract class MainWindowImpl2 : MainWindowImpl {

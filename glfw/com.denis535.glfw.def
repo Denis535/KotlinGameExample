@@ -1,4 +1,4 @@
-package = glfw
+package = com.denis535.glfw
 headers = GLFW/glfw3.h
 
 compilerOpts.mingw = -Iglfw-3.4.bin.WIN64/include

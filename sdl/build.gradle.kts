@@ -6,14 +6,14 @@ kotlin {
     this.mingwX64 {
         this.compilations["main"].cinterops {
             val glfw by creating {
-                this.definitionFile = file("com.denis535.glfw.def")
+                this.definitionFile = file("com.denis535.sdl.def")
             }
         }
     }
     this.linuxX64 {
         this.compilations["main"].cinterops {
             val glfw by creating {
-                this.definitionFile = file("com.denis535.glfw.def")
+                this.definitionFile = file("com.denis535.sdl.def")
             }
         }
     }
