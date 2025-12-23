@@ -173,7 +173,7 @@ public abstract class MainWindowImpl : MainWindow {
         }
         set(value) {
             check(!this.IsClosed)
-            glfwSetInputMode(this.NativeWindow, GLFW_CURSOR, value.ToOriginal()).also { GLFW.ThrowErrorIfNeeded() }
+            glfwSetInputMode(this.NativeWindow, GLFW_CURSOR, value.ToNativeValue()).also { GLFW.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -319,13 +319,13 @@ public abstract class MainWindowImpl : MainWindow {
     @OptIn(ExperimentalForeignApi::class)
     public override fun GetMouseButtonPressed(button: MouseButton): Boolean {
         check(!this.IsClosed)
-        return glfwGetMouseButton(this@MainWindowImpl.NativeWindow, button.ToOriginal()).also { GLFW.ThrowErrorIfNeeded() } == GLFW_PRESS
+        return glfwGetMouseButton(this@MainWindowImpl.NativeWindow, button.ToNativeValue()).also { GLFW.ThrowErrorIfNeeded() } == GLFW_PRESS
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun GetKeyPressed(key: Key): Boolean {
         check(!this.IsClosed)
-        return glfwGetKey(this@MainWindowImpl.NativeWindow, key.ToOriginal()).also { GLFW.ThrowErrorIfNeeded() } == GLFW_PRESS
+        return glfwGetKey(this@MainWindowImpl.NativeWindow, key.ToNativeValue()).also { GLFW.ThrowErrorIfNeeded() } == GLFW_PRESS
     }
 
 }
@@ -454,7 +454,7 @@ private fun Int.ToKey(): Key? {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun CursorMode.ToOriginal(): Int {
+private fun CursorMode.ToNativeValue(): Int {
     return when (this) {
         CursorMode.Normal -> GLFW_CURSOR_NORMAL
         CursorMode.Hidden -> GLFW_CURSOR_HIDDEN
@@ -463,7 +463,7 @@ private fun CursorMode.ToOriginal(): Int {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun MouseButton.ToOriginal(): Int {
+private fun MouseButton.ToNativeValue(): Int {
     return when (this) {
         MouseButton.Button_1 -> GLFW_MOUSE_BUTTON_1
         MouseButton.Button_2 -> GLFW_MOUSE_BUTTON_2
@@ -477,7 +477,7 @@ private fun MouseButton.ToOriginal(): Int {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun Key.ToOriginal(): Int {
+private fun Key.ToNativeValue(): Int {
     return when (this) {
         Key.Letter_A -> GLFW_KEY_A
         Key.Letter_B -> GLFW_KEY_B
