@@ -15,7 +15,7 @@ export CXX=aarch64-linux-gnu-g++
 cmake -S . -B "${BUILD_DIR}" \
   -DCMAKE_BUILD_TYPE=Release \
   -DSDL_SHARED=ON \
-  -DSDL_STATIC=OFF \
+  -DSDL_STATIC=ON \
   -DSDL_ENABLE_PCH=OFF \
   -DSDL_VIDEO_WINDOWS=OFF \
   -DSDL_VIDEO_X11=ON \
