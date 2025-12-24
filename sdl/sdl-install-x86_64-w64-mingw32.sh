@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -e
+
+BUILD_DIR="build/x86_64-w64-mingw32"
+INSTALL_DIR="install/x86_64-w64-mingw32"
+
+export CC=x86_64-w64-mingw32-gcc
+export CXX=x86_64-w64-mingw32-g++
+export RC=x86_64-w64-mingw32-windres
+
+cmake -S . -B "${BUILD_DIR}" \
+  -DCMAKE_SYSTEM_NAME=Windows \
+  -DCMAKE_FIND_ROOT_PATH=/usr/x86_64-w64-mingw32 \
+  -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+  -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
+  -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=BOTH \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DSDL_SHARED=ON \
+  -DSDL_STATIC=OFF \
+  -DSDL_ENABLE_PCH=OFF \
+  -DSDL_VIDEO_WINDOWS=ON \
+  -DSDL_VIDEO_X11=OFF \
+  -DSDL_VIDEO_WAYLAND=OFF \
+  -DSDL_RENDER_OPENGL=ON \
+  -DSDL_RENDER_VULKAN=ON \
+  -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
+
+cmake --build "${BUILD_DIR}" -- -j$(nproc)
+
+cmake --install "${BUILD_DIR}"
+

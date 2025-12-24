@@ -1,1 +1,10 @@
 package = com.denis535.sdl
+headers = SDL3/SDL.h
+
+compilerOpts.mingw = -ISDL-release-3.2.28/install/x86_64-w64-mingw32/include
+staticLibraries.mingw = libSDL3.dll.a
+libraryPaths.mingw = SDL-release-3.2.28/install/x86_64-w64-mingw32/lib
+
+compilerOpts.linux = -ISDL-release-3.2.28/install/x86_64-linux-gnu/include
+staticLibraries.linux = libSDL3.so
+libraryPaths.linux = SDL-release-3.2.28/install/x86_64-linux-gnu/lib
