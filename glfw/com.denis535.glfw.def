@@ -2,6 +2,7 @@ package = com.denis535.glfw
 headers = GLFW/glfw3.h
 
 compilerOpts.mingw = -Iglfw-3.4.bin.WIN64/include
+linkerOpts.mingw = -lgdi32 -lopengl32 -luser32 -lkernel32
 staticLibraries.mingw = libglfw3.a
 libraryPaths.mingw = glfw-3.4.bin.WIN64/lib-mingw-w64
 
