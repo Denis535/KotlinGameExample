@@ -336,7 +336,7 @@ private fun Int.ToCursorMode(): CursorMode {
         GLFW_CURSOR_NORMAL -> CursorMode.Normal
         GLFW_CURSOR_HIDDEN -> CursorMode.Hidden
         GLFW_CURSOR_DISABLED -> CursorMode.Disabled
-        else -> error("CursorMode $this is not supported")
+        else -> error("Cursor mode $this is unsupported")
     }
 }
 
