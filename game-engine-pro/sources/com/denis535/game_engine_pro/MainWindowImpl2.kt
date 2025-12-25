@@ -15,8 +15,6 @@ public abstract class MainWindowImpl2 : MainWindowImpl {
 
     @OptIn(ExperimentalForeignApi::class)
     protected override fun OnStart() {
-        glfwMakeContextCurrent(this.NativeWindow).also { Glfw.ThrowErrorIfNeeded() }
-        glfwSwapInterval(1).also { Glfw.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -30,7 +28,6 @@ public abstract class MainWindowImpl2 : MainWindowImpl {
 
     @OptIn(ExperimentalForeignApi::class)
     protected override fun OnFrameEnd(info: FrameInfo) {
-        glfwSwapBuffers(this.NativeWindow).also { Glfw.ThrowErrorIfNeeded() }
     }
 
 }

@@ -194,19 +194,7 @@ public abstract class MainWindowImpl : MainWindow {
             val monitor = glfwGetPrimaryMonitor()!!.also { Glfw.ThrowErrorIfNeeded() }
             val videoMode = glfwGetVideoMode(monitor)!!.also { Glfw.ThrowErrorIfNeeded() }
             glfwDefaultWindowHints().also { Glfw.ThrowErrorIfNeeded() }
-            // OpenGL
-            glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API)
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4)
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6)
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
-            if (Platform.isDebugBinary) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE)
-            // Frame
-            glfwWindowHint(GLFW_RED_BITS, 8)
-            glfwWindowHint(GLFW_GREEN_BITS, 8)
-            glfwWindowHint(GLFW_BLUE_BITS, 8)
-            glfwWindowHint(GLFW_ALPHA_BITS, 8)
-            glfwWindowHint(GLFW_DEPTH_BITS, 24)
-            glfwWindowHint(GLFW_STENCIL_BITS, 8)
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API)
             when (desc) {
                 is MainWindowDesc.FullScreen -> {
                     glfwWindowHint(GLFW_POSITION_X, 0)
