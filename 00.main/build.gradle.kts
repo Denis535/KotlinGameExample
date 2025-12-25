@@ -37,34 +37,34 @@ kotlin {
     }
 }
 
-tasks.register<Copy>("copy-mingw-debug-dependencies") {
+tasks.register<Copy>("install-debug-dependencies-mingw") {
     this.from("../sdl/SDL-release-3.2.28/install/x86_64-w64-mingw32/bin/SDL3.dll")
     this.into(kotlin.mingwX64().binaries.getExecutable("DEBUG").outputDirectory)
 }
-tasks.register<Copy>("copy-mingw-release-dependencies") {
+tasks.register<Copy>("install-release-dependencies-mingw") {
     this.from("../sdl/SDL-release-3.2.28/install/x86_64-w64-mingw32/bin/SDL3.dll")
     this.into(kotlin.mingwX64().binaries.getExecutable("RELEASE").outputDirectory)
 }
-tasks.register<Copy>("copy-linux-debug-dependencies") {
+tasks.register<Copy>("install-debug-dependencies-linux") {
     this.from("../sdl/SDL-release-3.2.28/install/x86_64-linux-gnu/lib/libSDL3.so")
     this.into(kotlin.linuxX64().binaries.getExecutable("DEBUG").outputDirectory)
 }
-tasks.register<Copy>("copy-linux-release-dependencies") {
+tasks.register<Copy>("install-release-dependencies-linux") {
     this.from("../sdl/SDL-release-3.2.28/install/x86_64-linux-gnu/lib/libSDL3.so")
     this.into(kotlin.linuxX64().binaries.getExecutable("RELEASE").outputDirectory)
 }
 
 tasks.named("linkDebugExecutableMingwX64") {
-    this.finalizedBy("copy-mingw-debug-dependencies")
+    this.finalizedBy("install-debug-dependencies-mingw")
 }
 tasks.named("linkReleaseExecutableMingwX64") {
-    this.finalizedBy("copy-mingw-release-dependencies")
+    this.finalizedBy("install-release-dependencies-mingw")
 }
 tasks.named("linkDebugExecutableLinuxX64") {
-    this.finalizedBy("copy-linux-debug-dependencies")
+    this.finalizedBy("install-debug-dependencies-linux")
 }
 tasks.named("linkReleaseExecutableLinuxX64") {
-    this.finalizedBy("copy-linux-release-dependencies")
+    this.finalizedBy("install-release-dependencies-linux")
 }
 
 val OperationSystem = System.getProperty("os.name")!!
@@ -76,7 +76,5 @@ tasks.register<Exec>("run") {
     }
     val executable = target.binaries.getExecutable("DEBUG")
     this.dependsOn(executable.linkTaskProvider)
-    this.doFirst {
-        commandLine(executable.outputFile.absolutePath)
-    }
+    this.commandLine(executable.outputFile.absolutePath)
 }
