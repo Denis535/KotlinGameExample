@@ -17,7 +17,7 @@ kotlin {
             this.executable {
                 this.baseName = "Launcher"
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
-                this.linkerOpts("-Wl,--allow-shlib-undefined")
+//                this.linkerOpts("-Wl,--allow-shlib-undefined")
             }
         }
     }
