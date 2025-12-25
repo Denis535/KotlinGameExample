@@ -37,47 +37,29 @@ kotlin {
     }
 }
 
-//tasks.register<Copy>("install-debug-dependencies-mingw") {
-//    this.from("../sdl/SDL-release-3.2.28/install/x86_64-w64-mingw32/bin/SDL3.dll")
-//    this.into(kotlin.mingwX64().binaries.getExecutable("DEBUG").outputDirectory)
-//}
-//tasks.register<Copy>("install-release-dependencies-mingw") {
-//    this.from("../sdl/SDL-release-3.2.28/install/x86_64-w64-mingw32/bin/SDL3.dll")
-//    this.into(kotlin.mingwX64().binaries.getExecutable("RELEASE").outputDirectory)
-//}
-//tasks.register<Copy>("install-debug-dependencies-linux") {
-//    this.from("../sdl/SDL-release-3.2.28/install/x86_64-linux-gnu/lib/libSDL3.so")
-//    this.into(kotlin.linuxX64().binaries.getExecutable("DEBUG").outputDirectory)
-//}
-//tasks.register<Copy>("install-release-dependencies-linux") {
-//    this.from("../sdl/SDL-release-3.2.28/install/x86_64-linux-gnu/lib/libSDL3.so")
-//    this.into(kotlin.linuxX64().binaries.getExecutable("RELEASE").outputDirectory)
-//}
-
-//tasks.named("linkDebugExecutableMingwX64") {
-//    this.finalizedBy("install-debug-dependencies-mingw")
-//}
-//tasks.named("linkReleaseExecutableMingwX64") {
-//    this.finalizedBy("install-release-dependencies-mingw")
-//}
-//tasks.named("linkDebugExecutableLinuxX64") {
-//    this.finalizedBy("install-debug-dependencies-linux")
-//}
-//tasks.named("linkReleaseExecutableLinuxX64") {
-//    this.finalizedBy("install-release-dependencies-linux")
-//}
-
 val OperationSystem = System.getProperty("os.name")!!
-
-tasks.register<Exec>("run") {
-    val target = when {
-        OperationSystem.lowercase().contains("windows") -> kotlin.mingwX64()
-        OperationSystem.lowercase().contains("linux") -> kotlin.linuxX64()
-        else -> error("Operation system $OperationSystem is unsupported")
+if (OperationSystem.lowercase().contains("windows")) {
+    tasks.register<Exec>("run") {
+        val target = kotlin.mingwX64()
+        val executable = target.binaries.getExecutable("DEBUG")
+        this.dependsOn(executable.linkTaskProvider)
+        val paths = listOfNotNull(
+            "../sdl/SDL-release-3.2.28/install/x86_64-w64-mingw32/bin", System.getenv("PATH")
+        )
+        this.environment("PATH", paths.joinToString(";"))
+        this.commandLine(executable.outputFile)
     }
-    val executable = target.binaries.getExecutable("DEBUG")
-    this.dependsOn(executable.linkTaskProvider)
-    this.commandLine(executable.outputFile.absolutePath)
+} else if (OperationSystem.lowercase().contains("linux")) {
+    tasks.register<Exec>("run") {
+        val target = kotlin.linuxX64()
+        val executable = target.binaries.getExecutable("DEBUG")
+        this.dependsOn(executable.linkTaskProvider)
+        val paths = listOfNotNull(
+            "../sdl/SDL-release-3.2.28/install/x86_64-linux-gnu/lib", System.getenv("LD_LIBRARY_PATH")
+        )
+        this.environment("LD_LIBRARY_PATH", paths.joinToString(":"))
+        this.commandLine(executable.outputFile)
+    }
 }
 
 tasks.register("publish") {
