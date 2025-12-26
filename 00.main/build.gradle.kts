@@ -77,7 +77,8 @@ tasks.register<Copy>("publish-windows-x86_64") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../sdl/SDL-release-3.2.28/install/x86_64-w64-mingw32/bin/SDL3.dll")
+    this.from("../sdl/SDL-3.2.28/x86_64-w64-mingw32/bin/SDL3.dll")
+    this.from("../sdl/SDL-3.2.28/x86_64-w64-mingw32/share")
     this.into(layout.projectDirectory.dir("publications/Windows-x86_64"))
 }
 
@@ -86,6 +87,7 @@ tasks.register<Copy>("publish-linux-x86_64") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../sdl/SDL-release-3.2.28/install/x86_64-linux-gnu/lib/libSDL3.so")
+    this.from("../sdl/SDL-3.2.28/x86_64-linux-gnu/lib/libSDL3.so")
+    this.from("../sdl/SDL-3.2.28/x86_64-linux-gnu/share")
     this.into(layout.projectDirectory.dir("publications/Linux-x86_64"))
 }
