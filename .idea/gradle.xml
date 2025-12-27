@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/03.game" />
             <option value="$PROJECT_DIR$/10.common" />
             <option value="$PROJECT_DIR$/game-engine-pro" />
-            <option value="$PROJECT_DIR$/glfw" />
             <option value="$PROJECT_DIR$/sdl" />
           </set>
         </option>

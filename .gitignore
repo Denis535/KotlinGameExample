@@ -1,14 +1,3 @@
-### IntelliJ IDEA ###
-.idea/*
-!.idea/codeStyles/**
-!.idea/compiler.xml
-!.idea/encodings.xml
-!.idea/gradle.xml
-!.idea/jarRepositories.xml
-!.idea/kotlinc.xml
-!.idea/misc.xml
-!.idea/vcs.xml
-
 ### Kotlin ###
 .kotlin
 
@@ -17,5 +6,6 @@
 
 ### Misc ###
 build/
+dist/
 publication/
 publications/

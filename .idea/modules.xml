@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/02.app/kotlin-game-example.app.mingwMain.iml" filepath="$PROJECT_DIR$/.idea/modules/02.app/kotlin-game-example.app.mingwMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/02.app/kotlin-game-example.app.mingwTest.iml" filepath="$PROJECT_DIR$/.idea/modules/02.app/kotlin-game-example.app.mingwTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/02.app/kotlin-game-example.app.mingwX64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/02.app/kotlin-game-example.app.mingwX64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/02.app/kotlin-game-example.app.mingwX64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/02.app/kotlin-game-example.app.mingwX64Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/10.common/kotlin-game-example.common.mingwMain.iml" filepath="$PROJECT_DIR$/.idea/modules/10.common/kotlin-game-example.common.mingwMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/10.common/kotlin-game-example.common.mingwTest.iml" filepath="$PROJECT_DIR$/.idea/modules/10.common/kotlin-game-example.common.mingwTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/10.common/kotlin-game-example.common.mingwX64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/10.common/kotlin-game-example.common.mingwX64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/10.common/kotlin-game-example.common.mingwX64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/10.common/kotlin-game-example.common.mingwX64Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/03.game/kotlin-game-example.game.mingwMain.iml" filepath="$PROJECT_DIR$/.idea/modules/03.game/kotlin-game-example.game.mingwMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/03.game/kotlin-game-example.game.mingwTest.iml" filepath="$PROJECT_DIR$/.idea/modules/03.game/kotlin-game-example.game.mingwTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/03.game/kotlin-game-example.game.mingwX64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/03.game/kotlin-game-example.game.mingwX64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/03.game/kotlin-game-example.game.mingwX64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/03.game/kotlin-game-example.game.mingwX64Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/01.ui/kotlin-game-example.ui.mingwMain.iml" filepath="$PROJECT_DIR$/.idea/modules/01.ui/kotlin-game-example.ui.mingwMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/01.ui/kotlin-game-example.ui.mingwTest.iml" filepath="$PROJECT_DIR$/.idea/modules/01.ui/kotlin-game-example.ui.mingwTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/01.ui/kotlin-game-example.ui.mingwX64Main.iml" filepath="$PROJECT_DIR$/.idea/modules/01.ui/kotlin-game-example.ui.mingwX64Main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/01.ui/kotlin-game-example.ui.mingwX64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/01.ui/kotlin-game-example.ui.mingwX64Test.iml" />
+    </modules>
+  </component>
+</project>
