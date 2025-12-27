@@ -269,20 +269,6 @@ public abstract class MainWindowImpl : MainWindow {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    protected override fun ProcessEvents(info: FrameInfo): Boolean {
-        memScoped {
-            val event = this.alloc<SDL_Event>()
-            while (SDL_PollEvent(event.ptr)) {
-//                OnEvent(event)
-                if (event.type == SDL_EVENT_QUIT) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
     public override fun MakeFullScreen() {
         check(!this.IsClosed)
         SDL_SetWindowFullscreen(this.NativeWindow, true).also { Sdl.ThrowErrorIfNeeded() }
@@ -292,6 +278,51 @@ public abstract class MainWindowImpl : MainWindow {
     public override fun MakeWindowed(width: Int, height: Int, isResizable: Boolean) {
         check(!this.IsClosed)
         SDL_SetWindowFullscreen(this.NativeWindow, false).also { Sdl.ThrowErrorIfNeeded() }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public override fun Close() {
+        memScoped {
+            val event = this.alloc<SDL_Event>()
+            event.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED
+            event.window.windowID = SDL_GetWindowID(this@MainWindowImpl.NativeWindow)
+            SDL_PushEvent(event.ptr)
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public override fun Quit() {
+        memScoped {
+            val event = this.alloc<SDL_Event>()
+            event.type = SDL_EVENT_QUIT
+            SDL_PushEvent(event.ptr)
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected override fun ProcessEvents(info: FrameInfo): Boolean {
+        memScoped {
+            val event = this.alloc<SDL_Event>()
+            while (SDL_PollEvent(event.ptr)) {
+                this@MainWindowImpl.OnEvent(event.ptr)
+                if (SDL_GetWindowFromEvent(event.ptr) == this@MainWindowImpl.NativeWindow) {
+                    if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED) {
+                        return true
+                    }
+                }
+                if (event.type == SDL_EVENT_QUIT) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    protected open fun OnEvent(event: CPointer<SDL_Event>) {
+        if (SDL_GetWindowFromEvent(event) == this@MainWindowImpl.NativeWindow) {
+
+        }
     }
 
 //    @OptIn(ExperimentalForeignApi::class)

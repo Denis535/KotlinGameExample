@@ -38,6 +38,12 @@ public abstract class MainWindow : AutoCloseable {
     public abstract fun Show()
     public abstract fun Hide()
 
+    public abstract fun MakeFullScreen()
+    public abstract fun MakeWindowed(width: Int = 1280, height: Int = 720, isResizable: Boolean = false)
+
+    public abstract fun Close()
+    public abstract fun Quit()
+
     public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
         check(!this.IsClosed)
         this.IsRunning = true
@@ -106,9 +112,6 @@ public abstract class MainWindow : AutoCloseable {
 //    public abstract fun GetMouseButtonPressed(button: MouseButton): Boolean
 //
 //    public abstract fun GetKeyPressed(key: Key): Boolean
-
-    public abstract fun MakeFullScreen()
-    public abstract fun MakeWindowed(width: Int = 1280, height: Int = 720, isResizable: Boolean = false)
 
 }
 
