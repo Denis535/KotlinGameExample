@@ -217,9 +217,10 @@ public abstract class MainWindowImpl : MainWindow {
         this._NativeWindow = run {
             when (desc) {
                 is MainWindowDesc.FullScreen -> {
-                    val mode = SDL_GetDesktopDisplayMode(0u)!!.also { Sdl.ThrowErrorIfNeeded() }
+                    val display = SDL_GetPrimaryDisplay()
+                    val displayMode = SDL_GetDesktopDisplayMode(display).also { Sdl.ThrowErrorIfNeeded() }!!
                     val flags = SDL_WINDOW_FULLSCREEN
-                    SDL_CreateWindow(desc.Title, mode.pointed.w, mode.pointed.h, flags).also { Sdl.ThrowErrorIfNeeded() }
+                    SDL_CreateWindow(desc.Title, displayMode.pointed.w, displayMode.pointed.h, flags).also { Sdl.ThrowErrorIfNeeded() }
                 }
                 is MainWindowDesc.Window -> {
                     var flags = 0UL
