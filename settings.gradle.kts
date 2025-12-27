@@ -24,7 +24,6 @@ include("app")
 include("game")
 include("common")
 include("game-engine-pro")
-include("glfw")
 include("sdl")
 
 project(":main").projectDir = File("00.main")

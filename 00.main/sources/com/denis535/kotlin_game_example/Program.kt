@@ -5,8 +5,6 @@ import com.denis535.game_framework_pro.*
 import kotlinx.cinterop.*
 import kotlin.reflect.*
 
-typealias ECursorMode = CursorMode
-
 public fun Main(args: Array<String>) {
     Program().use {
 //        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
@@ -38,17 +36,14 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Window = object : MainWindowImpl2(MainWindowDesc.Window("Kotlin Game Example")) {
 
             protected override fun OnStart() {
-                super.OnStart()
 //                println("OnStart")
             }
 
             protected override fun OnStop() {
 //                println("OnStop")
-                super.OnStop()
             }
 
             protected override fun OnFrameBegin(info: FrameInfo) {
-                super.OnFrameBegin(info)
             }
 
             protected override fun OnFixedUpdate(info: FrameInfo) {
@@ -64,54 +59,53 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             }
 
             protected override fun OnFrameEnd(info: FrameInfo) {
-                super.OnFrameEnd(info)
             }
 
-            protected override fun OnMouseCursorEnter() {
-            }
-
-            protected override fun OnMouseCursorLeave() {
-            }
-
-            protected override fun OnMouseCursorMove(pos: Pair<Double, Double>) {
-            }
-
-            protected override fun OnMouseButtonPress(button: MouseButton) {
-            }
-
-            protected override fun OnMouseButtonRepeat(button: MouseButton) {
-            }
-
-            protected override fun OnMouseButtonRelease(button: MouseButton) {
-            }
-
-            protected override fun OnMouseWheelScroll(delta: Pair<Double, Double>) {
-            }
-
-            protected override fun OnKeyPress(key: Key) {
-                if (key == Key.F1) {
-                    if (this.IsFullScreen) {
-                        this.MakeWindowed()
-                    } else {
-                        this.MakeFullScreen()
-                    }
-                }
-                if (key == Key.F2) {
-                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Hidden
-                }
-                if (key == Key.F3) {
-                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Disabled
-                }
-            }
-
-            protected override fun OnKeyRepeat(key: Key) {
-            }
-
-            protected override fun OnKeyRelease(key: Key) {
-            }
-
-            protected override fun OnCharInput(char: UInt) {
-            }
+//            protected override fun OnMouseCursorEnter() {
+//            }
+//
+//            protected override fun OnMouseCursorLeave() {
+//            }
+//
+//            protected override fun OnMouseCursorMove(pos: Pair<Double, Double>) {
+//            }
+//
+//            protected override fun OnMouseButtonPress(button: MouseButton) {
+//            }
+//
+//            protected override fun OnMouseButtonRepeat(button: MouseButton) {
+//            }
+//
+//            protected override fun OnMouseButtonRelease(button: MouseButton) {
+//            }
+//
+//            protected override fun OnMouseWheelScroll(delta: Pair<Double, Double>) {
+//            }
+//
+//            protected override fun OnKeyPress(key: Key) {
+//                if (key == Key.F1) {
+//                    if (this.IsFullScreen) {
+//                        this.MakeWindowed()
+//                    } else {
+//                        this.MakeFullScreen()
+//                    }
+//                }
+//                if (key == Key.F2) {
+//                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Hidden
+//                }
+//                if (key == Key.F3) {
+//                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Disabled
+//                }
+//            }
+//
+//            protected override fun OnKeyRepeat(key: Key) {
+//            }
+//
+//            protected override fun OnKeyRelease(key: Key) {
+//            }
+//
+//            protected override fun OnCharInput(char: UInt) {
+//            }
 
         }
         this.Application = Application()

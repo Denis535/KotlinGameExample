@@ -16,13 +16,15 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract val IsVisible: Boolean
 
-    public abstract val IsIconified: Boolean
-
     public abstract val IsFocused: Boolean
 
-    public abstract var CursorMode: CursorMode
+    public abstract var IsCursorVisible: Boolean
 
-    public abstract var IsClosingRequested: Boolean
+    public abstract var IsCursorGrabbed: Boolean
+
+    public abstract var IsCursorCaptured: Boolean
+
+    public abstract var IsCursorLocked: Boolean
 
     public var IsRunning: Boolean = false
         private set(value) {
@@ -41,9 +43,13 @@ public abstract class MainWindow : AutoCloseable {
         this.IsRunning = true
         val info = FrameInfo()
         this.OnStart()
-        while (!this.IsClosingRequested) {
+        while (true) {
             val startTime = this.Time
             run {
+                val isClosingRequested = this.ProcessEvents(info)
+                if (isClosingRequested) {
+                    break
+                }
                 this.OnFrameBegin(info)
                 if (info.FixedFrameInfo.Number == 0) {
                     this.OnFixedUpdate(info)
@@ -72,46 +78,43 @@ public abstract class MainWindow : AutoCloseable {
 
     protected abstract fun OnStart()
     protected abstract fun OnStop()
+
+    protected abstract fun ProcessEvents(info: FrameInfo): Boolean
+
     protected abstract fun OnFrameBegin(info: FrameInfo)
     protected abstract fun OnFixedUpdate(info: FrameInfo)
     protected abstract fun OnUpdate(info: FrameInfo)
     protected abstract fun OnDraw(info: FrameInfo)
     protected abstract fun OnFrameEnd(info: FrameInfo)
 
-    protected abstract fun OnMouseCursorEnter()
-    protected abstract fun OnMouseCursorLeave()
-    protected abstract fun OnMouseCursorMove(pos: Pair<Double, Double>)
-    protected abstract fun OnMouseButtonPress(button: MouseButton)
-    protected abstract fun OnMouseButtonRepeat(button: MouseButton)
-    protected abstract fun OnMouseButtonRelease(button: MouseButton)
-    protected abstract fun OnMouseWheelScroll(delta: Pair<Double, Double>)
+//    protected abstract fun OnMouseCursorEnter()
+//    protected abstract fun OnMouseCursorLeave()
+//    protected abstract fun OnMouseCursorMove(pos: Pair<Double, Double>)
+//    protected abstract fun OnMouseButtonPress(button: MouseButton)
+//    protected abstract fun OnMouseButtonRepeat(button: MouseButton)
+//    protected abstract fun OnMouseButtonRelease(button: MouseButton)
+//    protected abstract fun OnMouseWheelScroll(delta: Pair<Double, Double>)
 
-    protected abstract fun OnKeyPress(key: Key)
-    protected abstract fun OnKeyRepeat(key: Key)
-    protected abstract fun OnKeyRelease(key: Key)
+//    protected abstract fun OnKeyPress(key: Key)
+//    protected abstract fun OnKeyRepeat(key: Key)
+//    protected abstract fun OnKeyRelease(key: Key)
+//
+//    protected abstract fun OnCharInput(char: UInt)
 
-    protected abstract fun OnCharInput(char: UInt)
+//    public abstract fun GetMouseCursorPosition(): Pair<Double, Double>
+//    public abstract fun SetMouseCursorPosition(pos: Pair<Double, Double>)
+//    public abstract fun GetMouseButtonPressed(button: MouseButton): Boolean
+//
+//    public abstract fun GetKeyPressed(key: Key): Boolean
 
     public abstract fun MakeFullScreen()
     public abstract fun MakeWindowed(width: Int = 1280, height: Int = 720, isResizable: Boolean = false)
-
-    public abstract fun GetMouseCursorPosition(): Pair<Double, Double>
-    public abstract fun SetMouseCursorPosition(pos: Pair<Double, Double>)
-    public abstract fun GetMouseButtonPressed(button: MouseButton): Boolean
-
-    public abstract fun GetKeyPressed(key: Key): Boolean
 
 }
 
 public sealed class MainWindowDesc(public val Title: String) {
     public class FullScreen(title: String) : MainWindowDesc(title)
     public class Window(title: String, public val Width: Int = 1280, public val Height: Int = 720, public val IsResizable: Boolean = false) : MainWindowDesc(title)
-}
-
-public enum class CursorMode {
-    Normal,
-    Hidden,
-    Disabled,
 }
 
 public class FrameInfo {
