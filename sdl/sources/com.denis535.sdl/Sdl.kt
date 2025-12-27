@@ -4,16 +4,12 @@ import kotlinx.cinterop.*
 
 public object Sdl {
 
-    public fun ThrowErrorIfNeeded() {
-        val error = this.GetError()
-        if (error != null) {
-            error("SDL Error: $error")
-        }
-    }
-
     @OptIn(ExperimentalForeignApi::class)
-    private fun GetError(): String? {
-        return SDL_GetError()?.toKString()
+    public fun ThrowErrorIfNeeded() {
+        val error = SDL_GetError()
+        if (error != null && error.pointed.value.toInt() != 0) {
+            error(error.toKString())
+        }
     }
 
 }
