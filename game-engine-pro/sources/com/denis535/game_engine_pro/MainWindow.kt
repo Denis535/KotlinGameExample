@@ -93,19 +93,20 @@ public abstract class MainWindow : AutoCloseable {
     protected abstract fun OnDraw(info: FrameInfo)
     protected abstract fun OnFrameEnd(info: FrameInfo)
 
-//    protected abstract fun OnMouseCursorEnter()
-//    protected abstract fun OnMouseCursorLeave()
-//    protected abstract fun OnMouseCursorMove(pos: Pair<Double, Double>)
-//    protected abstract fun OnMouseButtonPress(button: MouseButton)
-//    protected abstract fun OnMouseButtonRepeat(button: MouseButton)
-//    protected abstract fun OnMouseButtonRelease(button: MouseButton)
-//    protected abstract fun OnMouseWheelScroll(delta: Pair<Double, Double>)
+    protected abstract fun OnMouseCursorEnter()
+    protected abstract fun OnMouseCursorLeave()
 
-//    protected abstract fun OnKeyPress(key: Key)
-//    protected abstract fun OnKeyRepeat(key: Key)
-//    protected abstract fun OnKeyRelease(key: Key)
-//
-//    protected abstract fun OnCharInput(char: UInt)
+    protected abstract fun OnMouseCursorMove(pos: Pair<Double, Double>)
+    protected abstract fun OnMouseButtonPress(button: MouseButton)
+    protected abstract fun OnMouseButtonRepeat(button: MouseButton)
+    protected abstract fun OnMouseButtonRelease(button: MouseButton)
+    protected abstract fun OnMouseWheelScroll(delta: Pair<Double, Double>)
+
+    protected abstract fun OnKeyPress(key: Key)
+    protected abstract fun OnKeyRepeat(key: Key)
+    protected abstract fun OnKeyRelease(key: Key)
+
+    protected abstract fun OnTextInput(char: UInt)
 
 //    public abstract fun GetMouseCursorPosition(): Pair<Double, Double>
 //    public abstract fun SetMouseCursorPosition(pos: Pair<Double, Double>)

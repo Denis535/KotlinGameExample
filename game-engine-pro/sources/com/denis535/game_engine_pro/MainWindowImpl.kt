@@ -7,70 +7,6 @@ import kotlin.experimental.*
 
 public abstract class MainWindowImpl : MainWindow {
 
-//    @OptIn(ExperimentalForeignApi::class)
-//    private val OnMouseCursorEnterCallback = staticCFunction { window: CPointer<GLFWwindow>?, isEnter: Int ->
-//        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
-//        val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
-//        if (isEnter == GLFW_TRUE) {
-//            thisRef.OnMouseCursorEnter()
-//        } else {
-//            thisRef.OnMouseCursorLeave()
-//        }
-//    }
-//
-//    @OptIn(ExperimentalForeignApi::class)
-//    private val OnMouseCursorMoveCallback = staticCFunction { window: CPointer<GLFWwindow>?, posX: Double, posY: Double ->
-//        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
-//        val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
-//        thisRef.OnMouseCursorMove(Pair(posX, posY))
-//    }
-//
-//    @OptIn(ExperimentalForeignApi::class)
-//    private val OnMouseButtonActionCallback = staticCFunction { window: CPointer<GLFWwindow>?, button: Int, action: Int, mods: Int ->
-//        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
-//        val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
-//        if (action == GLFW_PRESS) {
-//            val button2 = button.ToMouseButton()
-//            if (button2 != null) thisRef.OnMouseButtonPress(button2)
-//        } else if (action == GLFW_REPEAT) {
-//            val button2 = button.ToMouseButton()
-//            if (button2 != null) thisRef.OnMouseButtonRepeat(button2)
-//        } else if (action == GLFW_RELEASE) {
-//            val button2 = button.ToMouseButton()
-//            if (button2 != null) thisRef.OnMouseButtonRelease(button2)
-//        }
-//    }
-//
-//    @OptIn(ExperimentalForeignApi::class)
-//    private val OnMouseWheelScrollCallback = staticCFunction { window: CPointer<GLFWwindow>?, deltaX: Double, deltaY: Double ->
-//        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
-//        val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
-//        thisRef.OnMouseWheelScroll(Pair(deltaX, deltaY))
-//    }
-//
-//    @OptIn(ExperimentalForeignApi::class)
-//    private val OnKeyActionCallback = staticCFunction { window: CPointer<GLFWwindow>?, key: Int, scancode: Int, action: Int, mods: Int ->
-//        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
-//        val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
-//        if (action == GLFW_PRESS) {
-//            val key2 = key.ToKey()
-//            if (key2 != null) thisRef.OnKeyPress(key2)
-//        } else if (action == GLFW_REPEAT) {
-//            val key2 = key.ToKey()
-//            if (key2 != null) thisRef.OnKeyRepeat(key2)
-//        } else if (action == GLFW_RELEASE) {
-//            val key2 = key.ToKey()
-//            if (key2 != null) thisRef.OnKeyRelease(key2)
-//        }
-//    }
-//
-//    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-//    private val OnCharActionCallback = staticCFunction { window: CPointer<GLFWwindow>?, codepoint: UInt ->
-//        val thisPtr = glfwGetWindowUserPointer(window)!!.also { Glfw.ThrowErrorIfNeeded() }
-//        val thisRef = thisPtr.asStableRef<MainWindowImpl2>().get().also { check(!it.IsClosed) }
-//        thisRef.OnCharInput(codepoint)
-//    }
-
     @OptIn(ExperimentalForeignApi::class)
     private var _NativeWindow: CPointer<SDL_Window>? = null
 
@@ -98,7 +34,7 @@ public abstract class MainWindowImpl : MainWindow {
     public override val IsFullScreen: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this._NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_FULLSCREEN != 0UL
         }
 
@@ -106,12 +42,12 @@ public abstract class MainWindowImpl : MainWindow {
     public override var Title: String
         get() {
             check(!this.IsClosed)
-            val title = SDL_GetWindowTitle(this._NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            val title = SDL_GetWindowTitle(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             return title!!.toKString()
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowTitle(this._NativeWindow, value).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_SetWindowTitle(this.NativeWindow, value).also { Sdl.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -121,13 +57,13 @@ public abstract class MainWindowImpl : MainWindow {
             memScoped {
                 val posX = this.alloc<IntVar>()
                 val posY = this.alloc<IntVar>()
-                SDL_GetWindowPosition(this@MainWindowImpl._NativeWindow, posX.ptr, posY.ptr).also { Sdl.ThrowErrorIfNeeded() }
+                SDL_GetWindowPosition(this@MainWindowImpl.NativeWindow, posX.ptr, posY.ptr).also { Sdl.ThrowErrorIfNeeded() }
                 return Pair(posX.value, posY.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowPosition(this._NativeWindow, value.first, value.second).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_SetWindowPosition(this.NativeWindow, value.first, value.second).also { Sdl.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -137,20 +73,20 @@ public abstract class MainWindowImpl : MainWindow {
             memScoped {
                 val posX = this.alloc<IntVar>()
                 val posY = this.alloc<IntVar>()
-                SDL_GetWindowSize(this@MainWindowImpl._NativeWindow, posX.ptr, posY.ptr).also { Sdl.ThrowErrorIfNeeded() }
+                SDL_GetWindowSize(this@MainWindowImpl.NativeWindow, posX.ptr, posY.ptr).also { Sdl.ThrowErrorIfNeeded() }
                 return Pair(posX.value, posY.value)
             }
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowSize(this._NativeWindow, value.first, value.second).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_SetWindowSize(this.NativeWindow, value.first, value.second).also { Sdl.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public override val IsVisible: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this._NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_HIDDEN == 0UL && flags and SDL_WINDOW_MINIMIZED == 0UL
         }
 
@@ -158,8 +94,8 @@ public abstract class MainWindowImpl : MainWindow {
     public override val IsFocused: Boolean
         get() {
             check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this._NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-            return flags and SDL_WINDOW_INPUT_FOCUS == 0UL
+            val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_INPUT_FOCUS == 0UL && flags and SDL_WINDOW_MOUSE_FOCUS == 0UL
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -193,7 +129,7 @@ public abstract class MainWindowImpl : MainWindow {
         get() {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-            return (flags and SDL_WINDOW_MOUSE_CAPTURE) != 0uL
+            return flags and SDL_WINDOW_MOUSE_CAPTURE != 0uL
         }
         set(value) {
             check(!this.IsClosed)
@@ -217,7 +153,7 @@ public abstract class MainWindowImpl : MainWindow {
         this._NativeWindow = run {
             when (desc) {
                 is MainWindowDesc.FullScreen -> {
-                    val display = SDL_GetPrimaryDisplay()
+                    val display = SDL_GetPrimaryDisplay().also { Sdl.ThrowErrorIfNeeded() }
                     val displayMode = SDL_GetDesktopDisplayMode(display).also { Sdl.ThrowErrorIfNeeded() }!!
                     val flags = SDL_WINDOW_FULLSCREEN
                     SDL_CreateWindow(desc.Title, displayMode.pointed.w, displayMode.pointed.h, flags).also { Sdl.ThrowErrorIfNeeded() }
@@ -238,7 +174,7 @@ public abstract class MainWindowImpl : MainWindow {
         check(!this.IsClosed)
         check(!this.IsRunning)
         this._NativeWindow = run {
-            SDL_DestroyWindow(this._NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_DestroyWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             null
         }
         SDL_Quit().also { Sdl.ThrowErrorIfNeeded() }
@@ -247,12 +183,6 @@ public abstract class MainWindowImpl : MainWindow {
     @OptIn(ExperimentalForeignApi::class)
     public override fun Show() {
         check(!this.IsClosed)
-//        glfwSetCursorEnterCallback(this.NativeWindow, this.OnMouseCursorEnterCallback).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetCursorPosCallback(this.NativeWindow, this.OnMouseCursorMoveCallback).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetMouseButtonCallback(this.NativeWindow, this.OnMouseButtonActionCallback).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetScrollCallback(this.NativeWindow, this.OnMouseWheelScrollCallback).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetKeyCallback(this.NativeWindow, this.OnKeyActionCallback).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetCharCallback(this.NativeWindow, this.OnCharActionCallback).also { Glfw.ThrowErrorIfNeeded() }
         SDL_ShowWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
         SDL_RaiseWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
     }
@@ -261,12 +191,6 @@ public abstract class MainWindowImpl : MainWindow {
     public override fun Hide() {
         check(!this.IsClosed)
         SDL_HideWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-//        glfwSetCursorEnterCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetCursorPosCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetMouseButtonCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetScrollCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetKeyCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
-//        glfwSetCharCallback(this.NativeWindow, null).also { Glfw.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -286,8 +210,8 @@ public abstract class MainWindowImpl : MainWindow {
         memScoped {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED
-            event.window.windowID = SDL_GetWindowID(this@MainWindowImpl.NativeWindow)
-            SDL_PushEvent(event.ptr)
+            event.window.windowID = SDL_GetWindowID(this@MainWindowImpl.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_PushEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }
         }
     }
 
@@ -296,7 +220,7 @@ public abstract class MainWindowImpl : MainWindow {
         memScoped {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_QUIT
-            SDL_PushEvent(event.ptr)
+            SDL_PushEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }
         }
     }
 
@@ -306,7 +230,7 @@ public abstract class MainWindowImpl : MainWindow {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr)) {
                 this@MainWindowImpl.OnEvent(event.ptr)
-                if (SDL_GetWindowFromEvent(event.ptr) == this@MainWindowImpl.NativeWindow) {
+                if (event.window.windowID == SDL_GetWindowID(this@MainWindowImpl.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }) {
                     if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED) {
                         return true
                     }
@@ -321,8 +245,94 @@ public abstract class MainWindowImpl : MainWindow {
 
     @OptIn(ExperimentalForeignApi::class)
     protected open fun OnEvent(event: CPointer<SDL_Event>) {
-        if (SDL_GetWindowFromEvent(event) == this@MainWindowImpl.NativeWindow) {
+        if (event.pointed.window.windowID == SDL_GetWindowID(this@MainWindowImpl.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }) {
+//            if (event.pointed.type == SDL_EVENT_WINDOW_SHOWN) {
+//            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_HIDDEN) {
+//            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_EXPOSED) {
+//            }
+//
+//            if (event.pointed.type == SDL_EVENT_WINDOW_MOVED) {
+//            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_RESIZED) {
+//            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
+//            }
 
+//            if (event.pointed.type == SDL_EVENT_WINDOW_ENTER_FULLSCREEN) {
+//            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_LEAVE_FULLSCREEN) {
+//            }
+//
+//            if (event.pointed.type == SDL_EVENT_WINDOW_MINIMIZED) {
+//            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_MAXIMIZED) {
+//            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_RESTORED) {
+//            }
+//
+//            if (event.pointed.type == SDL_EVENT_WINDOW_FOCUS_GAINED) {
+//            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_FOCUS_LOST) {
+//            }
+
+            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_ENTER) {
+                val windowEvent = event.pointed.window
+                this.OnMouseCursorEnter()
+            }
+            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_LEAVE) {
+                val windowEvent = event.pointed.window
+                this.OnMouseCursorLeave()
+            }
+
+            if (event.pointed.type == SDL_EVENT_MOUSE_MOTION) {
+                val motionEvent = event.pointed.motion
+                val isLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+                val x = motionEvent.x
+                val y = motionEvent.y
+                val dx = motionEvent.xrel
+                val dy = motionEvent.yrel
+                val isLeftPressed = motionEvent.state and SDL_BUTTON_LMASK != 0U
+                val isRightPressed = motionEvent.state and SDL_BUTTON_RMASK != 0U
+                val isMiddlePressed = motionEvent.state and SDL_BUTTON_MMASK != 0U
+                val isX1Pressed = motionEvent.state and SDL_BUTTON_X1MASK != 0U
+                val isX2Pressed = motionEvent.state and SDL_BUTTON_X2MASK != 0U
+            }
+            if (event.pointed.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.pointed.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+                val buttonEvent = event.pointed.button
+                val isLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+                val x = buttonEvent.x
+                val y = buttonEvent.y
+                val isPressed = buttonEvent.down
+                val button = buttonEvent.button
+                val clicks = buttonEvent.clicks
+            }
+            if (event.pointed.type == SDL_EVENT_MOUSE_WHEEL) {
+                val wheelEvent = event.pointed.wheel
+                val isLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+                val x = wheelEvent.mouse_x
+                val y = wheelEvent.mouse_y
+                if (wheelEvent.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL) {
+                    val scrollX = wheelEvent.x
+                    val scrollY = wheelEvent.y
+                    val scrollIX = wheelEvent.integer_x
+                    val scrollIY = wheelEvent.integer_y
+                } else {
+                    val scrollX = -wheelEvent.x
+                    val scrollY = -wheelEvent.y
+                    val scrollIX = -wheelEvent.integer_x
+                    val scrollIY = -wheelEvent.integer_y
+                }
+            }
+
+            if (event.pointed.type == SDL_EVENT_KEY_DOWN) {
+            }
+            if (event.pointed.type == SDL_EVENT_KEY_UP) {
+            }
+
+            if (event.pointed.type == SDL_EVENT_TEXT_INPUT) {
+            }
         }
     }
 

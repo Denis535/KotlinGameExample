@@ -61,28 +61,28 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnFrameEnd(info: FrameInfo) {
             }
 
-//            protected override fun OnMouseCursorEnter() {
-//            }
-//
-//            protected override fun OnMouseCursorLeave() {
-//            }
-//
-//            protected override fun OnMouseCursorMove(pos: Pair<Double, Double>) {
-//            }
-//
-//            protected override fun OnMouseButtonPress(button: MouseButton) {
-//            }
-//
-//            protected override fun OnMouseButtonRepeat(button: MouseButton) {
-//            }
-//
-//            protected override fun OnMouseButtonRelease(button: MouseButton) {
-//            }
-//
-//            protected override fun OnMouseWheelScroll(delta: Pair<Double, Double>) {
-//            }
-//
-//            protected override fun OnKeyPress(key: Key) {
+            protected override fun OnMouseCursorEnter() {
+            }
+
+            protected override fun OnMouseCursorLeave() {
+            }
+
+            protected override fun OnMouseCursorMove(pos: Pair<Double, Double>) {
+            }
+
+            protected override fun OnMouseButtonPress(button: MouseButton) {
+            }
+
+            protected override fun OnMouseButtonRepeat(button: MouseButton) {
+            }
+
+            protected override fun OnMouseButtonRelease(button: MouseButton) {
+            }
+
+            protected override fun OnMouseWheelScroll(delta: Pair<Double, Double>) {
+            }
+
+            protected override fun OnKeyPress(key: Key) {
 //                if (key == Key.F1) {
 //                    if (this.IsFullScreen) {
 //                        this.MakeWindowed()
@@ -96,16 +96,16 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 //                if (key == Key.F3) {
 //                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Disabled
 //                }
-//            }
-//
-//            protected override fun OnKeyRepeat(key: Key) {
-//            }
-//
-//            protected override fun OnKeyRelease(key: Key) {
-//            }
-//
-//            protected override fun OnCharInput(char: UInt) {
-//            }
+            }
+
+            protected override fun OnKeyRepeat(key: Key) {
+            }
+
+            protected override fun OnKeyRelease(key: Key) {
+            }
+
+            protected override fun OnTextInput(char: UInt) {
+            }
 
         }
         this.Application = Application()
