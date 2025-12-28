@@ -96,7 +96,7 @@ public abstract class MainWindowImpl : MainWindow {
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowResizable(this.NativeWindow, value)
+            SDL_SetWindowResizable(this.NativeWindow, value).also { Sdl.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -168,14 +168,14 @@ public abstract class MainWindowImpl : MainWindow {
     public override var IsTextInputEnabled: Boolean
         get() {
             check(!this.IsClosed)
-            return SDL_TextInputActive(this.NativeWindow)
+            return SDL_TextInputActive(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
         }
         set(value) {
             check(!this.IsClosed)
             if (value) {
-                SDL_StartTextInput(this.NativeWindow)
+                SDL_StartTextInput(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             } else {
-                SDL_StopTextInput(this.NativeWindow)
+                SDL_StopTextInput(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             }
         }
 
