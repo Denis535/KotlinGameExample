@@ -32,11 +32,15 @@ public abstract class MainWindowImpl : MainWindow {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override val IsFullScreen: Boolean
+    public override var IsFullScreen: Boolean
         get() {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_FULLSCREEN != 0UL
+        }
+        set(value) {
+            check(!this.IsClosed)
+            SDL_SetWindowFullscreen(this.NativeWindow, value).also { Sdl.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -84,6 +88,18 @@ public abstract class MainWindowImpl : MainWindow {
         }
 
     @OptIn(ExperimentalForeignApi::class)
+    public override var IsResizable: Boolean
+        get() {
+            check(!this.IsClosed)
+            val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_RESIZABLE != 0UL
+        }
+        set(value) {
+            check(!this.IsClosed)
+            SDL_SetWindowResizable(this.NativeWindow, value)
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
     public override val IsVisible: Boolean
         get() {
             check(!this.IsClosed)
@@ -97,21 +113,6 @@ public abstract class MainWindowImpl : MainWindow {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_INPUT_FOCUS == 0UL && flags and SDL_WINDOW_MOUSE_FOCUS == 0UL
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override var IsTextInputEnabled: Boolean
-        get() {
-            check(!this.IsClosed)
-            return SDL_TextInputActive(this.NativeWindow)
-        }
-        set(value) {
-            check(!this.IsClosed)
-            if (value) {
-                SDL_StartTextInput(this.NativeWindow)
-            } else {
-                SDL_StopTextInput(this.NativeWindow)
-            }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -137,7 +138,7 @@ public abstract class MainWindowImpl : MainWindow {
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_SetWindowMouseGrab(this.NativeWindow, true).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_SetWindowMouseGrab(this.NativeWindow, value).also { Sdl.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -149,7 +150,7 @@ public abstract class MainWindowImpl : MainWindow {
         }
         set(value) {
             check(!this.IsClosed)
-            SDL_CaptureMouse(true).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_CaptureMouse(value).also { Sdl.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -163,16 +164,30 @@ public abstract class MainWindowImpl : MainWindow {
             SDL_SetWindowRelativeMouseMode(this.NativeWindow, value).also { Sdl.ThrowErrorIfNeeded() }
         }
 
+    @OptIn(ExperimentalForeignApi::class)
+    public override var IsTextInputEnabled: Boolean
+        get() {
+            check(!this.IsClosed)
+            return SDL_TextInputActive(this.NativeWindow)
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value) {
+                SDL_StartTextInput(this.NativeWindow)
+            } else {
+                SDL_StopTextInput(this.NativeWindow)
+            }
+        }
+
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
     public constructor(desc: MainWindowDesc) {
         SDL_Init(SDL_INIT_VIDEO).also { Sdl.ThrowErrorIfNeeded() }
         this._NativeWindow = run {
             when (desc) {
                 is MainWindowDesc.FullScreen -> {
-                    val display = SDL_GetPrimaryDisplay().also { Sdl.ThrowErrorIfNeeded() }
-                    val displayMode = SDL_GetDesktopDisplayMode(display).also { Sdl.ThrowErrorIfNeeded() }!!
-                    val flags = SDL_WINDOW_FULLSCREEN
-                    SDL_CreateWindow(desc.Title, displayMode.pointed.w, displayMode.pointed.h, flags).also { Sdl.ThrowErrorIfNeeded() }
+                    var flags = 0UL
+                    flags = flags or SDL_WINDOW_FULLSCREEN
+                    SDL_CreateWindow(desc.Title, 0, 0, flags).also { Sdl.ThrowErrorIfNeeded() }
                 }
                 is MainWindowDesc.Window -> {
                     var flags = 0UL
@@ -207,18 +222,6 @@ public abstract class MainWindowImpl : MainWindow {
     public override fun Hide() {
         check(!this.IsClosed)
         SDL_HideWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun MakeFullScreen() {
-        check(!this.IsClosed)
-        SDL_SetWindowFullscreen(this.NativeWindow, true).also { Sdl.ThrowErrorIfNeeded() }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun MakeWindowed(width: Int, height: Int, isResizable: Boolean) {
-        check(!this.IsClosed)
-        SDL_SetWindowFullscreen(this.NativeWindow, false).also { Sdl.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)

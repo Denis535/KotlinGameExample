@@ -6,7 +6,7 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract val Time: Double
 
-    public abstract val IsFullScreen: Boolean
+    public abstract var IsFullScreen: Boolean
 
     public abstract var Title: String
 
@@ -14,11 +14,11 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract var Size: Pair<Int, Int>
 
+    public abstract var IsResizable: Boolean
+
     public abstract val IsVisible: Boolean
 
     public abstract val IsFocused: Boolean
-
-    public abstract var IsTextInputEnabled: Boolean
 
     public abstract var IsCursorVisible: Boolean
 
@@ -27,6 +27,8 @@ public abstract class MainWindow : AutoCloseable {
     public abstract var IsCursorCaptured: Boolean
 
     public abstract var IsCursorLocked: Boolean
+
+    public abstract var IsTextInputEnabled: Boolean
 
     public var IsRunning: Boolean = false
         private set(value) {
@@ -39,9 +41,6 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract fun Show()
     public abstract fun Hide()
-
-    public abstract fun MakeFullScreen()
-    public abstract fun MakeWindowed(width: Int = 1280, height: Int = 720, isResizable: Boolean = false)
 
     public abstract fun RequestClose()
     public abstract fun RequestQuit()

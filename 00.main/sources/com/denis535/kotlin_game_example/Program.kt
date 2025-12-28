@@ -32,7 +32,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Window = object : MainWindowImpl2(MainWindowDesc.FullScreen("Kotlin Game Example")) {
+        this.Window = object : MainWindowImpl2(MainWindowDesc.Window("Kotlin Game Example")) {
 
             protected override fun OnStart() {
             }
@@ -68,19 +68,26 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             }
 
             protected override fun OnKeyPress(event: KeyActionEvent) {
-                //                if (key == Key.F1) {
-                //                    if (this.IsFullScreen) {
-                //                        this.MakeWindowed()
-                //                    } else {
-                //                        this.MakeFullScreen()
-                //                    }
-                //                }
-                //                if (key == Key.F2) {
-                //                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Hidden
-                //                }
-                //                if (key == Key.F3) {
-                //                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Disabled
-                //                }
+                if (event.Key == Key.F1) {
+                    this.IsFullScreen = !this.IsFullScreen
+                }
+
+                if (event.Key == Key.F2) {
+                    this.IsResizable = !this.IsResizable
+                }
+
+                if (event.Key == Key.F3) {
+                    this.IsCursorVisible = !this.IsCursorVisible
+                }
+                if (event.Key == Key.F4) {
+                    this.IsCursorGrabbed = !this.IsCursorGrabbed
+                }
+                if (event.Key == Key.F5) {
+                    this.IsCursorCaptured = !this.IsCursorCaptured
+                }
+                if (event.Key == Key.F6) {
+                    this.IsCursorLocked = !this.IsCursorLocked
+                }
             }
 
             protected override fun OnKeyRepeat(event: KeyActionEvent) {
