@@ -359,12 +359,12 @@ public abstract class MainWindowImpl : MainWindow {
                 if (key != null) {
                     if (isKeyPressed) {
                         if (!isKeyRepeated) {
-                            this.OnKeyPress(KeyboardKeyActionEvent(key))
+                            this.OnKeyPress(KeyActionEvent(key))
                         } else {
-                            this.OnKeyRepeat(KeyboardKeyActionEvent(key))
+                            this.OnKeyRepeat(KeyActionEvent(key))
                         }
                     } else {
-                        this.OnKeyRelease(KeyboardKeyActionEvent(key))
+                        this.OnKeyRelease(KeyActionEvent(key))
                     }
                 }
             }

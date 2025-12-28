@@ -100,9 +100,9 @@ public abstract class MainWindow : AutoCloseable {
     protected abstract fun OnMouseButtonRelease(event: MouseButtonActionEvent)
     protected abstract fun OnMouseWheelScroll(event: MouseWheelScrollEvent)
 
-    protected abstract fun OnKeyPress(event: KeyboardKeyActionEvent)
-    protected abstract fun OnKeyRepeat(event: KeyboardKeyActionEvent)
-    protected abstract fun OnKeyRelease(event: KeyboardKeyActionEvent)
+    protected abstract fun OnKeyPress(event: KeyActionEvent)
+    protected abstract fun OnKeyRepeat(event: KeyActionEvent)
+    protected abstract fun OnKeyRelease(event: KeyActionEvent)
 
     protected abstract fun OnTextInput(text: String)
 
@@ -192,7 +192,7 @@ public class MouseWheelScrollEvent(
     public val ScrollIntegerY: Int,
 )
 
-public class KeyboardKeyActionEvent(
+public class KeyActionEvent(
     public val Key: Key
 )
 
