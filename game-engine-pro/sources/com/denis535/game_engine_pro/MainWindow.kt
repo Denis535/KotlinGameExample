@@ -95,23 +95,22 @@ public abstract class MainWindow : AutoCloseable {
     protected abstract fun OnDraw(info: FrameInfo)
     protected abstract fun OnFrameEnd(info: FrameInfo)
 
-    protected abstract fun OnMouseCursorMove(pos: Pair<Double, Double>)
-    protected abstract fun OnMouseButtonPress(button: MouseButton)
-    protected abstract fun OnMouseButtonRepeat(button: MouseButton)
-    protected abstract fun OnMouseButtonRelease(button: MouseButton)
-    protected abstract fun OnMouseWheelScroll(delta: Pair<Double, Double>)
+    protected abstract fun OnMouseCursorMove(event: MouseCursorMoveEvent)
+    protected abstract fun OnMouseButtonPress(event: MouseButtonActionEvent)
+    protected abstract fun OnMouseButtonRelease(event: MouseButtonActionEvent)
+    protected abstract fun OnMouseWheelScroll(event: MouseWheelScrollEvent)
 
-    protected abstract fun OnKeyPress(key: Key, modifiers: KeyModifiers)
-    protected abstract fun OnKeyRepeat(key: Key, modifiers: KeyModifiers)
-    protected abstract fun OnKeyRelease(key: Key, modifiers: KeyModifiers)
+    protected abstract fun OnKeyPress(event: KeyboardActionEvent)
+    protected abstract fun OnKeyRepeat(event: KeyboardActionEvent)
+    protected abstract fun OnKeyRelease(event: KeyboardActionEvent)
 
     protected abstract fun OnTextInput(text: String)
 
-//    public abstract fun GetMouseCursorPosition(): Pair<Double, Double>
-//    public abstract fun SetMouseCursorPosition(pos: Pair<Double, Double>)
-//    public abstract fun GetMouseButtonPressed(button: MouseButton): Boolean
-//
-//    public abstract fun GetKeyPressed(key: Key): Boolean
+    //    public abstract fun GetMouseCursorPosition(): Pair<Double, Double>
+    //    public abstract fun SetMouseCursorPosition(pos: Pair<Double, Double>)
+    //    public abstract fun GetMouseButtonPressed(button: MouseButton): Boolean
+    //
+    //    public abstract fun GetKeyPressed(key: Key): Boolean
 
 }
 
@@ -167,22 +166,43 @@ public class FixedFrameInfo {
 
 }
 
-//public enum class MouseButton {
-//    Button_1,
-//    Button_2,
-//    Button_3,
-//    Button_4,
-//    Button_5,
-//    Button_6,
-//    Button_7,
-//    Button_8;
-//
-//    public companion object {
-//        val Left = Button_1
-//        val Right = Button_2
-//        val Middle = Button_3
-//    }
-//}
+public class MouseCursorMoveEvent(
+    public val IsCursorLocked: Boolean,
+    public val CursorX: Float,
+    public val CursorY: Float,
+    public val CursorDeltaX: Float,
+    public val CursorDeltaY: Float,
+)
+
+public class MouseButtonActionEvent(
+    public val IsCursorLocked: Boolean,
+    public val CursorX: Float,
+    public val CursorY: Float,
+    public val Button: Button,
+    public val Clicks: Int,
+)
+
+public class MouseWheelScrollEvent(
+    public val IsCursorLocked: Boolean,
+    public val CursorX: Float,
+    public val CursorY: Float,
+    public val ScrollX: Float,
+    public val ScrollY: Float,
+    public val ScrollIX: Int,
+    public val ScrollIY: Int,
+)
+
+public class KeyboardActionEvent(
+    public val Key: Key
+)
+
+public enum class Button {
+    Left,
+    Right,
+    Middle,
+    X1,
+    X2,
+}
 
 public enum class Key {
     Letter_A,
@@ -276,14 +296,3 @@ public enum class Key {
     F11,
     F12;
 }
-
-public class KeyModifiers(
-    public val LeftAlt: Boolean,
-    public val LeftControl: Boolean,
-    public val LeftShift: Boolean,
-    public val RightAlt: Boolean,
-    public val RightControl: Boolean,
-    public val RightShift: Boolean,
-    public val CapsLock: Boolean,
-    public val NumLock: Boolean,
-)

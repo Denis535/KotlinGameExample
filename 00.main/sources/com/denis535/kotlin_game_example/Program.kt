@@ -6,24 +6,23 @@ import kotlinx.cinterop.*
 import kotlin.reflect.*
 
 public fun Main(args: Array<String>) {
-    Program().use {
-//        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
-//        it.RequireDependency<Program>(Program::class)
-//
-//        it.RequireDependency<AbstractTheme>(AbstractTheme::class)
-//        it.RequireDependency<Theme>(Theme::class)
-//
-//        it.RequireDependency<AbstractScreen>(AbstractScreen::class)
-//        it.RequireDependency<Screen>(Screen::class)
-//
-//        it.RequireDependency<AbstractRouter>(AbstractRouter::class)
-//        it.RequireDependency<Router>(Router::class)
-//
-//        it.RequireDependency<AbstractApplication>(AbstractApplication::class)
-//        it.RequireDependency<Application>(Application::class)
-//
-//        it.RequireDependency<AbstractGame>(AbstractGame::class)
-//        it.RequireDependency<Game>(Game::class)
+    Program().use { //        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
+        //        it.RequireDependency<Program>(Program::class)
+        //
+        //        it.RequireDependency<AbstractTheme>(AbstractTheme::class)
+        //        it.RequireDependency<Theme>(Theme::class)
+        //
+        //        it.RequireDependency<AbstractScreen>(AbstractScreen::class)
+        //        it.RequireDependency<Screen>(Screen::class)
+        //
+        //        it.RequireDependency<AbstractRouter>(AbstractRouter::class)
+        //        it.RequireDependency<Router>(Router::class)
+        //
+        //        it.RequireDependency<AbstractApplication>(AbstractApplication::class)
+        //        it.RequireDependency<Application>(Application::class)
+        //
+        //        it.RequireDependency<AbstractGame>(AbstractGame::class)
+        //        it.RequireDependency<Game>(Game::class)
     }
 }
 
@@ -36,66 +35,58 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Window = object : MainWindowImpl2(MainWindowDesc.FullScreen("Kotlin Game Example")) {
 
             protected override fun OnStart() {
-//                println("OnStart")
             }
 
             protected override fun OnStop() {
-//                println("OnStop")
             }
 
             protected override fun OnFrameBegin(info: FrameInfo) {
             }
 
             protected override fun OnFixedUpdate(info: FrameInfo) {
-//                println("OnFixedUpdate: ${info.Time}")
             }
 
             protected override fun OnUpdate(info: FrameInfo) {
-//                println("OnUpdate: ${info.Time}")
             }
 
             protected override fun OnDraw(info: FrameInfo) {
-//                println("OnDraw: ${info.Time}")
             }
 
             protected override fun OnFrameEnd(info: FrameInfo) {
             }
 
-            protected override fun OnMouseCursorMove(pos: Pair<Double, Double>) {
+            protected override fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
             }
 
-            protected override fun OnMouseButtonPress(button: MouseButton) {
+            protected override fun OnMouseButtonPress(event: MouseButtonActionEvent) {
             }
 
-            protected override fun OnMouseButtonRepeat(button: MouseButton) {
+            protected override fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
             }
 
-            protected override fun OnMouseButtonRelease(button: MouseButton) {
+            protected override fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
             }
 
-            protected override fun OnMouseWheelScroll(delta: Pair<Double, Double>) {
+            protected override fun OnKeyPress(event: KeyActionEvent) {
+                //                if (key == Key.F1) {
+                //                    if (this.IsFullScreen) {
+                //                        this.MakeWindowed()
+                //                    } else {
+                //                        this.MakeFullScreen()
+                //                    }
+                //                }
+                //                if (key == Key.F2) {
+                //                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Hidden
+                //                }
+                //                if (key == Key.F3) {
+                //                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Disabled
+                //                }
             }
 
-            protected override fun OnKeyPress(key: Key) {
-//                if (key == Key.F1) {
-//                    if (this.IsFullScreen) {
-//                        this.MakeWindowed()
-//                    } else {
-//                        this.MakeFullScreen()
-//                    }
-//                }
-//                if (key == Key.F2) {
-//                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Hidden
-//                }
-//                if (key == Key.F3) {
-//                    this.CursorMode = if (this.CursorMode != ECursorMode.Normal) ECursorMode.Normal else ECursorMode.Disabled
-//                }
+            protected override fun OnKeyRepeat(event: KeyActionEvent) {
             }
 
-            protected override fun OnKeyRepeat(key: Key) {
-            }
-
-            protected override fun OnKeyRelease(key: Key) {
+            protected override fun OnKeyRelease(event: KeyActionEvent) {
             }
 
             protected override fun OnTextInput(text: String) {

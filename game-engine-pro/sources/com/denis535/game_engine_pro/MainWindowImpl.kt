@@ -304,66 +304,74 @@ public abstract class MainWindowImpl : MainWindow {
 
             if (event.pointed.type == SDL_EVENT_MOUSE_MOTION) {
                 val motionEvent = event.pointed.motion
-                val isLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-                val x = motionEvent.x
-                val y = motionEvent.y
-                val dx = motionEvent.xrel
-                val dy = motionEvent.yrel
-                val isLeftPressed = motionEvent.state and SDL_BUTTON_LMASK != 0U
-                val isRightPressed = motionEvent.state and SDL_BUTTON_RMASK != 0U
-                val isMiddlePressed = motionEvent.state and SDL_BUTTON_MMASK != 0U
-                val isX1Pressed = motionEvent.state and SDL_BUTTON_X1MASK != 0U
-                val isX2Pressed = motionEvent.state and SDL_BUTTON_X2MASK != 0U
+                val isCursorLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+                val cursorX = motionEvent.x
+                val cursorY = motionEvent.y
+                val cursorDeltaX = motionEvent.xrel
+                val cursorDeltaY = motionEvent.yrel
+                this.OnMouseCursorMove(MouseCursorMoveEvent(isCursorLocked, cursorX, cursorY, cursorDeltaX, cursorDeltaY))
             }
             if (event.pointed.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.pointed.type == SDL_EVENT_MOUSE_BUTTON_UP) {
                 val buttonEvent = event.pointed.button
-                val isLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-                val x = buttonEvent.x
-                val y = buttonEvent.y
-                val isPressed = buttonEvent.down
-                val button = buttonEvent.button
-                val clicks = buttonEvent.clicks
+                val isCursorLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+                val cursorX = buttonEvent.x
+                val cursorY = buttonEvent.y
+                val isButtonPressed = buttonEvent.down
+                val button = buttonEvent.button.ToButton()
+                val clicks = buttonEvent.clicks.toInt()
+                if (button != null) {
+                    if (isButtonPressed) {
+                        this.OnMouseButtonPress(MouseButtonActionEvent(isCursorLocked, cursorX, cursorY, button, clicks))
+                    } else {
+                        this.OnMouseButtonRelease(MouseButtonActionEvent(isCursorLocked, cursorX, cursorY, button, clicks))
+                    }
+                }
             }
             if (event.pointed.type == SDL_EVENT_MOUSE_WHEEL) {
                 val wheelEvent = event.pointed.wheel
-                val isLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-                val x = wheelEvent.mouse_x
-                val y = wheelEvent.mouse_y
-                if (wheelEvent.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL) {
-                    val scrollX = wheelEvent.x
-                    val scrollY = wheelEvent.y
-                    val scrollIX = wheelEvent.integer_x
-                    val scrollIY = wheelEvent.integer_y
+                val isCursorLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+                val cursorX = wheelEvent.mouse_x
+                val cursorY = wheelEvent.mouse_y
+                val isDirectionNormal = wheelEvent.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
+                val scrollX: Float
+                val scrollY: Float
+                val scrollIX: Int
+                val scrollIY: Int
+                if (isDirectionNormal) {
+                    scrollX = wheelEvent.x
+                    scrollY = wheelEvent.y
+                    scrollIX = wheelEvent.integer_x
+                    scrollIY = wheelEvent.integer_y
                 } else {
-                    val scrollX = -wheelEvent.x
-                    val scrollY = -wheelEvent.y
-                    val scrollIX = -wheelEvent.integer_x
-                    val scrollIY = -wheelEvent.integer_y
+                    scrollX = -wheelEvent.x
+                    scrollY = -wheelEvent.y
+                    scrollIX = -wheelEvent.integer_x
+                    scrollIY = -wheelEvent.integer_y
                 }
+                this.OnMouseWheelScroll(MouseWheelScrollEvent(isCursorLocked, cursorX, cursorY, scrollX, scrollY, scrollIX, scrollIY))
             }
 
             if (event.pointed.type == SDL_EVENT_KEY_DOWN || event.pointed.type == SDL_EVENT_KEY_UP) {
                 val keyEvent = event.pointed.key
-                val isPressed = keyEvent.down
-                val isRepeated = keyEvent.repeat
+                val isKeyPressed = keyEvent.down
+                val isKeyRepeated = keyEvent.repeat
                 val key = keyEvent.scancode.ToKey()
-                val modifiers = keyEvent.mod.ToKeyModifiers()
                 if (key != null) {
-                    if (isPressed) {
-                        if (!isRepeated) {
-                            this.OnKeyPress(key, modifiers)
+                    if (isKeyPressed) {
+                        if (!isKeyRepeated) {
+                            this.OnKeyPress(KeyboardActionEvent(key))
                         } else {
-                            this.OnKeyRepeat(key, modifiers)
+                            this.OnKeyRepeat(KeyboardActionEvent(key))
                         }
                     } else {
-                        this.OnKeyRelease(key, modifiers)
+                        this.OnKeyRelease(KeyboardActionEvent(key))
                     }
                 }
             }
 
             if (event.pointed.type == SDL_EVENT_TEXT_INPUT) {
-                val textInputEvent = event.pointed.text
-                val text = textInputEvent.text?.toKStringFromUtf8()
+                val textEvent = event.pointed.text
+                val text = textEvent.text?.toKStringFromUtf8()
                 if (text != null) {
                     this.OnTextInput(text)
                 }
@@ -400,6 +408,18 @@ public abstract class MainWindowImpl : MainWindow {
 //        return glfwGetKey(this@MainWindowImpl.NativeWindow, key.ToNativeValue()).also { Glfw.ThrowErrorIfNeeded() } == GLFW_PRESS
 //    }
 
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun UByte.ToButton(): Button? {
+    return when (this.toInt()) {
+        SDL_BUTTON_LEFT -> Button.Left
+        SDL_BUTTON_RIGHT -> Button.Right
+        SDL_BUTTON_MIDDLE -> Button.Middle
+        SDL_BUTTON_X1 -> Button.X1
+        SDL_BUTTON_X2 -> Button.X2
+        else -> null
+    }
 }
 
 @OptIn(ExperimentalForeignApi::class)
@@ -501,17 +521,14 @@ private fun SDL_Scancode.ToKey(): Key? {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-private fun SDL_Keymod.ToKeyModifiers(): KeyModifiers {
-    return KeyModifiers(
-        LeftAlt = this.toUInt() and SDL_KMOD_LALT != 0U,
-        LeftControl = this.toUInt() and SDL_KMOD_LCTRL != 0U,
-        LeftShift = this.toUInt() and SDL_KMOD_LSHIFT != 0U,
-        RightAlt = this.toUInt() and SDL_KMOD_RALT != 0U,
-        RightControl = this.toUInt() and SDL_KMOD_RCTRL != 0U,
-        RightShift = this.toUInt() and SDL_KMOD_RSHIFT != 0U,
-        CapsLock = this.toUInt() and SDL_KMOD_CAPS != 0U,
-        NumLock = this.toUInt() and SDL_KMOD_NUM != 0U,
-    )
+private fun Button.ToNativeValue(): Int {
+    return when (this) {
+        Button.Left -> SDL_BUTTON_LEFT
+        Button.Right -> SDL_BUTTON_RIGHT
+        Button.Middle -> SDL_BUTTON_MIDDLE
+        Button.X1 -> SDL_BUTTON_X1
+        Button.X2 -> SDL_BUTTON_X2
+    }
 }
 
 @OptIn(ExperimentalForeignApi::class)
