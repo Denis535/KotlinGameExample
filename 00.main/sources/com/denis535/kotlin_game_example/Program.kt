@@ -61,12 +61,6 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnFrameEnd(info: FrameInfo) {
             }
 
-            protected override fun OnMouseCursorEnter() {
-            }
-
-            protected override fun OnMouseCursorLeave() {
-            }
-
             protected override fun OnMouseCursorMove(pos: Pair<Double, Double>) {
             }
 

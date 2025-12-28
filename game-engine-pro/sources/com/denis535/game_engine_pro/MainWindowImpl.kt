@@ -26,6 +26,7 @@ public abstract class MainWindowImpl : MainWindow {
     @OptIn(ExperimentalForeignApi::class)
     public override val Time: Double
         get() {
+            check(!this.IsClosed)
             val ticks = SDL_GetTicks().also { Sdl.ThrowErrorIfNeeded() }
             return ticks.toDouble() / 1000.0
         }
@@ -96,6 +97,21 @@ public abstract class MainWindowImpl : MainWindow {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_INPUT_FOCUS == 0UL && flags and SDL_WINDOW_MOUSE_FOCUS == 0UL
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public override var IsTextInputEnabled: Boolean
+        get() {
+            check(!this.IsClosed)
+            return SDL_TextInputActive(this.NativeWindow)
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value) {
+                SDL_StartTextInput(this.NativeWindow)
+            } else {
+                SDL_StopTextInput(this.NativeWindow)
+            }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -206,7 +222,8 @@ public abstract class MainWindowImpl : MainWindow {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override fun Close() {
+    public override fun RequestClose() {
+        check(!this.IsClosed)
         memScoped {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED
@@ -216,7 +233,8 @@ public abstract class MainWindowImpl : MainWindow {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public override fun Quit() {
+    public override fun RequestQuit() {
+        check(!this.IsClosed)
         memScoped {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_QUIT
@@ -226,6 +244,7 @@ public abstract class MainWindowImpl : MainWindow {
 
     @OptIn(ExperimentalForeignApi::class)
     protected override fun ProcessEvents(info: FrameInfo): Boolean {
+        check(!this.IsClosed)
         memScoped {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr)) {
@@ -245,6 +264,7 @@ public abstract class MainWindowImpl : MainWindow {
 
     @OptIn(ExperimentalForeignApi::class)
     protected open fun OnEvent(event: CPointer<SDL_Event>) {
+        check(!this.IsClosed)
         if (event.pointed.window.windowID == SDL_GetWindowID(this@MainWindowImpl.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }) {
 //            if (event.pointed.type == SDL_EVENT_WINDOW_SHOWN) {
 //            }
@@ -252,7 +272,7 @@ public abstract class MainWindowImpl : MainWindow {
 //            }
 //            if (event.pointed.type == SDL_EVENT_WINDOW_EXPOSED) {
 //            }
-//
+
 //            if (event.pointed.type == SDL_EVENT_WINDOW_MOVED) {
 //            }
 //            if (event.pointed.type == SDL_EVENT_WINDOW_RESIZED) {
@@ -264,27 +284,25 @@ public abstract class MainWindowImpl : MainWindow {
 //            }
 //            if (event.pointed.type == SDL_EVENT_WINDOW_LEAVE_FULLSCREEN) {
 //            }
-//
+
 //            if (event.pointed.type == SDL_EVENT_WINDOW_MINIMIZED) {
 //            }
 //            if (event.pointed.type == SDL_EVENT_WINDOW_MAXIMIZED) {
 //            }
 //            if (event.pointed.type == SDL_EVENT_WINDOW_RESTORED) {
 //            }
-//
+
 //            if (event.pointed.type == SDL_EVENT_WINDOW_FOCUS_GAINED) {
 //            }
 //            if (event.pointed.type == SDL_EVENT_WINDOW_FOCUS_LOST) {
 //            }
 
-            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_ENTER) {
-                val windowEvent = event.pointed.window
-                this.OnMouseCursorEnter()
-            }
-            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_LEAVE) {
-                val windowEvent = event.pointed.window
-                this.OnMouseCursorLeave()
-            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_ENTER) {
+//                val windowEvent = event.pointed.window
+//            }
+//            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_LEAVE) {
+//                val windowEvent = event.pointed.window
+//            }
 
             if (event.pointed.type == SDL_EVENT_MOUSE_MOTION) {
                 val motionEvent = event.pointed.motion
@@ -326,12 +344,17 @@ public abstract class MainWindowImpl : MainWindow {
                 }
             }
 
-            if (event.pointed.type == SDL_EVENT_KEY_DOWN) {
-            }
-            if (event.pointed.type == SDL_EVENT_KEY_UP) {
+            if (event.pointed.type == SDL_EVENT_KEY_DOWN || event.pointed.type == SDL_EVENT_KEY_UP) {
+                val keyEvent = event.pointed.key
+                val isPressed = keyEvent.down
+                val isRepeated = keyEvent.repeat
+                val key = keyEvent.scancode
+                val modifiers = keyEvent.mod
             }
 
             if (event.pointed.type == SDL_EVENT_TEXT_INPUT) {
+                val textInputEvent = event.pointed.text
+                val text = textInputEvent.text?.toKStringFromUtf8()
             }
         }
     }

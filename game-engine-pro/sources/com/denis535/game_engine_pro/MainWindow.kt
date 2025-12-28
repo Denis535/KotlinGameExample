@@ -18,6 +18,8 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract val IsFocused: Boolean
 
+    public abstract var IsTextInputEnabled: Boolean
+
     public abstract var IsCursorVisible: Boolean
 
     public abstract var IsCursorGrabbed: Boolean
@@ -41,8 +43,8 @@ public abstract class MainWindow : AutoCloseable {
     public abstract fun MakeFullScreen()
     public abstract fun MakeWindowed(width: Int = 1280, height: Int = 720, isResizable: Boolean = false)
 
-    public abstract fun Close()
-    public abstract fun Quit()
+    public abstract fun RequestClose()
+    public abstract fun RequestQuit()
 
     public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
         check(!this.IsClosed)
@@ -92,9 +94,6 @@ public abstract class MainWindow : AutoCloseable {
     protected abstract fun OnUpdate(info: FrameInfo)
     protected abstract fun OnDraw(info: FrameInfo)
     protected abstract fun OnFrameEnd(info: FrameInfo)
-
-    protected abstract fun OnMouseCursorEnter()
-    protected abstract fun OnMouseCursorLeave()
 
     protected abstract fun OnMouseCursorMove(pos: Pair<Double, Double>)
     protected abstract fun OnMouseButtonPress(button: MouseButton)
