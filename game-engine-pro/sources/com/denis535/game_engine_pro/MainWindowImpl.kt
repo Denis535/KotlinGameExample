@@ -335,20 +335,20 @@ public abstract class MainWindowImpl : MainWindow {
                 val isDirectionNormal = wheelEvent.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
                 val scrollX: Float
                 val scrollY: Float
-                val scrollIX: Int
-                val scrollIY: Int
+                val scrollIntegerX: Int
+                val scrollIntegerY: Int
                 if (isDirectionNormal) {
                     scrollX = wheelEvent.x
                     scrollY = wheelEvent.y
-                    scrollIX = wheelEvent.integer_x
-                    scrollIY = wheelEvent.integer_y
+                    scrollIntegerX = wheelEvent.integer_x
+                    scrollIntegerY = wheelEvent.integer_y
                 } else {
                     scrollX = -wheelEvent.x
                     scrollY = -wheelEvent.y
-                    scrollIX = -wheelEvent.integer_x
-                    scrollIY = -wheelEvent.integer_y
+                    scrollIntegerX = -wheelEvent.integer_x
+                    scrollIntegerY = -wheelEvent.integer_y
                 }
-                this.OnMouseWheelScroll(MouseWheelScrollEvent(isCursorLocked, cursorX, cursorY, scrollX, scrollY, scrollIX, scrollIY))
+                this.OnMouseWheelScroll(MouseWheelScrollEvent(isCursorLocked, cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
             }
 
             if (event.pointed.type == SDL_EVENT_KEY_DOWN || event.pointed.type == SDL_EVENT_KEY_UP) {
@@ -359,12 +359,12 @@ public abstract class MainWindowImpl : MainWindow {
                 if (key != null) {
                     if (isKeyPressed) {
                         if (!isKeyRepeated) {
-                            this.OnKeyPress(KeyboardActionEvent(key))
+                            this.OnKeyPress(KeyboardKeyActionEvent(key))
                         } else {
-                            this.OnKeyRepeat(KeyboardActionEvent(key))
+                            this.OnKeyRepeat(KeyboardKeyActionEvent(key))
                         }
                     } else {
-                        this.OnKeyRelease(KeyboardActionEvent(key))
+                        this.OnKeyRelease(KeyboardKeyActionEvent(key))
                     }
                 }
             }

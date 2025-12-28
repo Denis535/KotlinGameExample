@@ -67,7 +67,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
             }
 
-            protected override fun OnKeyPress(event: KeyboardActionEvent) {
+            protected override fun OnKeyPress(event: KeyboardKeyActionEvent) {
                 //                if (key == Key.F1) {
                 //                    if (this.IsFullScreen) {
                 //                        this.MakeWindowed()
@@ -83,10 +83,10 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 //                }
             }
 
-            protected override fun OnKeyRepeat(event: KeyboardActionEvent) {
+            protected override fun OnKeyRepeat(event: KeyboardKeyActionEvent) {
             }
 
-            protected override fun OnKeyRelease(event: KeyboardActionEvent) {
+            protected override fun OnKeyRelease(event: KeyboardKeyActionEvent) {
             }
 
             protected override fun OnTextInput(text: String) {
