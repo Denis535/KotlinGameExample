@@ -101,11 +101,11 @@ public abstract class MainWindow : AutoCloseable {
     protected abstract fun OnMouseButtonRelease(button: MouseButton)
     protected abstract fun OnMouseWheelScroll(delta: Pair<Double, Double>)
 
-    protected abstract fun OnKeyPress(key: Key)
-    protected abstract fun OnKeyRepeat(key: Key)
-    protected abstract fun OnKeyRelease(key: Key)
+    protected abstract fun OnKeyPress(key: Key, modifiers: KeyModifiers)
+    protected abstract fun OnKeyRepeat(key: Key, modifiers: KeyModifiers)
+    protected abstract fun OnKeyRelease(key: Key, modifiers: KeyModifiers)
 
-    protected abstract fun OnTextInput(char: UInt)
+    protected abstract fun OnTextInput(text: String)
 
 //    public abstract fun GetMouseCursorPosition(): Pair<Double, Double>
 //    public abstract fun SetMouseCursorPosition(pos: Pair<Double, Double>)
@@ -167,22 +167,22 @@ public class FixedFrameInfo {
 
 }
 
-public enum class MouseButton {
-    Button_1,
-    Button_2,
-    Button_3,
-    Button_4,
-    Button_5,
-    Button_6,
-    Button_7,
-    Button_8;
-
-    public companion object {
-        val Left = Button_1
-        val Right = Button_2
-        val Middle = Button_3
-    }
-}
+//public enum class MouseButton {
+//    Button_1,
+//    Button_2,
+//    Button_3,
+//    Button_4,
+//    Button_5,
+//    Button_6,
+//    Button_7,
+//    Button_8;
+//
+//    public companion object {
+//        val Left = Button_1
+//        val Right = Button_2
+//        val Middle = Button_3
+//    }
+//}
 
 public enum class Key {
     Letter_A,
@@ -232,18 +232,19 @@ public enum class Key {
     Backspace,
     Delete,
     Enter,
-
-    Left_Alt,
-    Left_Control,
-    Left_Shift,
-
-    Right_Alt,
-    Right_Control,
-    Right_Shift,
-
-    CapsLock,
     Tab,
     Escape,
+
+    LeftAlt,
+    LeftControl,
+    LeftShift,
+
+    RightAlt,
+    RightControl,
+    RightShift,
+
+    CapsLock,
+    NumLock,
 
     Keypad_0,
     Keypad_1,
@@ -255,13 +256,11 @@ public enum class Key {
     Keypad_7,
     Keypad_8,
     Keypad_9,
-
-    Keypad_Add,
-    Keypad_Subtract,
+    Keypad_Decimal,
+    Keypad_Plus,
+    Keypad_Minus,
     Keypad_Multiply,
     Keypad_Divide,
-    Keypad_Decimal,
-
     Keypad_Enter,
 
     F1,
@@ -277,3 +276,14 @@ public enum class Key {
     F11,
     F12;
 }
+
+public class KeyModifiers(
+    public val LeftAlt: Boolean,
+    public val LeftControl: Boolean,
+    public val LeftShift: Boolean,
+    public val RightAlt: Boolean,
+    public val RightControl: Boolean,
+    public val RightShift: Boolean,
+    public val CapsLock: Boolean,
+    public val NumLock: Boolean,
+)

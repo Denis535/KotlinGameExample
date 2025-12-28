@@ -98,7 +98,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnKeyRelease(key: Key) {
             }
 
-            protected override fun OnTextInput(char: UInt) {
+            protected override fun OnTextInput(text: String) {
             }
 
         }

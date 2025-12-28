@@ -298,10 +298,8 @@ public abstract class MainWindowImpl : MainWindow {
 //            }
 
 //            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_ENTER) {
-//                val windowEvent = event.pointed.window
 //            }
 //            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_LEAVE) {
-//                val windowEvent = event.pointed.window
 //            }
 
             if (event.pointed.type == SDL_EVENT_MOUSE_MOTION) {
@@ -348,13 +346,27 @@ public abstract class MainWindowImpl : MainWindow {
                 val keyEvent = event.pointed.key
                 val isPressed = keyEvent.down
                 val isRepeated = keyEvent.repeat
-                val key = keyEvent.scancode
-                val modifiers = keyEvent.mod
+                val key = keyEvent.scancode.ToKey()
+                val modifiers = keyEvent.mod.ToKeyModifiers()
+                if (key != null) {
+                    if (isPressed) {
+                        if (!isRepeated) {
+                            this.OnKeyPress(key, modifiers)
+                        } else {
+                            this.OnKeyRepeat(key, modifiers)
+                        }
+                    } else {
+                        this.OnKeyRelease(key, modifiers)
+                    }
+                }
             }
 
             if (event.pointed.type == SDL_EVENT_TEXT_INPUT) {
                 val textInputEvent = event.pointed.text
                 val text = textInputEvent.text?.toKStringFromUtf8()
+                if (text != null) {
+                    this.OnTextInput(text)
+                }
             }
         }
     }
@@ -390,219 +402,210 @@ public abstract class MainWindowImpl : MainWindow {
 
 }
 
-//@OptIn(ExperimentalForeignApi::class)
-//private fun Int.ToKey(): Key? {
-//    return when (this) {
-//        GLFW_KEY_A -> Key.Letter_A
-//        GLFW_KEY_B -> Key.Letter_B
-//        GLFW_KEY_C -> Key.Letter_C
-//        GLFW_KEY_D -> Key.Letter_D
-//        GLFW_KEY_E -> Key.Letter_E
-//        GLFW_KEY_F -> Key.Letter_F
-//        GLFW_KEY_G -> Key.Letter_G
-//        GLFW_KEY_H -> Key.Letter_H
-//        GLFW_KEY_I -> Key.Letter_I
-//        GLFW_KEY_J -> Key.Letter_J
-//        GLFW_KEY_K -> Key.Letter_K
-//        GLFW_KEY_L -> Key.Letter_L
-//        GLFW_KEY_M -> Key.Letter_M
-//        GLFW_KEY_N -> Key.Letter_N
-//        GLFW_KEY_O -> Key.Letter_O
-//        GLFW_KEY_P -> Key.Letter_P
-//        GLFW_KEY_Q -> Key.Letter_Q
-//        GLFW_KEY_R -> Key.Letter_R
-//        GLFW_KEY_S -> Key.Letter_S
-//        GLFW_KEY_T -> Key.Letter_T
-//        GLFW_KEY_U -> Key.Letter_U
-//        GLFW_KEY_V -> Key.Letter_V
-//        GLFW_KEY_W -> Key.Letter_W
-//        GLFW_KEY_X -> Key.Letter_X
-//        GLFW_KEY_Y -> Key.Letter_Y
-//        GLFW_KEY_Z -> Key.Letter_Z
-//
-//        GLFW_KEY_0 -> Key.Digit_0
-//        GLFW_KEY_1 -> Key.Digit_1
-//        GLFW_KEY_2 -> Key.Digit_2
-//        GLFW_KEY_3 -> Key.Digit_3
-//        GLFW_KEY_4 -> Key.Digit_4
-//        GLFW_KEY_5 -> Key.Digit_5
-//        GLFW_KEY_6 -> Key.Digit_6
-//        GLFW_KEY_7 -> Key.Digit_7
-//        GLFW_KEY_8 -> Key.Digit_8
-//        GLFW_KEY_9 -> Key.Digit_9
-//
-//        GLFW_KEY_UP -> Key.Up
-//        GLFW_KEY_DOWN -> Key.Down
-//        GLFW_KEY_LEFT -> Key.Left
-//        GLFW_KEY_RIGHT -> Key.Right
-//
-//        GLFW_KEY_SPACE -> Key.Space
-//        GLFW_KEY_BACKSPACE -> Key.Backspace
-//        GLFW_KEY_DELETE -> Key.Delete
-//        GLFW_KEY_ENTER -> Key.Enter
-//
-//        GLFW_KEY_LEFT_ALT -> Key.Left_Alt
-//        GLFW_KEY_LEFT_CONTROL -> Key.Left_Control
-//        GLFW_KEY_LEFT_SHIFT -> Key.Left_Shift
-//
-//        GLFW_KEY_RIGHT_ALT -> Key.Right_Alt
-//        GLFW_KEY_RIGHT_CONTROL -> Key.Right_Control
-//        GLFW_KEY_RIGHT_SHIFT -> Key.Right_Shift
-//
-//        GLFW_KEY_CAPS_LOCK -> Key.CapsLock
-//        GLFW_KEY_TAB -> Key.Tab
-//        GLFW_KEY_ESCAPE -> Key.Escape
-//
-//        GLFW_KEY_KP_0 -> Key.Keypad_0
-//        GLFW_KEY_KP_1 -> Key.Keypad_1
-//        GLFW_KEY_KP_2 -> Key.Keypad_2
-//        GLFW_KEY_KP_3 -> Key.Keypad_3
-//        GLFW_KEY_KP_4 -> Key.Keypad_4
-//        GLFW_KEY_KP_5 -> Key.Keypad_5
-//        GLFW_KEY_KP_6 -> Key.Keypad_6
-//        GLFW_KEY_KP_7 -> Key.Keypad_7
-//        GLFW_KEY_KP_8 -> Key.Keypad_8
-//        GLFW_KEY_KP_9 -> Key.Keypad_9
-//
-//        GLFW_KEY_KP_ADD -> Key.Keypad_Add
-//        GLFW_KEY_KP_SUBTRACT -> Key.Keypad_Subtract
-//        GLFW_KEY_KP_MULTIPLY -> Key.Keypad_Multiply
-//        GLFW_KEY_KP_DIVIDE -> Key.Keypad_Divide
-//        GLFW_KEY_KP_DECIMAL -> Key.Keypad_Decimal
-//        GLFW_KEY_KP_ENTER -> Key.Keypad_Enter
-//
-//        GLFW_KEY_F1 -> Key.F1
-//        GLFW_KEY_F2 -> Key.F2
-//        GLFW_KEY_F3 -> Key.F3
-//        GLFW_KEY_F4 -> Key.F4
-//        GLFW_KEY_F5 -> Key.F5
-//        GLFW_KEY_F6 -> Key.F6
-//        GLFW_KEY_F7 -> Key.F7
-//        GLFW_KEY_F8 -> Key.F8
-//        GLFW_KEY_F9 -> Key.F9
-//        GLFW_KEY_F10 -> Key.F10
-//        GLFW_KEY_F11 -> Key.F11
-//        GLFW_KEY_F12 -> Key.F12
-//
-//        else -> null
-//    }
-//}
-//
-//@OptIn(ExperimentalForeignApi::class)
-//private fun CursorMode.ToNativeValue(): Int {
-//    return when (this) {
-//        CursorMode.Normal -> GLFW_CURSOR_NORMAL
-//        CursorMode.Hidden -> GLFW_CURSOR_HIDDEN
-//        CursorMode.Disabled -> GLFW_CURSOR_DISABLED
-//    }
-//}
-//
-//@OptIn(ExperimentalForeignApi::class)
-//private fun MouseButton.ToNativeValue(): Int {
-//    return when (this) {
-//        MouseButton.Button_1 -> GLFW_MOUSE_BUTTON_1
-//        MouseButton.Button_2 -> GLFW_MOUSE_BUTTON_2
-//        MouseButton.Button_3 -> GLFW_MOUSE_BUTTON_3
-//        MouseButton.Button_4 -> GLFW_MOUSE_BUTTON_4
-//        MouseButton.Button_5 -> GLFW_MOUSE_BUTTON_5
-//        MouseButton.Button_6 -> GLFW_MOUSE_BUTTON_6
-//        MouseButton.Button_7 -> GLFW_MOUSE_BUTTON_7
-//        MouseButton.Button_8 -> GLFW_MOUSE_BUTTON_8
-//    }
-//}
-//
-//@OptIn(ExperimentalForeignApi::class)
-//private fun Key.ToNativeValue(): Int {
-//    return when (this) {
-//        Key.Letter_A -> GLFW_KEY_A
-//        Key.Letter_B -> GLFW_KEY_B
-//        Key.Letter_C -> GLFW_KEY_C
-//        Key.Letter_D -> GLFW_KEY_D
-//        Key.Letter_E -> GLFW_KEY_E
-//        Key.Letter_F -> GLFW_KEY_F
-//        Key.Letter_G -> GLFW_KEY_G
-//        Key.Letter_H -> GLFW_KEY_H
-//        Key.Letter_I -> GLFW_KEY_I
-//        Key.Letter_J -> GLFW_KEY_J
-//        Key.Letter_K -> GLFW_KEY_K
-//        Key.Letter_L -> GLFW_KEY_L
-//        Key.Letter_M -> GLFW_KEY_M
-//        Key.Letter_N -> GLFW_KEY_N
-//        Key.Letter_O -> GLFW_KEY_O
-//        Key.Letter_P -> GLFW_KEY_P
-//        Key.Letter_Q -> GLFW_KEY_Q
-//        Key.Letter_R -> GLFW_KEY_R
-//        Key.Letter_S -> GLFW_KEY_S
-//        Key.Letter_T -> GLFW_KEY_T
-//        Key.Letter_U -> GLFW_KEY_U
-//        Key.Letter_V -> GLFW_KEY_V
-//        Key.Letter_W -> GLFW_KEY_W
-//        Key.Letter_X -> GLFW_KEY_X
-//        Key.Letter_Y -> GLFW_KEY_Y
-//        Key.Letter_Z -> GLFW_KEY_Z
-//
-//        Key.Digit_0 -> GLFW_KEY_0
-//        Key.Digit_1 -> GLFW_KEY_1
-//        Key.Digit_2 -> GLFW_KEY_2
-//        Key.Digit_3 -> GLFW_KEY_3
-//        Key.Digit_4 -> GLFW_KEY_4
-//        Key.Digit_5 -> GLFW_KEY_5
-//        Key.Digit_6 -> GLFW_KEY_6
-//        Key.Digit_7 -> GLFW_KEY_7
-//        Key.Digit_8 -> GLFW_KEY_8
-//        Key.Digit_9 -> GLFW_KEY_9
-//
-//        Key.Up -> GLFW_KEY_UP
-//        Key.Down -> GLFW_KEY_DOWN
-//        Key.Left -> GLFW_KEY_LEFT
-//        Key.Right -> GLFW_KEY_RIGHT
-//
-//        Key.Space -> GLFW_KEY_SPACE
-//        Key.Backspace -> GLFW_KEY_BACKSPACE
-//        Key.Delete -> GLFW_KEY_DELETE
-//        Key.Enter -> GLFW_KEY_ENTER
-//
-//        Key.Left_Alt -> GLFW_KEY_LEFT_ALT
-//        Key.Left_Control -> GLFW_KEY_LEFT_CONTROL
-//        Key.Left_Shift -> GLFW_KEY_LEFT_SHIFT
-//
-//        Key.Right_Alt -> GLFW_KEY_RIGHT_ALT
-//        Key.Right_Control -> GLFW_KEY_RIGHT_CONTROL
-//        Key.Right_Shift -> GLFW_KEY_RIGHT_SHIFT
-//
-//        Key.CapsLock -> GLFW_KEY_CAPS_LOCK
-//        Key.Tab -> GLFW_KEY_TAB
-//        Key.Escape -> GLFW_KEY_ESCAPE
-//
-//        Key.Keypad_0 -> GLFW_KEY_KP_0
-//        Key.Keypad_1 -> GLFW_KEY_KP_1
-//        Key.Keypad_2 -> GLFW_KEY_KP_2
-//        Key.Keypad_3 -> GLFW_KEY_KP_3
-//        Key.Keypad_4 -> GLFW_KEY_KP_4
-//        Key.Keypad_5 -> GLFW_KEY_KP_5
-//        Key.Keypad_6 -> GLFW_KEY_KP_6
-//        Key.Keypad_7 -> GLFW_KEY_KP_7
-//        Key.Keypad_8 -> GLFW_KEY_KP_8
-//        Key.Keypad_9 -> GLFW_KEY_KP_9
-//
-//        Key.Keypad_Add -> GLFW_KEY_KP_ADD
-//        Key.Keypad_Subtract -> GLFW_KEY_KP_SUBTRACT
-//        Key.Keypad_Multiply -> GLFW_KEY_KP_MULTIPLY
-//        Key.Keypad_Divide -> GLFW_KEY_KP_DIVIDE
-//        Key.Keypad_Decimal -> GLFW_KEY_KP_DECIMAL
-//        Key.Keypad_Enter -> GLFW_KEY_KP_ENTER
-//
-//        Key.F1 -> GLFW_KEY_F1
-//        Key.F2 -> GLFW_KEY_F2
-//        Key.F3 -> GLFW_KEY_F3
-//        Key.F4 -> GLFW_KEY_F4
-//        Key.F5 -> GLFW_KEY_F5
-//        Key.F6 -> GLFW_KEY_F6
-//        Key.F7 -> GLFW_KEY_F7
-//        Key.F8 -> GLFW_KEY_F8
-//        Key.F9 -> GLFW_KEY_F9
-//        Key.F10 -> GLFW_KEY_F10
-//        Key.F11 -> GLFW_KEY_F11
-//        Key.F12 -> GLFW_KEY_F12
-//    }
-//}
+@OptIn(ExperimentalForeignApi::class)
+private fun SDL_Scancode.ToKey(): Key? {
+    return when (this) {
+        SDL_SCANCODE_A -> Key.Letter_A
+        SDL_SCANCODE_B -> Key.Letter_B
+        SDL_SCANCODE_C -> Key.Letter_C
+        SDL_SCANCODE_D -> Key.Letter_D
+        SDL_SCANCODE_E -> Key.Letter_E
+        SDL_SCANCODE_F -> Key.Letter_F
+        SDL_SCANCODE_G -> Key.Letter_G
+        SDL_SCANCODE_H -> Key.Letter_H
+        SDL_SCANCODE_I -> Key.Letter_I
+        SDL_SCANCODE_J -> Key.Letter_J
+        SDL_SCANCODE_K -> Key.Letter_K
+        SDL_SCANCODE_L -> Key.Letter_L
+        SDL_SCANCODE_M -> Key.Letter_M
+        SDL_SCANCODE_N -> Key.Letter_N
+        SDL_SCANCODE_O -> Key.Letter_O
+        SDL_SCANCODE_P -> Key.Letter_P
+        SDL_SCANCODE_Q -> Key.Letter_Q
+        SDL_SCANCODE_R -> Key.Letter_R
+        SDL_SCANCODE_S -> Key.Letter_S
+        SDL_SCANCODE_T -> Key.Letter_T
+        SDL_SCANCODE_U -> Key.Letter_U
+        SDL_SCANCODE_V -> Key.Letter_V
+        SDL_SCANCODE_W -> Key.Letter_W
+        SDL_SCANCODE_X -> Key.Letter_X
+        SDL_SCANCODE_Y -> Key.Letter_Y
+        SDL_SCANCODE_Z -> Key.Letter_Z
+
+        SDL_SCANCODE_0 -> Key.Digit_0
+        SDL_SCANCODE_1 -> Key.Digit_1
+        SDL_SCANCODE_2 -> Key.Digit_2
+        SDL_SCANCODE_3 -> Key.Digit_3
+        SDL_SCANCODE_4 -> Key.Digit_4
+        SDL_SCANCODE_5 -> Key.Digit_5
+        SDL_SCANCODE_6 -> Key.Digit_6
+        SDL_SCANCODE_7 -> Key.Digit_7
+        SDL_SCANCODE_8 -> Key.Digit_8
+        SDL_SCANCODE_9 -> Key.Digit_9
+
+        SDL_SCANCODE_UP -> Key.Up
+        SDL_SCANCODE_DOWN -> Key.Down
+        SDL_SCANCODE_LEFT -> Key.Left
+        SDL_SCANCODE_RIGHT -> Key.Right
+
+        SDL_SCANCODE_SPACE -> Key.Space
+        SDL_SCANCODE_BACKSPACE -> Key.Backspace
+        SDL_SCANCODE_DELETE -> Key.Delete
+        SDL_SCANCODE_RETURN -> Key.Enter
+        SDL_SCANCODE_TAB -> Key.Tab
+        SDL_SCANCODE_ESCAPE -> Key.Escape
+
+        SDL_SCANCODE_LALT -> Key.LeftAlt
+        SDL_SCANCODE_LCTRL -> Key.LeftControl
+        SDL_SCANCODE_LSHIFT -> Key.LeftShift
+
+        SDL_SCANCODE_RALT -> Key.RightAlt
+        SDL_SCANCODE_RCTRL -> Key.RightControl
+        SDL_SCANCODE_RSHIFT -> Key.RightShift
+
+        SDL_SCANCODE_CAPSLOCK -> Key.CapsLock
+        SDL_SCANCODE_NUMLOCKCLEAR -> Key.NumLock
+
+        SDL_SCANCODE_KP_0 -> Key.Keypad_0
+        SDL_SCANCODE_KP_1 -> Key.Keypad_1
+        SDL_SCANCODE_KP_2 -> Key.Keypad_2
+        SDL_SCANCODE_KP_3 -> Key.Keypad_3
+        SDL_SCANCODE_KP_4 -> Key.Keypad_4
+        SDL_SCANCODE_KP_5 -> Key.Keypad_5
+        SDL_SCANCODE_KP_6 -> Key.Keypad_6
+        SDL_SCANCODE_KP_7 -> Key.Keypad_7
+        SDL_SCANCODE_KP_8 -> Key.Keypad_8
+        SDL_SCANCODE_KP_9 -> Key.Keypad_9
+        SDL_SCANCODE_KP_DECIMAL -> Key.Keypad_Decimal
+        SDL_SCANCODE_KP_PLUS -> Key.Keypad_Plus
+        SDL_SCANCODE_KP_MINUS -> Key.Keypad_Minus
+        SDL_SCANCODE_KP_MULTIPLY -> Key.Keypad_Multiply
+        SDL_SCANCODE_KP_DIVIDE -> Key.Keypad_Divide
+        SDL_SCANCODE_KP_ENTER -> Key.Keypad_Enter
+
+        SDL_SCANCODE_F1 -> Key.F1
+        SDL_SCANCODE_F2 -> Key.F2
+        SDL_SCANCODE_F3 -> Key.F3
+        SDL_SCANCODE_F4 -> Key.F4
+        SDL_SCANCODE_F5 -> Key.F5
+        SDL_SCANCODE_F6 -> Key.F6
+        SDL_SCANCODE_F7 -> Key.F7
+        SDL_SCANCODE_F8 -> Key.F8
+        SDL_SCANCODE_F9 -> Key.F9
+        SDL_SCANCODE_F10 -> Key.F10
+        SDL_SCANCODE_F11 -> Key.F11
+        SDL_SCANCODE_F12 -> Key.F12
+
+        else -> null
+    }
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun SDL_Keymod.ToKeyModifiers(): KeyModifiers {
+    return KeyModifiers(
+        LeftAlt = this.toUInt() and SDL_KMOD_LALT != 0U,
+        LeftControl = this.toUInt() and SDL_KMOD_LCTRL != 0U,
+        LeftShift = this.toUInt() and SDL_KMOD_LSHIFT != 0U,
+        RightAlt = this.toUInt() and SDL_KMOD_RALT != 0U,
+        RightControl = this.toUInt() and SDL_KMOD_RCTRL != 0U,
+        RightShift = this.toUInt() and SDL_KMOD_RSHIFT != 0U,
+        CapsLock = this.toUInt() and SDL_KMOD_CAPS != 0U,
+        NumLock = this.toUInt() and SDL_KMOD_NUM != 0U,
+    )
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun Key.ToNativeValue(): UInt {
+    return when (this) {
+        Key.Letter_A -> SDL_SCANCODE_A
+        Key.Letter_B -> SDL_SCANCODE_B
+        Key.Letter_C -> SDL_SCANCODE_C
+        Key.Letter_D -> SDL_SCANCODE_D
+        Key.Letter_E -> SDL_SCANCODE_E
+        Key.Letter_F -> SDL_SCANCODE_F
+        Key.Letter_G -> SDL_SCANCODE_G
+        Key.Letter_H -> SDL_SCANCODE_H
+        Key.Letter_I -> SDL_SCANCODE_I
+        Key.Letter_J -> SDL_SCANCODE_J
+        Key.Letter_K -> SDL_SCANCODE_K
+        Key.Letter_L -> SDL_SCANCODE_L
+        Key.Letter_M -> SDL_SCANCODE_M
+        Key.Letter_N -> SDL_SCANCODE_N
+        Key.Letter_O -> SDL_SCANCODE_O
+        Key.Letter_P -> SDL_SCANCODE_P
+        Key.Letter_Q -> SDL_SCANCODE_Q
+        Key.Letter_R -> SDL_SCANCODE_R
+        Key.Letter_S -> SDL_SCANCODE_S
+        Key.Letter_T -> SDL_SCANCODE_T
+        Key.Letter_U -> SDL_SCANCODE_U
+        Key.Letter_V -> SDL_SCANCODE_V
+        Key.Letter_W -> SDL_SCANCODE_W
+        Key.Letter_X -> SDL_SCANCODE_X
+        Key.Letter_Y -> SDL_SCANCODE_Y
+        Key.Letter_Z -> SDL_SCANCODE_Z
+
+        Key.Digit_0 -> SDL_SCANCODE_0
+        Key.Digit_1 -> SDL_SCANCODE_1
+        Key.Digit_2 -> SDL_SCANCODE_2
+        Key.Digit_3 -> SDL_SCANCODE_3
+        Key.Digit_4 -> SDL_SCANCODE_4
+        Key.Digit_5 -> SDL_SCANCODE_5
+        Key.Digit_6 -> SDL_SCANCODE_6
+        Key.Digit_7 -> SDL_SCANCODE_7
+        Key.Digit_8 -> SDL_SCANCODE_8
+        Key.Digit_9 -> SDL_SCANCODE_9
+
+        Key.Up -> SDL_SCANCODE_UP
+        Key.Down -> SDL_SCANCODE_DOWN
+        Key.Left -> SDL_SCANCODE_LEFT
+        Key.Right -> SDL_SCANCODE_RIGHT
+
+        Key.Space -> SDL_SCANCODE_SPACE
+        Key.Backspace -> SDL_SCANCODE_BACKSPACE
+        Key.Delete -> SDL_SCANCODE_DELETE
+        Key.Enter -> SDL_SCANCODE_RETURN
+        Key.Tab -> SDL_SCANCODE_TAB
+        Key.Escape -> SDL_SCANCODE_ESCAPE
+
+        Key.LeftAlt -> SDL_SCANCODE_LALT
+        Key.LeftControl -> SDL_SCANCODE_LCTRL
+        Key.LeftShift -> SDL_SCANCODE_LSHIFT
+
+        Key.RightAlt -> SDL_SCANCODE_RALT
+        Key.RightControl -> SDL_SCANCODE_RCTRL
+        Key.RightShift -> SDL_SCANCODE_RSHIFT
+
+        Key.CapsLock -> SDL_SCANCODE_CAPSLOCK
+        Key.NumLock -> SDL_SCANCODE_NUMLOCKCLEAR
+
+        Key.Keypad_0 -> SDL_SCANCODE_KP_0
+        Key.Keypad_1 -> SDL_SCANCODE_KP_1
+        Key.Keypad_2 -> SDL_SCANCODE_KP_2
+        Key.Keypad_3 -> SDL_SCANCODE_KP_3
+        Key.Keypad_4 -> SDL_SCANCODE_KP_4
+        Key.Keypad_5 -> SDL_SCANCODE_KP_5
+        Key.Keypad_6 -> SDL_SCANCODE_KP_6
+        Key.Keypad_7 -> SDL_SCANCODE_KP_7
+        Key.Keypad_8 -> SDL_SCANCODE_KP_8
+        Key.Keypad_9 -> SDL_SCANCODE_KP_9
+        Key.Keypad_Decimal -> SDL_SCANCODE_KP_DECIMAL
+        Key.Keypad_Plus -> SDL_SCANCODE_KP_PLUS
+        Key.Keypad_Minus -> SDL_SCANCODE_KP_MINUS
+        Key.Keypad_Multiply -> SDL_SCANCODE_KP_MULTIPLY
+        Key.Keypad_Divide -> SDL_SCANCODE_KP_DIVIDE
+        Key.Keypad_Enter -> SDL_SCANCODE_KP_ENTER
+
+        Key.F1 -> SDL_SCANCODE_F1
+        Key.F2 -> SDL_SCANCODE_F2
+        Key.F3 -> SDL_SCANCODE_F3
+        Key.F4 -> SDL_SCANCODE_F4
+        Key.F5 -> SDL_SCANCODE_F5
+        Key.F6 -> SDL_SCANCODE_F6
+        Key.F7 -> SDL_SCANCODE_F7
+        Key.F8 -> SDL_SCANCODE_F8
+        Key.F9 -> SDL_SCANCODE_F9
+        Key.F10 -> SDL_SCANCODE_F10
+        Key.F11 -> SDL_SCANCODE_F11
+        Key.F12 -> SDL_SCANCODE_F12
+    }
+}
