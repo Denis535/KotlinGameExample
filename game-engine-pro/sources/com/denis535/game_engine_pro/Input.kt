@@ -4,7 +4,7 @@ import cnames.structs.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
-public class Input {
+public class Input : AutoCloseable {
 
     private val Window: MainWindow
 
@@ -16,6 +16,9 @@ public class Input {
 
     internal constructor(window: MainWindow) {
         this.Window = window
+    }
+
+    public override fun close() {
     }
 
     //    public abstract fun GetMouseCursorPosition(): Pair<Double, Double>
@@ -151,7 +154,7 @@ public enum class Key {
     F12;
 
     @OptIn(ExperimentalForeignApi::class)
-    internal fun ToNativeValue(): UInt {
+    internal fun ToNativeValue(): SDL_Scancode {
         return when (this) {
             Letter_A -> SDL_SCANCODE_A
             Letter_B -> SDL_SCANCODE_B

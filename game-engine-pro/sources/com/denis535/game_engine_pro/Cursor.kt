@@ -4,7 +4,7 @@ import cnames.structs.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
-public class Cursor {
+public class Cursor : AutoCloseable {
 
     private val Window: MainWindow
 
@@ -18,17 +18,21 @@ public class Cursor {
     private var NativeCursor: CPointer<SDL_Cursor>? = null
 
     @OptIn(ExperimentalForeignApi::class)
-    public var Style: CursorStyle
+    public var Style: CursorStyle?
         get() {
             error("Not implemented")
         }
         set(value) {
-            if (this.NativeCursor != null) {
-                SDL_DestroyCursor(this.NativeCursor).also { Sdl.ThrowErrorIfNeeded() }
-                this.NativeCursor = null
+            val prevNativeCursor = this.NativeCursor
+            this.NativeCursor = if (value != null) {
+                SDL_CreateSystemCursor(value.ToNativeValue()).also { Sdl.ThrowErrorIfNeeded() }
+            } else {
+                null
             }
-            this.NativeCursor = SDL_CreateSystemCursor(value.ToNativeValue()).also { Sdl.ThrowErrorIfNeeded() }
             SDL_SetCursor(this.NativeCursor).also { Sdl.ThrowErrorIfNeeded() }
+            if (prevNativeCursor != null) {
+                SDL_DestroyCursor(prevNativeCursor).also { Sdl.ThrowErrorIfNeeded() }
+            }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -74,6 +78,13 @@ public class Cursor {
 
     internal constructor(window: MainWindow) {
         this.Window = window
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public override fun close() {
+        if (this.NativeCursor != null) {
+            SDL_DestroyCursor(this.NativeCursor).also { Sdl.ThrowErrorIfNeeded() }
+        }
     }
 
 }

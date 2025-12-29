@@ -143,9 +143,9 @@ public abstract class MainWindow : AutoCloseable {
             field = value
         }
 
-    public val Cursor: Cursor = Cursor(this)
+    public val Cursor: Cursor
 
-    public val Input: Input = Input(this)
+    public val Input: Input
 
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
     public constructor(desc: MainWindowDesc) {
@@ -166,12 +166,16 @@ public abstract class MainWindow : AutoCloseable {
                 }
             }
         }
+        this.Cursor = Cursor(this)
+        this.Input = Input(this)
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
+        this.Input.close()
+        this.Cursor.close()
         this._NativeWindow = run {
             SDL_DestroyWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             null

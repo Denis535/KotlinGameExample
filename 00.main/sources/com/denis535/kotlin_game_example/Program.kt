@@ -90,42 +90,42 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                     this.Cursor.IsLocked = !this.Cursor.IsLocked
                 }
 
-//                if (event.Key == Key.Digit_1) {
-//                    this.Cursor.Style = CursorStyle.Arrow
-//                }
-//                if (event.Key == Key.Digit_2) {
-//                    this.Cursor.Style = CursorStyle.Text
-//                }
-//                if (event.Key == Key.Digit_3) {
-//                    this.Cursor.Style = CursorStyle.Pointer
-//                }
-//                if (event.Key == Key.Digit_4) {
-//                    this.Cursor.Style = CursorStyle.Crosshair
-//                }
-//                if (event.Key == Key.Digit_5) {
-//                    this.Cursor.Style = CursorStyle.Progress
-//                }
-//                if (event.Key == Key.Digit_6) {
-//                    this.Cursor.Style = CursorStyle.Wait
-//                }
-//                if (event.Key == Key.Digit_7) {
-//                    this.Cursor.Style = CursorStyle.NotAllowed
-//                }
-//                if (event.Key == Key.Keypad_0) {
-//                    this.Cursor.Style = CursorStyle.Move
-//                }
-//                if (event.Key == Key.Keypad_1) {
-//                    this.Cursor.Style = CursorStyle.SingleArrowResize_N
-//                }
-//                if (event.Key == Key.Keypad_2) {
-//                    this.Cursor.Style = CursorStyle.SingleArrowResize_N_W
-//                }
-//                if (event.Key == Key.Keypad_3) {
-//                    this.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
-//                }
-//                if (event.Key == Key.Keypad_4) {
-//                    this.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
-//                }
+                if (event.Key == Key.Digit_1) {
+                    this.Cursor.Style = CursorStyle.Arrow
+                }
+                if (event.Key == Key.Digit_2) {
+                    this.Cursor.Style = CursorStyle.Text
+                }
+                if (event.Key == Key.Digit_3) {
+                    this.Cursor.Style = CursorStyle.Pointer
+                }
+                if (event.Key == Key.Digit_4) {
+                    this.Cursor.Style = CursorStyle.Crosshair
+                }
+                if (event.Key == Key.Digit_5) {
+                    this.Cursor.Style = CursorStyle.Progress
+                }
+                if (event.Key == Key.Digit_6) {
+                    this.Cursor.Style = CursorStyle.Wait
+                }
+                if (event.Key == Key.Digit_7) {
+                    this.Cursor.Style = CursorStyle.NotAllowed
+                }
+                if (event.Key == Key.Keypad_0) {
+                    this.Cursor.Style = CursorStyle.Move
+                }
+                if (event.Key == Key.Keypad_1) {
+                    this.Cursor.Style = CursorStyle.SingleArrowResize_N
+                }
+                if (event.Key == Key.Keypad_2) {
+                    this.Cursor.Style = CursorStyle.SingleArrowResize_N_W
+                }
+                if (event.Key == Key.Keypad_3) {
+                    this.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
+                }
+                if (event.Key == Key.Keypad_4) {
+                    this.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
+                }
             }
 
             protected override fun OnKeyRepeat(event: KeyActionEvent) {
