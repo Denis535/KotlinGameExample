@@ -72,7 +72,7 @@ public class Cursor {
             SDL_SetWindowRelativeMouseMode(this.NativeWindow, value).also { Sdl.ThrowErrorIfNeeded() }
         }
 
-    public constructor(window: MainWindow) {
+    internal constructor(window: MainWindow) {
         this.Window = window
     }
 
