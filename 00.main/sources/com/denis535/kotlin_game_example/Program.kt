@@ -5,10 +5,9 @@ import com.denis535.game_framework_pro.*
 import kotlinx.cinterop.*
 import kotlin.reflect.*
 
-private typealias ECursor = Cursor
-
 public fun Main(args: Array<String>) {
-    Program().use { //        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
+    Program().use {
+        //        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
         //        it.RequireDependency<Program>(Program::class)
         //
         //        it.RequireDependency<AbstractTheme>(AbstractTheme::class)
@@ -34,7 +33,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Window = object : MainWindowImpl2(MainWindowDesc.Window("Kotlin Game Example")) {
+        this.Window = object : MainWindowImpl(MainWindowDesc.Window("Kotlin Game Example")) {
 
             protected override fun OnStart() {
             }
@@ -78,41 +77,41 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                     this.IsResizable = !this.IsResizable
                 }
 
-                if (event.Key == Key.F3) {
-                    this.IsCursorVisible = !this.IsCursorVisible
-                }
-                if (event.Key == Key.F4) {
-                    this.IsCursorGrabbed = !this.IsCursorGrabbed
-                }
-                if (event.Key == Key.F5) {
-                    this.IsCursorCaptured = !this.IsCursorCaptured
-                }
-                if (event.Key == Key.F6) {
-                    this.IsCursorLocked = !this.IsCursorLocked
-                }
+//                if (event.Key == Key.F3) {
+//                    this.IsCursorVisible = !this.IsCursorVisible
+//                }
+//                if (event.Key == Key.F4) {
+//                    this.IsCursorGrabbed = !this.IsCursorGrabbed
+//                }
+//                if (event.Key == Key.F5) {
+//                    this.IsCursorCaptured = !this.IsCursorCaptured
+//                }
+//                if (event.Key == Key.F6) {
+//                    this.IsCursorLocked = !this.IsCursorLocked
+//                }
 
-                if (event.Key == Key.F10) {
-                    MessageWindow.ShowInfoMessage("Info", "Info")
-                }
-                if (event.Key == Key.F11) {
-                    MessageWindow.ShowWarningMessage("Warning", "Warning")
-                }
-                if (event.Key == Key.F12) {
-                    MessageWindow.ShowErrorMessage("Error", "Error")
-                }
+//                if (event.Key == Key.F10) {
+//                    MessageWindow.ShowInfoMessage("Info", "Info")
+//                }
+//                if (event.Key == Key.F11) {
+//                    MessageWindow.ShowWarningMessage("Warning", "Warning")
+//                }
+//                if (event.Key == Key.F12) {
+//                    MessageWindow.ShowErrorMessage("Error", "Error")
+//                }
 
-                if (event.Key == Key.Keypad_0) {
-                    this.Cursor = ECursor.Arrow
-                }
-                if (event.Key == Key.Keypad_1) {
-                    this.Cursor = ECursor.Text
-                }
-                if (event.Key == Key.Keypad_2) {
-                    this.Cursor = ECursor.Pointer
-                }
-                if (event.Key == Key.Keypad_3) {
-                    this.Cursor = ECursor.Crosshair
-                }
+//                if (event.Key == Key.Keypad_0) {
+//                    this.Cursor = ECursor.Arrow
+//                }
+//                if (event.Key == Key.Keypad_1) {
+//                    this.Cursor = ECursor.Text
+//                }
+//                if (event.Key == Key.Keypad_2) {
+//                    this.Cursor = ECursor.Pointer
+//                }
+//                if (event.Key == Key.Keypad_3) {
+//                    this.Cursor = ECursor.Crosshair
+//                }
             }
 
             protected override fun OnKeyRepeat(event: KeyActionEvent) {

@@ -20,16 +20,6 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract val IsFocused: Boolean
 
-    public abstract var Cursor: Cursor
-
-    public abstract var IsCursorVisible: Boolean
-
-    public abstract var IsCursorGrabbed: Boolean
-
-    public abstract var IsCursorCaptured: Boolean
-
-    public abstract var IsCursorLocked: Boolean
-
     public abstract var IsTextInputEnabled: Boolean
 
     public var IsRunning: Boolean = false
@@ -165,33 +155,6 @@ public class FixedFrameInfo {
         return "FixedFrameInfo(Number=${this.Number}, Time=${this.Time})"
     }
 
-}
-
-public enum class Cursor {
-    Arrow,
-    Text,
-    Pointer,
-    Crosshair,
-    Progress,
-    NotAllowed,
-    Move,
-    Wait,
-
-    SingleArrowResize_N,
-    SingleArrowResize_S,
-    SingleArrowResize_W,
-    SingleArrowResize_E,
-
-    SingleArrowResize_N_W,
-    SingleArrowResize_N_E,
-    SingleArrowResize_S_W,
-    SingleArrowResize_S_E,
-
-    DoubleArrowResize_N_S,
-    DoubleArrowResize_W_E,
-
-    DoubleArrowResize_NW_SE,
-    DoubleArrowResize_NE_SW,
 }
 
 public class MouseCursorMoveEvent(
