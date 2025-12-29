@@ -83,10 +83,11 @@ public enum class CursorStyle {
     Text,
     Pointer,
     Crosshair,
-    Move,
     Progress,
     Wait,
     NotAllowed,
+
+    Move,
 
     SingleArrowResize_N,
     SingleArrowResize_S,
@@ -111,10 +112,11 @@ public enum class CursorStyle {
             Text -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_TEXT
             Pointer -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_POINTER
             Crosshair -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_CROSSHAIR
-            Move -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_MOVE
             Progress -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_PROGRESS
             Wait -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_WAIT
             NotAllowed -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_NOT_ALLOWED
+
+            Move -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_MOVE
 
             SingleArrowResize_N -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_N_RESIZE
             SingleArrowResize_S -> SDL_SystemCursor.SDL_SYSTEM_CURSOR_S_RESIZE
@@ -142,10 +144,11 @@ public enum class CursorStyle {
                 SDL_SystemCursor.SDL_SYSTEM_CURSOR_TEXT -> Text
                 SDL_SystemCursor.SDL_SYSTEM_CURSOR_POINTER -> Pointer
                 SDL_SystemCursor.SDL_SYSTEM_CURSOR_CROSSHAIR -> Crosshair
-                SDL_SystemCursor.SDL_SYSTEM_CURSOR_MOVE -> Move
                 SDL_SystemCursor.SDL_SYSTEM_CURSOR_PROGRESS -> Progress
                 SDL_SystemCursor.SDL_SYSTEM_CURSOR_WAIT -> Wait
                 SDL_SystemCursor.SDL_SYSTEM_CURSOR_NOT_ALLOWED -> NotAllowed
+
+                SDL_SystemCursor.SDL_SYSTEM_CURSOR_MOVE -> Move
 
                 SDL_SystemCursor.SDL_SYSTEM_CURSOR_N_RESIZE -> SingleArrowResize_N
                 SDL_SystemCursor.SDL_SYSTEM_CURSOR_S_RESIZE -> SingleArrowResize_S
