@@ -175,6 +175,16 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 return window
             }
         }
+        this.Window.Cursor.let { cursor ->
+            if (clazz.isInstance(cursor)) {
+                return cursor
+            }
+        }
+        this.Window.Input.let { input ->
+            if (clazz.isInstance(input)) {
+                return input
+            }
+        }
         return null
     }
 
