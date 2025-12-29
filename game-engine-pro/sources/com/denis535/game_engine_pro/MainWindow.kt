@@ -47,6 +47,7 @@ public abstract class MainWindow : AutoCloseable {
 
     public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
         check(!this.IsClosed)
+        check(!this.IsRunning)
         this.IsRunning = true
         val info = FrameInfo()
         this.OnStart()
@@ -106,7 +107,6 @@ public abstract class MainWindow : AutoCloseable {
     protected abstract fun OnTextInput(text: String)
 
     //    public abstract fun GetMouseCursorPosition(): Pair<Double, Double>
-    //    public abstract fun SetMouseCursorPosition(pos: Pair<Double, Double>)
     //    public abstract fun GetMouseButtonPressed(button: MouseButton): Boolean
     //
     //    public abstract fun GetKeyPressed(key: Key): Boolean

@@ -88,6 +88,16 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 if (event.Key == Key.F6) {
                     this.IsCursorLocked = !this.IsCursorLocked
                 }
+
+                if (event.Key == Key.F10) {
+                    MessageWindow.ShowInfoMessage("Info", "Info")
+                }
+                if (event.Key == Key.F11) {
+                    MessageWindow.ShowWarningMessage("Warning", "Warning")
+                }
+                if (event.Key == Key.F12) {
+                    MessageWindow.ShowErrorMessage("Error", "Error")
+                }
             }
 
             protected override fun OnKeyRepeat(event: KeyActionEvent) {
