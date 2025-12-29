@@ -5,6 +5,8 @@ import com.denis535.game_framework_pro.*
 import kotlinx.cinterop.*
 import kotlin.reflect.*
 
+private typealias ECursor = Cursor
+
 public fun Main(args: Array<String>) {
     Program().use { //        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
         //        it.RequireDependency<Program>(Program::class)
@@ -97,6 +99,19 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 }
                 if (event.Key == Key.F12) {
                     MessageWindow.ShowErrorMessage("Error", "Error")
+                }
+
+                if (event.Key == Key.Keypad_0) {
+                    this.Cursor = ECursor.Arrow
+                }
+                if (event.Key == Key.Keypad_1) {
+                    this.Cursor = ECursor.Text
+                }
+                if (event.Key == Key.Keypad_2) {
+                    this.Cursor = ECursor.Pointer
+                }
+                if (event.Key == Key.Keypad_3) {
+                    this.Cursor = ECursor.Crosshair
                 }
             }
 

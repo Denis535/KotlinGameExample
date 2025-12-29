@@ -20,6 +20,8 @@ public abstract class MainWindow : AutoCloseable {
 
     public abstract val IsFocused: Boolean
 
+    public abstract var Cursor: Cursor
+
     public abstract var IsCursorVisible: Boolean
 
     public abstract var IsCursorGrabbed: Boolean
@@ -165,6 +167,33 @@ public class FixedFrameInfo {
 
 }
 
+public enum class Cursor {
+    Arrow,
+    Text,
+    Pointer,
+    Crosshair,
+    Progress,
+    NotAllowed,
+    Move,
+    Wait,
+
+    SingleArrowResize_N,
+    SingleArrowResize_S,
+    SingleArrowResize_W,
+    SingleArrowResize_E,
+
+    SingleArrowResize_N_W,
+    SingleArrowResize_N_E,
+    SingleArrowResize_S_W,
+    SingleArrowResize_S_E,
+
+    DoubleArrowResize_N_S,
+    DoubleArrowResize_W_E,
+
+    DoubleArrowResize_NW_SE,
+    DoubleArrowResize_NE_SW,
+}
+
 public class MouseCursorMoveEvent(
     public val IsCursorLocked: Boolean,
     public val CursorX: Float,
@@ -177,7 +206,7 @@ public class MouseButtonActionEvent(
     public val IsCursorLocked: Boolean,
     public val CursorX: Float,
     public val CursorY: Float,
-    public val Button: Button,
+    public val Button: MouseButton,
     public val Clicks: Int,
 )
 
@@ -195,7 +224,7 @@ public class KeyActionEvent(
     public val Key: Key
 )
 
-public enum class Button {
+public enum class MouseButton {
     Left,
     Right,
     Middle,
