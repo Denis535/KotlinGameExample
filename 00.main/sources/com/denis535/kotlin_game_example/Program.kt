@@ -33,7 +33,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Window = object : MainWindowImpl(MainWindowDesc.Window("Kotlin Game Example")) {
+        this.Window = object : MainWindow(MainWindowDesc.Window("Kotlin Game Example")) {
 
             protected override fun OnStart() {
             }
@@ -77,41 +77,43 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                     this.IsResizable = !this.IsResizable
                 }
 
-//                if (event.Key == Key.F3) {
-//                    this.IsCursorVisible = !this.IsCursorVisible
-//                }
-//                if (event.Key == Key.F4) {
-//                    this.IsCursorGrabbed = !this.IsCursorGrabbed
-//                }
-//                if (event.Key == Key.F5) {
-//                    this.IsCursorCaptured = !this.IsCursorCaptured
-//                }
-//                if (event.Key == Key.F6) {
-//                    this.IsCursorLocked = !this.IsCursorLocked
-//                }
+                if (event.Key == Key.F3) {
+                    this.Cursor.IsVisible = !this.Cursor.IsVisible
+                }
+                if (event.Key == Key.F4) {
+                    this.Cursor.IsGrabbed = !this.Cursor.IsGrabbed
+                }
+                if (event.Key == Key.F5) {
+                    this.Cursor.IsCaptured = !this.Cursor.IsCaptured
+                }
+                if (event.Key == Key.F6) {
+                    this.Cursor.IsLocked = !this.Cursor.IsLocked
+                }
 
-//                if (event.Key == Key.F10) {
-//                    MessageWindow.ShowInfoMessage("Info", "Info")
-//                }
-//                if (event.Key == Key.F11) {
-//                    MessageWindow.ShowWarningMessage("Warning", "Warning")
-//                }
-//                if (event.Key == Key.F12) {
-//                    MessageWindow.ShowErrorMessage("Error", "Error")
-//                }
-
-//                if (event.Key == Key.Keypad_0) {
-//                    this.Cursor = ECursor.Arrow
-//                }
-//                if (event.Key == Key.Keypad_1) {
-//                    this.Cursor = ECursor.Text
-//                }
-//                if (event.Key == Key.Keypad_2) {
-//                    this.Cursor = ECursor.Pointer
-//                }
-//                if (event.Key == Key.Keypad_3) {
-//                    this.Cursor = ECursor.Crosshair
-//                }
+                if (event.Key == Key.Digit_1) {
+                    this.Cursor.Style = CursorStyle.Arrow
+                }
+                if (event.Key == Key.Digit_2) {
+                    this.Cursor.Style = CursorStyle.Text
+                }
+                if (event.Key == Key.Digit_3) {
+                    this.Cursor.Style = CursorStyle.Pointer
+                }
+                if (event.Key == Key.Digit_4) {
+                    this.Cursor.Style = CursorStyle.Crosshair
+                }
+                if (event.Key == Key.Digit_5) {
+                    this.Cursor.Style = CursorStyle.Progress
+                }
+                if (event.Key == Key.Digit_6) {
+                    this.Cursor.Style = CursorStyle.Move
+                }
+                if (event.Key == Key.Digit_7) {
+                    this.Cursor.Style = CursorStyle.Wait
+                }
+                if (event.Key == Key.Digit_8) {
+                    this.Cursor.Style = CursorStyle.NotAllowed
+                }
             }
 
             protected override fun OnKeyRepeat(event: KeyActionEvent) {
