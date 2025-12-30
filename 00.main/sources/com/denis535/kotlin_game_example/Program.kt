@@ -33,7 +33,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Window = object : MainWindow(MainWindowDesc.Window("Kotlin Game Example")) {
+        this.Window = object : MainWindow(MainWindowDesc.Window("Kotlin Game Example"), Manifest("Kotlin Game Example")) {
 
             protected override fun OnStart() {
             }
