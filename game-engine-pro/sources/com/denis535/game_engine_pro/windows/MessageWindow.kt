@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro
+package com.denis535.game_engine_pro.windows
 
 import com.denis535.sdl.*
 import kotlinx.cinterop.*

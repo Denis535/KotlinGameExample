@@ -1,4 +1,4 @@
-package com.denis535.game_engine_pro
+package com.denis535.game_engine_pro.windows
 
 public sealed class MainWindowDesc(
     public val Title: String
