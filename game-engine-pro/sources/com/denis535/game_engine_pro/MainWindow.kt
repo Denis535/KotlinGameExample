@@ -148,12 +148,7 @@ public abstract class MainWindow : AutoCloseable {
     public val Input: Input
 
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-    public constructor(desc: MainWindowDesc, manifest: Manifest?) {
-        SDL_Init(SDL_INIT_VIDEO).also { Sdl.ThrowErrorIfNeeded() }
-        if (manifest != null) {
-            SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { Sdl.ThrowErrorIfNeeded() }
-            SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { Sdl.ThrowErrorIfNeeded() }
-        }
+    public constructor(desc: MainWindowDesc) {
         this._NativeWindow = run {
             when (desc) {
                 is MainWindowDesc.FullScreen -> {
@@ -184,7 +179,6 @@ public abstract class MainWindow : AutoCloseable {
             SDL_DestroyWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             null
         }
-        SDL_Quit().also { Sdl.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
