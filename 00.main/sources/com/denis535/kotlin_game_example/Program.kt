@@ -8,42 +8,38 @@ import kotlin.reflect.*
 
 public fun Main(args: Array<String>) {
     Program().use {
-        //        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
-        //        it.RequireDependency<Program>(Program::class)
-        //
-        //        it.RequireDependency<AbstractTheme>(AbstractTheme::class)
-        //        it.RequireDependency<Theme>(Theme::class)
-        //
-        //        it.RequireDependency<AbstractScreen>(AbstractScreen::class)
-        //        it.RequireDependency<Screen>(Screen::class)
-        //
-        //        it.RequireDependency<AbstractRouter>(AbstractRouter::class)
-        //        it.RequireDependency<Router>(Router::class)
-        //
-        //        it.RequireDependency<AbstractApplication>(AbstractApplication::class)
-        //        it.RequireDependency<Application>(Application::class)
-        //
-        //        it.RequireDependency<AbstractGame>(AbstractGame::class)
-        //        it.RequireDependency<Game>(Game::class)
+//        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
+//        it.RequireDependency<Program>(Program::class)
+//
+//        it.RequireDependency<AbstractTheme>(AbstractTheme::class)
+//        it.RequireDependency<Theme>(Theme::class)
+//
+//        it.RequireDependency<AbstractScreen>(AbstractScreen::class)
+//        it.RequireDependency<Screen>(Screen::class)
+//
+//        it.RequireDependency<AbstractRouter>(AbstractRouter::class)
+//        it.RequireDependency<Router>(Router::class)
+//
+//        it.RequireDependency<AbstractApplication>(AbstractApplication::class)
+//        it.RequireDependency<Application>(Application::class)
+//
+//        it.RequireDependency<AbstractGame>(AbstractGame::class)
+//        it.RequireDependency<Game>(Game::class)
     }
 }
 
 public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
-    private val Window: MainWindow
+    private val Engine: Engine
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        Engine.Initialize("Kotlin Game Example")
-        this.Window = object : MainWindow(MainWindowDesc.Window("Kotlin Game Example")) {
+        this.Engine = object : Engine("Kotlin Game Example") {
 
-            protected override fun OnStart() {
+            protected override fun OnStart(info: FrameInfo) {
             }
 
-            protected override fun OnStop() {
-            }
-
-            protected override fun OnFrameBegin(info: FrameInfo) {
+            protected override fun OnStop(info: FrameInfo) {
             }
 
             protected override fun OnFixedUpdate(info: FrameInfo) {
@@ -52,10 +48,19 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             protected override fun OnUpdate(info: FrameInfo) {
             }
 
-            protected override fun OnDraw(info: FrameInfo) {
+        }
+        this.Engine.Window = object : MainWindow(MainWindowDesc.Window("Kotlin Game Example")) {
+
+            protected override fun OnShow() {
+
             }
 
-            protected override fun OnFrameEnd(info: FrameInfo) {
+            protected override fun OnHide() {
+
+            }
+
+            protected override fun OnDraw(info: FrameInfo) {
+
             }
 
             protected override fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
@@ -145,21 +150,19 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Screen = Screen()
         this.Theme = Theme()
         run {
-            this.Window.Show()
-            this.Window.Run()
+            this.Engine.Run()
         }
     }
 
     protected override fun OnClose() {
         run {
-            this.Window.Hide()
+            check(!this.Engine.IsRunning)
         }
         this.Theme!!.close()
         this.Screen!!.close()
         this.Router!!.close()
         this.Application!!.close()
-        this.Window.close()
-        Engine.Deinitialize()
+        this.Engine.close()
         super.OnClose()
     }
 
@@ -173,17 +176,22 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 return game
             }
         }
-        this.Window.let { window ->
+        this.Engine.let { engine ->
+            if (clazz.isInstance(engine)) {
+                return engine
+            }
+        }
+        this.Engine.Window?.let { window ->
             if (clazz.isInstance(window)) {
                 return window
             }
         }
-        this.Window.Cursor.let { cursor ->
+        this.Engine.Window?.Cursor?.let { cursor ->
             if (clazz.isInstance(cursor)) {
                 return cursor
             }
         }
-        this.Window.Input.let { input ->
+        this.Engine.Window?.Input?.let { input ->
             if (clazz.isInstance(input)) {
                 return input
             }

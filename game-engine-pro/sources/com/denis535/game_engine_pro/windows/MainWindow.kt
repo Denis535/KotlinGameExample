@@ -1,6 +1,7 @@
 package com.denis535.game_engine_pro.windows
 
 import cnames.structs.*
+import com.denis535.game_engine_pro.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 import kotlin.experimental.*
@@ -27,14 +28,6 @@ public abstract class MainWindow : AutoCloseable {
     internal val NativeWindowInternal: CPointer<SDL_Window>
         get() {
             return this.NativeWindow
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public val Time: Double
-        get() {
-            check(!this.IsClosed)
-            val ticks = SDL_GetTicks().also { Sdl.ThrowErrorIfNeeded() }
-            return ticks.toDouble() / 1000.0
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -136,13 +129,6 @@ public abstract class MainWindow : AutoCloseable {
             }
         }
 
-    public var IsRunning: Boolean = false
-        private set(value) {
-            check(!this.IsClosed)
-            check(field != value)
-            field = value
-        }
-
     public val Cursor: Cursor
 
     public val Input: Input
@@ -172,7 +158,6 @@ public abstract class MainWindow : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
-        check(!this.IsRunning)
         this.Input.close()
         this.Cursor.close()
         this._NativeWindow = run {
@@ -182,142 +167,26 @@ public abstract class MainWindow : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public open fun Show() {
+    public fun Show() {
         check(!this.IsClosed)
         SDL_ShowWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
         SDL_RaiseWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+        this.OnShow()
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public open fun Hide() {
+    public fun Hide() {
         check(!this.IsClosed)
+        this.OnHide()
         SDL_HideWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun RequestClose() {
-        check(!this.IsClosed)
-        memScoped {
-            val event = this.alloc<SDL_Event>()
-            event.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED
-            event.window.windowID = SDL_GetWindowID(this@MainWindow.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-            SDL_PushEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }
-        }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public fun RequestQuit() {
-        check(!this.IsClosed)
-        memScoped {
-            val event = this.alloc<SDL_Event>()
-            event.type = SDL_EVENT_QUIT
-            SDL_PushEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }
-        }
-    }
-
-    public fun Run(fixedDeltaTime: Float = 1.0f / 20.0f) {
-        check(!this.IsClosed)
-        check(!this.IsRunning)
-        this.IsRunning = true
-        val info = FrameInfo()
-        this.OnStart()
-        while (true) {
-            val startTime = this.Time
-            run {
-                val isClosingRequested = this.ProcessEvents(info)
-                if (isClosingRequested) {
-                    break
-                }
-                this.OnFrameBegin(info)
-                if (info.FixedFrameInfo.Number == 0) {
-                    this.OnFixedUpdate(info)
-                    info.FixedFrameInfo.Number++
-                    info.FixedFrameInfo.DeltaTime = fixedDeltaTime
-                } else {
-                    while (info.FixedFrameInfo.Time <= info.Time) {
-                        this.OnFixedUpdate(info)
-                        info.FixedFrameInfo.Number++
-                        info.FixedFrameInfo.DeltaTime = fixedDeltaTime
-                    }
-                }
-                this.OnUpdate(info)
-                this.OnDraw(info)
-                this.OnFrameEnd(info)
-            }
-            val endTime = this.Time
-            val deltaTime = (endTime - startTime).toFloat()
-            info.Number++
-            info.Time += deltaTime
-            info.DeltaTime = deltaTime
-        }
-        this.OnStop()
-        this.IsRunning = false
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    private fun ProcessEvents(info: FrameInfo): Boolean {
-        check(!this.IsClosed)
-        memScoped {
-            val event = this.alloc<SDL_Event>()
-            while (SDL_PollEvent(event.ptr)) {
-                this@MainWindow.OnEvent(event.ptr)
-                if (event.window.windowID == SDL_GetWindowID(this@MainWindow.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }) {
-                    if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED) {
-                        return true
-                    }
-                }
-                if (event.type == SDL_EVENT_QUIT) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
-    protected abstract fun OnStart()
-    protected abstract fun OnStop()
-
-    @OptIn(ExperimentalForeignApi::class)
     protected open fun OnEvent(event: CPointer<SDL_Event>) {
         check(!this.IsClosed)
-        if (event.pointed.window.windowID == SDL_GetWindowID(this@MainWindow.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }) {
-//            if (event.pointed.type == SDL_EVENT_WINDOW_SHOWN) {
-//            }
-//            if (event.pointed.type == SDL_EVENT_WINDOW_HIDDEN) {
-//            }
-//            if (event.pointed.type == SDL_EVENT_WINDOW_EXPOSED) {
-//            }
-
-//            if (event.pointed.type == SDL_EVENT_WINDOW_MOVED) {
-//            }
-//            if (event.pointed.type == SDL_EVENT_WINDOW_RESIZED) {
-//            }
-//            if (event.pointed.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
-//            }
-
-//            if (event.pointed.type == SDL_EVENT_WINDOW_ENTER_FULLSCREEN) {
-//            }
-//            if (event.pointed.type == SDL_EVENT_WINDOW_LEAVE_FULLSCREEN) {
-//            }
-
-//            if (event.pointed.type == SDL_EVENT_WINDOW_MINIMIZED) {
-//            }
-//            if (event.pointed.type == SDL_EVENT_WINDOW_MAXIMIZED) {
-//            }
-//            if (event.pointed.type == SDL_EVENT_WINDOW_RESTORED) {
-//            }
-
-//            if (event.pointed.type == SDL_EVENT_WINDOW_FOCUS_GAINED) {
-//            }
-//            if (event.pointed.type == SDL_EVENT_WINDOW_FOCUS_LOST) {
-//            }
-
-//            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_ENTER) {
-//            }
-//            if (event.pointed.type == SDL_EVENT_WINDOW_MOUSE_LEAVE) {
-//            }
-
-            if (event.pointed.type == SDL_EVENT_MOUSE_MOTION) {
+        check(event.pointed.window.windowID == SDL_GetWindowID(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() })
+        when (event.pointed.type) {
+            SDL_EVENT_MOUSE_MOTION -> {
                 val motionEvent = event.pointed.motion
                 val isCursorLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
                 val cursorX = motionEvent.x
@@ -326,7 +195,7 @@ public abstract class MainWindow : AutoCloseable {
                 val cursorDeltaY = motionEvent.yrel
                 this.OnMouseCursorMove(MouseCursorMoveEvent(isCursorLocked, cursorX, cursorY, cursorDeltaX, cursorDeltaY))
             }
-            if (event.pointed.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.pointed.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+            SDL_EVENT_MOUSE_BUTTON_DOWN or SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val buttonEvent = event.pointed.button
                 val isCursorLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
                 val cursorX = buttonEvent.x
@@ -342,7 +211,7 @@ public abstract class MainWindow : AutoCloseable {
                     }
                 }
             }
-            if (event.pointed.type == SDL_EVENT_MOUSE_WHEEL) {
+            SDL_EVENT_MOUSE_WHEEL -> {
                 val wheelEvent = event.pointed.wheel
                 val isCursorLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
                 val cursorX = wheelEvent.mouse_x
@@ -365,8 +234,7 @@ public abstract class MainWindow : AutoCloseable {
                 }
                 this.OnMouseWheelScroll(MouseWheelScrollEvent(isCursorLocked, cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
             }
-
-            if (event.pointed.type == SDL_EVENT_KEY_DOWN || event.pointed.type == SDL_EVENT_KEY_UP) {
+            SDL_EVENT_KEY_DOWN or SDL_EVENT_KEY_UP -> {
                 val keyEvent = event.pointed.key
                 val isKeyPressed = keyEvent.down
                 val isKeyRepeated = keyEvent.repeat
@@ -383,8 +251,7 @@ public abstract class MainWindow : AutoCloseable {
                     }
                 }
             }
-
-            if (event.pointed.type == SDL_EVENT_TEXT_INPUT) {
+            SDL_EVENT_TEXT_INPUT -> {
                 val textEvent = event.pointed.text
                 val text = textEvent.text?.toKStringFromUtf8()
                 if (text != null) {
@@ -394,11 +261,19 @@ public abstract class MainWindow : AutoCloseable {
         }
     }
 
-    protected abstract fun OnFrameBegin(info: FrameInfo)
-    protected abstract fun OnFixedUpdate(info: FrameInfo)
-    protected abstract fun OnUpdate(info: FrameInfo)
+    @OptIn(ExperimentalForeignApi::class)
+    internal fun OnEventInternal(event: CPointer<SDL_Event>) {
+        this.OnEvent(event)
+    }
+
+    protected abstract fun OnShow()
+    protected abstract fun OnHide()
+
     protected abstract fun OnDraw(info: FrameInfo)
-    protected abstract fun OnFrameEnd(info: FrameInfo)
+
+    internal fun OnDrawInternal(info: FrameInfo) {
+        this.OnDraw(info)
+    }
 
     protected abstract fun OnMouseCursorMove(event: MouseCursorMoveEvent)
     protected abstract fun OnMouseButtonPress(event: MouseButtonActionEvent)
@@ -411,51 +286,15 @@ public abstract class MainWindow : AutoCloseable {
 
     protected abstract fun OnTextInput(text: String)
 
-}
-
-public class FrameInfo {
-
-    public val FixedFrameInfo: FixedFrameInfo = FixedFrameInfo()
-
-    public var Number: Int = 0
-        internal set
-
-    public var Time: Float = 0.0f
-        internal set
-
-    public var DeltaTime: Float = 0.0f
-        internal set
-
-    public val Fps: Float
-        get() {
-            return if (this.DeltaTime > 0.0f) 1.0f / this.DeltaTime else 0.0f
+    @OptIn(ExperimentalForeignApi::class)
+    public fun RequestClose() {
+        check(!this.IsClosed)
+        memScoped {
+            val event = this.alloc<SDL_Event>()
+            event.type = SDL_EVENT_WINDOW_CLOSE_REQUESTED
+            event.window.windowID = SDL_GetWindowID(this@MainWindow.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_PushEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }
         }
-
-    internal constructor()
-
-    public override fun toString(): String {
-        return "FrameInfo(Number=${this.Number}, Time=${this.Time})"
-    }
-
-}
-
-public class FixedFrameInfo {
-
-    public var Number: Int = 0
-        internal set
-
-    public val Time: Float
-        get() {
-            return this.Number * this.DeltaTime
-        }
-
-    public var DeltaTime: Float = 0.0f
-        internal set
-
-    internal constructor()
-
-    public override fun toString(): String {
-        return "FixedFrameInfo(Number=${this.Number}, Time=${this.Time})"
     }
 
 }
