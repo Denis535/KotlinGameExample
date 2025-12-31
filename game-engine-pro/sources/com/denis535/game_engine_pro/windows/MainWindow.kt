@@ -1,11 +1,10 @@
 package com.denis535.game_engine_pro.windows
 
 import cnames.structs.*
-import com.denis535.game_engine_pro.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
-public abstract class MainWindow : AutoCloseable {
+public open class MainWindow : AutoCloseable {
     public sealed class Desc(public val Title: String) {
         public class FullScreen(title: String) : Desc(title)
         public class Window(title: String, public val Width: Int = 1280, public val Height: Int = 720, public val IsResizable: Boolean = false) : Desc(title)
@@ -30,7 +29,8 @@ public abstract class MainWindow : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     internal val NativeWindowInternal: CPointer<SDL_Window>
         get() {
-            return this.NativeWindow
+            check(!this.IsClosed)
+            return this._NativeWindow!!
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -102,11 +102,19 @@ public abstract class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val IsVisible: Boolean
+    public var IsShown: Boolean
         get() {
             check(!this.IsClosed)
             val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-            return flags and SDL_WINDOW_HIDDEN == 0UL && flags and SDL_WINDOW_MINIMIZED == 0UL
+            return flags and SDL_WINDOW_HIDDEN == 0UL
+        }
+        set(value) {
+            check(!this.IsClosed)
+            if (value) {
+                SDL_ShowWindow(this.NativeWindow)
+            } else {
+                SDL_HideWindow(this.NativeWindow)
+            }
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -177,116 +185,9 @@ public abstract class MainWindow : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    public fun Show() {
-        check(!this.IsClosed)
-        SDL_ShowWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+    public fun Raise() {
         SDL_RaiseWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-        this.OnShow()
     }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public fun Hide() {
-        check(!this.IsClosed)
-        this.OnHide()
-        SDL_HideWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    internal fun ProcessEvent(event: CPointer<SDL_Event>) {
-        check(!this.IsClosed)
-        check(event.pointed.window.windowID == SDL_GetWindowID(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() })
-        when (event.pointed.type) {
-            SDL_EVENT_MOUSE_MOTION -> {
-                val motionEvent = event.pointed.motion
-                val cursorX = motionEvent.x
-                val cursorY = motionEvent.y
-                val cursorDeltaX = motionEvent.xrel
-                val cursorDeltaY = motionEvent.yrel
-                this.OnMouseCursorMove(MouseCursorMoveEvent(cursorX, cursorY, cursorDeltaX, cursorDeltaY))
-            }
-            SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
-                val buttonEvent = event.pointed.button
-                val cursorX = buttonEvent.x
-                val cursorY = buttonEvent.y
-                val isButtonPressed = buttonEvent.down
-                val button = MouseButton.FromNativeValue(buttonEvent.button)
-                val clicks = buttonEvent.clicks.toInt()
-                if (button != null) {
-                    if (isButtonPressed) {
-                        this.OnMouseButtonPress(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
-                    } else {
-                        this.OnMouseButtonRelease(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
-                    }
-                }
-            }
-            SDL_EVENT_MOUSE_WHEEL -> {
-                val wheelEvent = event.pointed.wheel
-                val cursorX = wheelEvent.mouse_x
-                val cursorY = wheelEvent.mouse_y
-                val isDirectionNormal = wheelEvent.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
-                val scrollX: Float
-                val scrollY: Float
-                val scrollIntegerX: Int
-                val scrollIntegerY: Int
-                if (isDirectionNormal) {
-                    scrollX = wheelEvent.x
-                    scrollY = wheelEvent.y
-                    scrollIntegerX = wheelEvent.integer_x
-                    scrollIntegerY = wheelEvent.integer_y
-                } else {
-                    scrollX = -wheelEvent.x
-                    scrollY = -wheelEvent.y
-                    scrollIntegerX = -wheelEvent.integer_x
-                    scrollIntegerY = -wheelEvent.integer_y
-                }
-                this.OnMouseWheelScroll(MouseWheelScrollEvent(cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
-            }
-            SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
-                val keyEvent = event.pointed.key
-                val isKeyPressed = keyEvent.down
-                val isKeyRepeated = keyEvent.repeat
-                val key = KeyboardKey.FromNativeValue(keyEvent.scancode)
-                if (key != null) {
-                    if (isKeyPressed) {
-                        if (!isKeyRepeated) {
-                            this.OnKeyboardKeyPress(KeyboardKeyActionEvent(key))
-                        } else {
-                            this.OnKeyboardKeyRepeat(KeyboardKeyActionEvent(key))
-                        }
-                    } else {
-                        this.OnKeyboardKeyRelease(KeyboardKeyActionEvent(key))
-                    }
-                }
-            }
-            SDL_EVENT_TEXT_INPUT -> {
-                val textEvent = event.pointed.text
-                val text = textEvent.text?.toKStringFromUtf8()
-                if (text != null) {
-                    this.OnTextInput(text)
-                }
-            }
-        }
-    }
-
-    protected abstract fun OnShow()
-    protected abstract fun OnHide()
-
-//    protected abstract fun OnDraw(info: FrameInfo)
-//
-//    internal fun OnDrawInternal(info: FrameInfo) {
-//        this.OnDraw(info)
-//    }
-
-    protected abstract fun OnMouseCursorMove(event: MouseCursorMoveEvent)
-    protected abstract fun OnMouseButtonPress(event: MouseButtonActionEvent)
-    protected abstract fun OnMouseButtonRelease(event: MouseButtonActionEvent)
-    protected abstract fun OnMouseWheelScroll(event: MouseWheelScrollEvent)
-
-    protected abstract fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent)
-    protected abstract fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent)
-    protected abstract fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent)
-
-    protected abstract fun OnTextInput(text: String)
 
     @OptIn(ExperimentalForeignApi::class)
     public fun RequestClose() {
@@ -300,30 +201,3 @@ public abstract class MainWindow : AutoCloseable {
     }
 
 }
-
-public class MouseCursorMoveEvent(
-    public val CursorX: Float,
-    public val CursorY: Float,
-    public val CursorDeltaX: Float,
-    public val CursorDeltaY: Float,
-)
-
-public class MouseButtonActionEvent(
-    public val CursorX: Float,
-    public val CursorY: Float,
-    public val Button: MouseButton,
-    public val Clicks: Int,
-)
-
-public class MouseWheelScrollEvent(
-    public val CursorX: Float,
-    public val CursorY: Float,
-    public val ScrollX: Float,
-    public val ScrollY: Float,
-    public val ScrollIntegerX: Int,
-    public val ScrollIntegerY: Int,
-)
-
-public class KeyboardKeyActionEvent(
-    public val Key: KeyboardKey
-)

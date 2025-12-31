@@ -97,7 +97,7 @@ private class ClientEngine2 : ClientEngine {
     private val Program: Program
 
     public constructor(program: Program) : super(Manifest("Kotlin Game Example")) {
-        this.Window = MainWindow2(program)
+        this.Window = MainWindow2()
         this.Program = program
     }
 
@@ -119,28 +119,8 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnUpdate(info: FrameInfo) {
     }
 
-}
-
-private class MainWindow2 : MainWindow {
-
-    private val Program: Program
-
-    public constructor(program: Program) : super(Desc.Window("Kotlin Game Example")) {
-        this.Program = program
+    protected override fun OnDraw(info: FrameInfo) {
     }
-
-    public override fun close() {
-        super.close()
-    }
-
-    protected override fun OnShow() {
-    }
-
-    protected override fun OnHide() {
-    }
-
-//    protected override fun OnDraw(info: FrameInfo) {
-//    }
 
     protected override fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
     }
@@ -156,59 +136,59 @@ private class MainWindow2 : MainWindow {
 
     protected override fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
         if (event.Key == KeyboardKey.F1) {
-            this.IsFullScreen = !this.IsFullScreen
+            this.Window!!.IsFullScreen = !this.Window!!.IsFullScreen
         }
         if (event.Key == KeyboardKey.F2) {
-            this.IsResizable = !this.IsResizable
+            this.Window!!.IsResizable = !this.Window!!.IsResizable
         }
         if (event.Key == KeyboardKey.F3) {
-            this.Cursor.IsVisible = !this.Cursor.IsVisible
+            this.Window!!.Cursor.IsVisible = !this.Window!!.Cursor.IsVisible
         }
         if (event.Key == KeyboardKey.F4) {
-            this.Cursor.IsGrabbed = !this.Cursor.IsGrabbed
+            this.Window!!.Cursor.IsGrabbed = !this.Window!!.Cursor.IsGrabbed
         }
         if (event.Key == KeyboardKey.F5) {
-            this.Cursor.IsCaptured = !this.Cursor.IsCaptured
+            this.Window!!.Cursor.IsCaptured = !this.Window!!.Cursor.IsCaptured
         }
         if (event.Key == KeyboardKey.F6) {
-            this.Cursor.IsLocked = !this.Cursor.IsLocked
+            this.Window!!.Cursor.IsLocked = !this.Window!!.Cursor.IsLocked
         }
 
         if (event.Key == KeyboardKey.Digit_1) {
-            this.Cursor.Style = CursorStyle.Arrow
+            this.Window!!.Cursor.Style = CursorStyle.Arrow
         }
         if (event.Key == KeyboardKey.Digit_2) {
-            this.Cursor.Style = CursorStyle.Text
+            this.Window!!.Cursor.Style = CursorStyle.Text
         }
         if (event.Key == KeyboardKey.Digit_3) {
-            this.Cursor.Style = CursorStyle.Pointer
+            this.Window!!.Cursor.Style = CursorStyle.Pointer
         }
         if (event.Key == KeyboardKey.Digit_4) {
-            this.Cursor.Style = CursorStyle.Crosshair
+            this.Window!!.Cursor.Style = CursorStyle.Crosshair
         }
         if (event.Key == KeyboardKey.Digit_5) {
-            this.Cursor.Style = CursorStyle.Progress
+            this.Window!!.Cursor.Style = CursorStyle.Progress
         }
         if (event.Key == KeyboardKey.Digit_6) {
-            this.Cursor.Style = CursorStyle.Wait
+            this.Window!!.Cursor.Style = CursorStyle.Wait
         }
         if (event.Key == KeyboardKey.Digit_7) {
-            this.Cursor.Style = CursorStyle.NotAllowed
+            this.Window!!.Cursor.Style = CursorStyle.NotAllowed
         }
         if (event.Key == KeyboardKey.Keypad_0) {
-            this.Cursor.Style = CursorStyle.Move
+            this.Window!!.Cursor.Style = CursorStyle.Move
         }
         if (event.Key == KeyboardKey.Keypad_1) {
-            this.Cursor.Style = CursorStyle.SingleArrowResize_N
+            this.Window!!.Cursor.Style = CursorStyle.SingleArrowResize_N
         }
         if (event.Key == KeyboardKey.Keypad_2) {
-            this.Cursor.Style = CursorStyle.SingleArrowResize_N_W
+            this.Window!!.Cursor.Style = CursorStyle.SingleArrowResize_N_W
         }
         if (event.Key == KeyboardKey.Keypad_3) {
-            this.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
+            this.Window!!.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
         }
         if (event.Key == KeyboardKey.Keypad_4) {
-            this.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
+            this.Window!!.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
         }
     }
 
@@ -219,6 +199,18 @@ private class MainWindow2 : MainWindow {
     }
 
     protected override fun OnTextInput(text: String) {
+    }
+
+}
+
+private class MainWindow2 : MainWindow {
+
+    public constructor() : super(Desc.Window("Kotlin Game Example")) {
+        this.Raise()
+    }
+
+    public override fun close() {
+        super.close()
     }
 
 }

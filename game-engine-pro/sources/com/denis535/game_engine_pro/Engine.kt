@@ -1,6 +1,5 @@
 package com.denis535.game_engine_pro
 
-import com.denis535.game_engine_pro.windows.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
@@ -48,7 +47,7 @@ public abstract class Engine : AutoCloseable {
             if (this.ProcessEvents()) {
                 break
             }
-            this.Update(info, fixedDeltaTime)
+            this.ProcessFrame(info, fixedDeltaTime)
             val endTime = this.Time
             val deltaTime = (endTime - startTime).toFloat()
             info.Number++
@@ -83,7 +82,7 @@ public abstract class Engine : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun Update(info: FrameInfo, fixedDeltaTime: Float) {
+    internal open fun ProcessFrame(info: FrameInfo, fixedDeltaTime: Float) {
         if (info.FixedFrameInfo.Number == 0) {
             this.OnFixedUpdate(info)
             info.FixedFrameInfo.Number++
@@ -113,94 +112,6 @@ public abstract class Engine : AutoCloseable {
             event.type = SDL_EVENT_QUIT
             SDL_PushEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }
         }
-    }
-
-}
-
-public abstract class ServerEngine : Engine {
-
-    @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest) : super() {
-        SDL_Init(0U).also { Sdl.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { Sdl.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { Sdl.ThrowErrorIfNeeded() }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun close() {
-        check(!this.IsClosed)
-        check(!this.IsRunning)
-        SDL_Quit().also { Sdl.ThrowErrorIfNeeded() }
-    }
-
-}
-
-public abstract class ClientEngine : Engine {
-
-    public val Mouse: Mouse
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
-    public val Keyboard: Keyboard
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
-    public var Window: MainWindow? = null
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-        protected set(value) {
-            check(!this.IsClosed)
-            field = value
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest) : super() {
-        SDL_Init(SDL_INIT_VIDEO).also { Sdl.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { Sdl.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { Sdl.ThrowErrorIfNeeded() }
-        this.Mouse = Mouse()
-        this.Keyboard = Keyboard()
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    public override fun close() {
-        check(!this.IsClosed)
-        check(!this.IsRunning)
-        this.Keyboard.close()
-        this.Mouse.close()
-        SDL_Quit().also { Sdl.ThrowErrorIfNeeded() }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    internal override fun ProcessEvent(event: CPointer<SDL_Event>): Boolean {
-        if (super.ProcessEvent(event)) {
-            return true
-        }
-        this.Window!!.let { window ->
-            if (event.pointed.window.windowID == SDL_GetWindowID(window.NativeWindowInternal).also { Sdl.ThrowErrorIfNeeded() }) {
-                window.ProcessEvent(event)
-                when (event.pointed.type) {
-                    SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
-                        return true
-                    }
-                }
-            }
-        }
-        return false
-    }
-
-    protected override fun OnStart(info: FrameInfo) {
-        this.Window!!.Show()
-    }
-
-    protected override fun OnStop(info: FrameInfo) {
-        this.Window!!.Hide()
     }
 
 }
