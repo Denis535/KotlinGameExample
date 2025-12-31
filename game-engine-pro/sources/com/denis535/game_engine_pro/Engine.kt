@@ -69,8 +69,10 @@ public abstract class Engine : AutoCloseable {
         this.Window?.Show()
         while (true) {
             val startTime = this.Time
-            val isRunning = this.Update(info, fixedDeltaTime)
-            if (!isRunning) break
+            if (this.ProcessEvents()) {
+                break
+            }
+            this.Update(info, fixedDeltaTime)
             val endTime = this.Time
             val deltaTime = (endTime - startTime).toFloat()
             info.Number++
@@ -83,25 +85,40 @@ public abstract class Engine : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun Update(info: FrameInfo, fixedDeltaTime: Float): Boolean {
+    private fun ProcessEvents(): Boolean {
         memScoped {
             val event = this.alloc<SDL_Event>()
             while (SDL_PollEvent(event.ptr)) {
-                this@Engine.Window?.let { window ->
-                    if (event.window.windowID == SDL_GetWindowID(window.NativeWindowInternal).also { Sdl.ThrowErrorIfNeeded() }) {
-                        window.OnEventInternal(event.ptr)
-                    }
+                if (this@Engine.ProcessEvent(event.ptr)) {
+                    return true
                 }
-                when (event.type) {
-//                    SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
-//                        return false
-//                    }
-                    SDL_EVENT_QUIT -> {
-                        return false
+            }
+        }
+        return false
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun ProcessEvent(event: CPointer<SDL_Event>): Boolean {
+        this@Engine.Window?.let { window ->
+            if (event.pointed.window.windowID == SDL_GetWindowID(window.NativeWindowInternal).also { Sdl.ThrowErrorIfNeeded() }) {
+                window.ProcessEvent(event)
+                when (event.pointed.type) {
+                    SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
+                        return true
                     }
                 }
             }
         }
+        when (event.pointed.type) {
+            SDL_EVENT_QUIT -> {
+                return true
+            }
+        }
+        return false
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    private fun Update(info: FrameInfo, fixedDeltaTime: Float) {
         if (info.FixedFrameInfo.Number == 0) {
             this.OnFixedUpdate(info)
             info.FixedFrameInfo.Number++
@@ -115,7 +132,6 @@ public abstract class Engine : AutoCloseable {
         }
         this.OnUpdate(info)
         this.Window?.OnDrawInternal(info)
-        return true
     }
 
     protected abstract fun OnStart(info: FrameInfo)

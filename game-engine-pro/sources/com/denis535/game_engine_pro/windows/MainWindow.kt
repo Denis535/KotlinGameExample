@@ -182,22 +182,20 @@ public abstract class MainWindow : AutoCloseable {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    protected open fun OnEvent(event: CPointer<SDL_Event>) {
+    internal fun ProcessEvent(event: CPointer<SDL_Event>) {
         check(!this.IsClosed)
         check(event.pointed.window.windowID == SDL_GetWindowID(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() })
         when (event.pointed.type) {
             SDL_EVENT_MOUSE_MOTION -> {
                 val motionEvent = event.pointed.motion
-                val isCursorLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
                 val cursorX = motionEvent.x
                 val cursorY = motionEvent.y
                 val cursorDeltaX = motionEvent.xrel
                 val cursorDeltaY = motionEvent.yrel
-                this.OnMouseCursorMove(MouseCursorMoveEvent(isCursorLocked, cursorX, cursorY, cursorDeltaX, cursorDeltaY))
+                this.OnMouseCursorMove(MouseCursorMoveEvent(cursorX, cursorY, cursorDeltaX, cursorDeltaY))
             }
-            SDL_EVENT_MOUSE_BUTTON_DOWN or SDL_EVENT_MOUSE_BUTTON_UP -> {
+            SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
                 val buttonEvent = event.pointed.button
-                val isCursorLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
                 val cursorX = buttonEvent.x
                 val cursorY = buttonEvent.y
                 val isButtonPressed = buttonEvent.down
@@ -205,15 +203,14 @@ public abstract class MainWindow : AutoCloseable {
                 val clicks = buttonEvent.clicks.toInt()
                 if (button != null) {
                     if (isButtonPressed) {
-                        this.OnMouseButtonPress(MouseButtonActionEvent(isCursorLocked, cursorX, cursorY, button, clicks))
+                        this.OnMouseButtonPress(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
                     } else {
-                        this.OnMouseButtonRelease(MouseButtonActionEvent(isCursorLocked, cursorX, cursorY, button, clicks))
+                        this.OnMouseButtonRelease(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
                     }
                 }
             }
             SDL_EVENT_MOUSE_WHEEL -> {
                 val wheelEvent = event.pointed.wheel
-                val isCursorLocked = SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
                 val cursorX = wheelEvent.mouse_x
                 val cursorY = wheelEvent.mouse_y
                 val isDirectionNormal = wheelEvent.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
@@ -232,9 +229,9 @@ public abstract class MainWindow : AutoCloseable {
                     scrollIntegerX = -wheelEvent.integer_x
                     scrollIntegerY = -wheelEvent.integer_y
                 }
-                this.OnMouseWheelScroll(MouseWheelScrollEvent(isCursorLocked, cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
+                this.OnMouseWheelScroll(MouseWheelScrollEvent(cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
             }
-            SDL_EVENT_KEY_DOWN or SDL_EVENT_KEY_UP -> {
+            SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
                 val keyEvent = event.pointed.key
                 val isKeyPressed = keyEvent.down
                 val isKeyRepeated = keyEvent.repeat
@@ -259,11 +256,6 @@ public abstract class MainWindow : AutoCloseable {
                 }
             }
         }
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    internal fun OnEventInternal(event: CPointer<SDL_Event>) {
-        this.OnEvent(event)
     }
 
     protected abstract fun OnShow()
@@ -300,7 +292,6 @@ public abstract class MainWindow : AutoCloseable {
 }
 
 public class MouseCursorMoveEvent(
-    public val IsCursorLocked: Boolean,
     public val CursorX: Float,
     public val CursorY: Float,
     public val CursorDeltaX: Float,
@@ -308,7 +299,6 @@ public class MouseCursorMoveEvent(
 )
 
 public class MouseButtonActionEvent(
-    public val IsCursorLocked: Boolean,
     public val CursorX: Float,
     public val CursorY: Float,
     public val Button: MouseButton,
@@ -316,7 +306,6 @@ public class MouseButtonActionEvent(
 )
 
 public class MouseWheelScrollEvent(
-    public val IsCursorLocked: Boolean,
     public val CursorX: Float,
     public val CursorY: Float,
     public val ScrollX: Float,
