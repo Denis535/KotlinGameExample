@@ -30,12 +30,11 @@ public fun Main(args: Array<String>) {
 
 public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
-    private val Engine: Engine
+    private val Engine: ClientEngine2
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Engine = Engine2(this)
-        this.Engine.Window = MainWindow2(this)
+        this.Engine = ClientEngine2(this)
         this.Application = Application()
         this.Router = Router()
         this.Screen = Screen()
@@ -49,7 +48,6 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Screen!!.close()
         this.Router!!.close()
         this.Application!!.close()
-        this.Engine.Window!!.close()
         this.Engine.close()
         super.OnClose()
     }
@@ -94,15 +92,18 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
 }
 
-private class Engine2 : Engine {
+private class ClientEngine2 : ClientEngine {
 
     private val Program: Program
 
-    public constructor(program: Program) : super("Kotlin Game Example") {
+    public constructor(program: Program) : super(Manifest("Kotlin Game Example")) {
+        this.Window = MainWindow2(program)
         this.Program = program
     }
 
     public override fun close() {
+        check(!this.IsClosed)
+        this.Window!!.close()
         super.close()
     }
 
@@ -124,7 +125,7 @@ private class MainWindow2 : MainWindow {
 
     private val Program: Program
 
-    public constructor(program: Program) : super(MainWindowDesc.Window("Kotlin Game Example")) {
+    public constructor(program: Program) : super(Desc.Window("Kotlin Game Example")) {
         this.Program = program
     }
 
@@ -138,8 +139,8 @@ private class MainWindow2 : MainWindow {
     protected override fun OnHide() {
     }
 
-    protected override fun OnDraw(info: FrameInfo) {
-    }
+//    protected override fun OnDraw(info: FrameInfo) {
+//    }
 
     protected override fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
     }
@@ -157,11 +158,9 @@ private class MainWindow2 : MainWindow {
         if (event.Key == KeyboardKey.F1) {
             this.IsFullScreen = !this.IsFullScreen
         }
-
         if (event.Key == KeyboardKey.F2) {
             this.IsResizable = !this.IsResizable
         }
-
         if (event.Key == KeyboardKey.F3) {
             this.Cursor.IsVisible = !this.Cursor.IsVisible
         }

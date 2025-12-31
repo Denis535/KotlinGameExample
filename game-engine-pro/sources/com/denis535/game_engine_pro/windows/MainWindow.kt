@@ -4,9 +4,12 @@ import cnames.structs.*
 import com.denis535.game_engine_pro.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
-import kotlin.experimental.*
 
 public abstract class MainWindow : AutoCloseable {
+    public sealed class Desc(public val Title: String) {
+        public class FullScreen(title: String) : Desc(title)
+        public class Window(title: String, public val Width: Int = 1280, public val Height: Int = 720, public val IsResizable: Boolean = false) : Desc(title)
+    }
 
     @OptIn(ExperimentalForeignApi::class)
     private var _NativeWindow: CPointer<SDL_Window>? = null
@@ -143,15 +146,15 @@ public abstract class MainWindow : AutoCloseable {
             return field
         }
 
-    @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-    public constructor(desc: MainWindowDesc) {
+    @OptIn(ExperimentalForeignApi::class)
+    public constructor(desc: Desc) {
         this._NativeWindow = run {
             when (desc) {
-                is MainWindowDesc.FullScreen -> {
+                is Desc.FullScreen -> {
                     var flags = SDL_WINDOW_VULKAN or SDL_WINDOW_FULLSCREEN
                     SDL_CreateWindow(desc.Title, 0, 0, flags).also { Sdl.ThrowErrorIfNeeded() }
                 }
-                is MainWindowDesc.Window -> {
+                is Desc.Window -> {
                     var flags = SDL_WINDOW_VULKAN
                     if (desc.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
                     SDL_CreateWindow(desc.Title, desc.Width, desc.Height, flags).also { Sdl.ThrowErrorIfNeeded() }.also {
@@ -268,11 +271,11 @@ public abstract class MainWindow : AutoCloseable {
     protected abstract fun OnShow()
     protected abstract fun OnHide()
 
-    protected abstract fun OnDraw(info: FrameInfo)
-
-    internal fun OnDrawInternal(info: FrameInfo) {
-        this.OnDraw(info)
-    }
+//    protected abstract fun OnDraw(info: FrameInfo)
+//
+//    internal fun OnDrawInternal(info: FrameInfo) {
+//        this.OnDraw(info)
+//    }
 
     protected abstract fun OnMouseCursorMove(event: MouseCursorMoveEvent)
     protected abstract fun OnMouseButtonPress(event: MouseButtonActionEvent)
