@@ -25,7 +25,7 @@ public class Keyboard : AutoCloseable {
 
 }
 
-public enum class Key {
+public enum class KeyboardKey {
     Letter_A,
     Letter_B,
     Letter_C,
@@ -215,7 +215,7 @@ public enum class Key {
 
     public companion object {
         @OptIn(ExperimentalForeignApi::class)
-        internal fun FromNativeValue(value: SDL_Scancode): Key? {
+        internal fun FromNativeValue(value: SDL_Scancode): KeyboardKey? {
             return when (value) {
                 SDL_SCANCODE_A -> Letter_A
                 SDL_SCANCODE_B -> Letter_B

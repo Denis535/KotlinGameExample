@@ -259,16 +259,16 @@ public abstract class MainWindow : AutoCloseable {
                 val keyEvent = event.pointed.key
                 val isKeyPressed = keyEvent.down
                 val isKeyRepeated = keyEvent.repeat
-                val key = Key.FromNativeValue(keyEvent.scancode)
+                val key = KeyboardKey.FromNativeValue(keyEvent.scancode)
                 if (key != null) {
                     if (isKeyPressed) {
                         if (!isKeyRepeated) {
-                            this.OnKeyPress(KeyActionEvent(key))
+                            this.OnKeyboardKeyPress(KeyboardKeyActionEvent(key))
                         } else {
-                            this.OnKeyRepeat(KeyActionEvent(key))
+                            this.OnKeyboardKeyRepeat(KeyboardKeyActionEvent(key))
                         }
                     } else {
-                        this.OnKeyRelease(KeyActionEvent(key))
+                        this.OnKeyboardKeyRelease(KeyboardKeyActionEvent(key))
                     }
                 }
             }
@@ -296,9 +296,9 @@ public abstract class MainWindow : AutoCloseable {
     protected abstract fun OnMouseButtonRelease(event: MouseButtonActionEvent)
     protected abstract fun OnMouseWheelScroll(event: MouseWheelScrollEvent)
 
-    protected abstract fun OnKeyPress(event: KeyActionEvent)
-    protected abstract fun OnKeyRepeat(event: KeyActionEvent)
-    protected abstract fun OnKeyRelease(event: KeyActionEvent)
+    protected abstract fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent)
+    protected abstract fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent)
+    protected abstract fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent)
 
     protected abstract fun OnTextInput(text: String)
 
@@ -338,6 +338,6 @@ public class MouseWheelScrollEvent(
     public val ScrollIntegerY: Int,
 )
 
-public class KeyActionEvent(
-    public val Key: Key
+public class KeyboardKeyActionEvent(
+    public val Key: KeyboardKey
 )
