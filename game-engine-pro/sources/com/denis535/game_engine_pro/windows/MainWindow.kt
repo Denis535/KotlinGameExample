@@ -130,10 +130,22 @@ public abstract class MainWindow : AutoCloseable {
         }
 
     public val Cursor: Cursor
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
 
     public val Mouse: Mouse
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
 
     public val Keyboard: Keyboard
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
 
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
     public constructor(desc: MainWindowDesc) {

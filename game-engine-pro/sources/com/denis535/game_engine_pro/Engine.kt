@@ -21,9 +21,12 @@ public abstract class Engine : AutoCloseable {
         }
 
     public var IsRunning: Boolean = false
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
         private set(value) {
             check(!this.IsClosed)
-            check(field != value)
             field = value
         }
 
@@ -34,13 +37,7 @@ public abstract class Engine : AutoCloseable {
         }
         set(value) {
             check(!this.IsClosed)
-            if (field != null) {
-                require(value == null)
-                field = value
-            } else {
-                require(value != null)
-                field = value
-            }
+            field = value
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -55,7 +52,6 @@ public abstract class Engine : AutoCloseable {
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        this.Window?.close()
         SDL_Quit().also { Sdl.ThrowErrorIfNeeded() }
     }
 
