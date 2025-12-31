@@ -107,14 +107,6 @@ public abstract class MainWindow : AutoCloseable {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public val IsFocused: Boolean
-        get() {
-            check(!this.IsClosed)
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
-            return flags and SDL_WINDOW_INPUT_FOCUS == 0UL && flags and SDL_WINDOW_MOUSE_FOCUS == 0UL
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
     public var IsTextInputEnabled: Boolean
         get() {
             check(!this.IsClosed)
@@ -127,6 +119,22 @@ public abstract class MainWindow : AutoCloseable {
             } else {
                 SDL_StopTextInput(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
             }
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val HasFocus: Boolean
+        get() {
+            check(!this.IsClosed)
+            val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_INPUT_FOCUS == 0UL
+        }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public val HasMouseFocus: Boolean
+        get() {
+            check(!this.IsClosed)
+            val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            return flags and SDL_WINDOW_MOUSE_FOCUS == 0UL
         }
 
     public val Cursor: Cursor
