@@ -1,28 +1,41 @@
 package com.denis535.game_engine_pro.windows
 
-import cnames.structs.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
 public class Mouse : AutoCloseable {
 
-    private val Window: MainWindow
-
-    @OptIn(ExperimentalForeignApi::class)
-    private val NativeWindow: CPointer<SDL_Window>
-        get() {
-            return this.Window.NativeWindowInternal
-        }
-
-    internal constructor(window: MainWindow) {
-        this.Window = window
+    internal constructor() {
     }
 
     public override fun close() {
     }
 
-    //    public abstract fun GetMouseCursorPosition(): Pair<Double, Double>
-    //    public abstract fun GetMouseButtonPressed(button: MouseButton): Boolean
+    @OptIn(ExperimentalForeignApi::class)
+    public fun GetCursorPosition(): Pair<Float, Float> {
+        memScoped {
+            val cursorX = this.alloc<FloatVar>()
+            val cursorY = this.alloc<FloatVar>()
+            SDL_GetMouseState(cursorX.ptr, cursorY.ptr).also { Sdl.ThrowErrorIfNeeded() }
+            return Pair(cursorX.value, cursorY.value)
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun GetCursorDelta(): Pair<Float, Float> {
+        memScoped {
+            val cursorDeltaX = this.alloc<FloatVar>()
+            val cursorDeltaY = this.alloc<FloatVar>()
+            SDL_GetRelativeMouseState(cursorDeltaX.ptr, cursorDeltaY.ptr).also { Sdl.ThrowErrorIfNeeded() }
+            return Pair(cursorDeltaX.value, cursorDeltaY.value)
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    public fun IsButtonPressed(button: MouseButton): Boolean {
+        val state = SDL_GetMouseState(null, null).also { Sdl.ThrowErrorIfNeeded() }
+        return state and button.ToNativeMask() != 0u
+    }
 
 }
 
@@ -41,6 +54,17 @@ public enum class MouseButton {
             Middle -> SDL_BUTTON_MIDDLE
             X1 -> SDL_BUTTON_X1
             X2 -> SDL_BUTTON_X2
+        }
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    internal fun ToNativeMask(): UInt {
+        return when (this) {
+            Left -> SDL_BUTTON_LMASK
+            Right -> SDL_BUTTON_RMASK
+            Middle -> SDL_BUTTON_MMASK
+            X1 -> SDL_BUTTON_X1MASK
+            X2 -> SDL_BUTTON_X2MASK
         }
     }
 

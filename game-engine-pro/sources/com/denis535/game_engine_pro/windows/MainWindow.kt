@@ -59,10 +59,10 @@ public abstract class MainWindow : AutoCloseable {
         get() {
             check(!this.IsClosed)
             memScoped {
-                val posX = this.alloc<IntVar>()
-                val posY = this.alloc<IntVar>()
-                SDL_GetWindowPosition(this@MainWindow.NativeWindow, posX.ptr, posY.ptr).also { Sdl.ThrowErrorIfNeeded() }
-                return Pair(posX.value, posY.value)
+                val x = this.alloc<IntVar>()
+                val y = this.alloc<IntVar>()
+                SDL_GetWindowPosition(this@MainWindow.NativeWindow, x.ptr, y.ptr).also { Sdl.ThrowErrorIfNeeded() }
+                return Pair(x.value, y.value)
             }
         }
         set(value) {
@@ -75,10 +75,10 @@ public abstract class MainWindow : AutoCloseable {
         get() {
             check(!this.IsClosed)
             memScoped {
-                val posX = this.alloc<IntVar>()
-                val posY = this.alloc<IntVar>()
-                SDL_GetWindowSize(this@MainWindow.NativeWindow, posX.ptr, posY.ptr).also { Sdl.ThrowErrorIfNeeded() }
-                return Pair(posX.value, posY.value)
+                val width = this.alloc<IntVar>()
+                val height = this.alloc<IntVar>()
+                SDL_GetWindowSize(this@MainWindow.NativeWindow, width.ptr, height.ptr).also { Sdl.ThrowErrorIfNeeded() }
+                return Pair(width.value, height.value)
             }
         }
         set(value) {
@@ -174,8 +174,8 @@ public abstract class MainWindow : AutoCloseable {
             }
         }
         this.Cursor = Cursor(this)
-        this.Mouse = Mouse(this)
-        this.Keyboard = Keyboard(this)
+        this.Mouse = Mouse()
+        this.Keyboard = Keyboard()
     }
 
     @OptIn(ExperimentalForeignApi::class)

@@ -1,27 +1,21 @@
 package com.denis535.game_engine_pro.windows
 
-import cnames.structs.*
 import com.denis535.sdl.*
 import kotlinx.cinterop.*
 
 public class Keyboard : AutoCloseable {
 
-    private val Window: MainWindow
-
-    @OptIn(ExperimentalForeignApi::class)
-    private val NativeWindow: CPointer<SDL_Window>
-        get() {
-            return this.Window.NativeWindowInternal
-        }
-
-    internal constructor(window: MainWindow) {
-        this.Window = window
+    internal constructor() {
     }
 
     public override fun close() {
     }
 
-    //    public abstract fun GetKeyPressed(key: Key): Boolean
+    @OptIn(ExperimentalForeignApi::class)
+    public fun IsKeyPressed(key: KeyboardKey): Boolean {
+        val state = SDL_GetKeyboardState(null).also { Sdl.ThrowErrorIfNeeded() }!!
+        return state[key.ToNativeValue().toInt()].value
+    }
 
 }
 
@@ -87,6 +81,19 @@ public enum class KeyboardKey {
     CapsLock,
     NumLock,
 
+    F1,
+    F2,
+    F3,
+    F4,
+    F5,
+    F6,
+    F7,
+    F8,
+    F9,
+    F10,
+    F11,
+    F12,
+
     Keypad_0,
     Keypad_1,
     Keypad_2,
@@ -102,20 +109,7 @@ public enum class KeyboardKey {
     Keypad_Minus,
     Keypad_Multiply,
     Keypad_Divide,
-    Keypad_Enter,
-
-    F1,
-    F2,
-    F3,
-    F4,
-    F5,
-    F6,
-    F7,
-    F8,
-    F9,
-    F10,
-    F11,
-    F12;
+    Keypad_Enter;
 
     @OptIn(ExperimentalForeignApi::class)
     internal fun ToNativeValue(): SDL_Scancode {
@@ -181,6 +175,19 @@ public enum class KeyboardKey {
             CapsLock -> SDL_SCANCODE_CAPSLOCK
             NumLock -> SDL_SCANCODE_NUMLOCKCLEAR
 
+            F1 -> SDL_SCANCODE_F1
+            F2 -> SDL_SCANCODE_F2
+            F3 -> SDL_SCANCODE_F3
+            F4 -> SDL_SCANCODE_F4
+            F5 -> SDL_SCANCODE_F5
+            F6 -> SDL_SCANCODE_F6
+            F7 -> SDL_SCANCODE_F7
+            F8 -> SDL_SCANCODE_F8
+            F9 -> SDL_SCANCODE_F9
+            F10 -> SDL_SCANCODE_F10
+            F11 -> SDL_SCANCODE_F11
+            F12 -> SDL_SCANCODE_F12
+
             Keypad_0 -> SDL_SCANCODE_KP_0
             Keypad_1 -> SDL_SCANCODE_KP_1
             Keypad_2 -> SDL_SCANCODE_KP_2
@@ -197,19 +204,6 @@ public enum class KeyboardKey {
             Keypad_Multiply -> SDL_SCANCODE_KP_MULTIPLY
             Keypad_Divide -> SDL_SCANCODE_KP_DIVIDE
             Keypad_Enter -> SDL_SCANCODE_KP_ENTER
-
-            F1 -> SDL_SCANCODE_F1
-            F2 -> SDL_SCANCODE_F2
-            F3 -> SDL_SCANCODE_F3
-            F4 -> SDL_SCANCODE_F4
-            F5 -> SDL_SCANCODE_F5
-            F6 -> SDL_SCANCODE_F6
-            F7 -> SDL_SCANCODE_F7
-            F8 -> SDL_SCANCODE_F8
-            F9 -> SDL_SCANCODE_F9
-            F10 -> SDL_SCANCODE_F10
-            F11 -> SDL_SCANCODE_F11
-            F12 -> SDL_SCANCODE_F12
         }
     }
 
@@ -278,6 +272,19 @@ public enum class KeyboardKey {
                 SDL_SCANCODE_CAPSLOCK -> CapsLock
                 SDL_SCANCODE_NUMLOCKCLEAR -> NumLock
 
+                SDL_SCANCODE_F1 -> F1
+                SDL_SCANCODE_F2 -> F2
+                SDL_SCANCODE_F3 -> F3
+                SDL_SCANCODE_F4 -> F4
+                SDL_SCANCODE_F5 -> F5
+                SDL_SCANCODE_F6 -> F6
+                SDL_SCANCODE_F7 -> F7
+                SDL_SCANCODE_F8 -> F8
+                SDL_SCANCODE_F9 -> F9
+                SDL_SCANCODE_F10 -> F10
+                SDL_SCANCODE_F11 -> F11
+                SDL_SCANCODE_F12 -> F12
+
                 SDL_SCANCODE_KP_0 -> Keypad_0
                 SDL_SCANCODE_KP_1 -> Keypad_1
                 SDL_SCANCODE_KP_2 -> Keypad_2
@@ -294,19 +301,6 @@ public enum class KeyboardKey {
                 SDL_SCANCODE_KP_MULTIPLY -> Keypad_Multiply
                 SDL_SCANCODE_KP_DIVIDE -> Keypad_Divide
                 SDL_SCANCODE_KP_ENTER -> Keypad_Enter
-
-                SDL_SCANCODE_F1 -> F1
-                SDL_SCANCODE_F2 -> F2
-                SDL_SCANCODE_F3 -> F3
-                SDL_SCANCODE_F4 -> F4
-                SDL_SCANCODE_F5 -> F5
-                SDL_SCANCODE_F6 -> F6
-                SDL_SCANCODE_F7 -> F7
-                SDL_SCANCODE_F8 -> F8
-                SDL_SCANCODE_F9 -> F9
-                SDL_SCANCODE_F10 -> F10
-                SDL_SCANCODE_F11 -> F11
-                SDL_SCANCODE_F12 -> F12
 
                 else -> null
             }
