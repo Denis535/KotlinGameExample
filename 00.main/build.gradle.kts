@@ -17,7 +17,7 @@ kotlin {
             this.executable {
                 this.baseName = "Launcher"
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
-                this.linkerOpts("-Wl,--allow-shlib-undefined")
+                this.linkerOpts("-Wl,--allow-shlib-undefined", "-Wl,-rpath,\$ORIGIN")
             }
         }
     }
@@ -87,7 +87,8 @@ tasks.register<Copy>("publish-linux-x86_64") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../sdl/SDL-3.2.28/x86_64-linux-gnu/lib/libSDL3.so")
+    this.from("../sdl/SDL-3.2.28/x86_64-linux-gnu/lib/libSDL3.so.0")
+    this.from("../sdl/SDL-3.2.28/x86_64-linux-gnu/lib/libSDL3.so.0.2.28")
     this.from("../sdl/SDL-3.2.28/x86_64-linux-gnu/share")
     this.into(layout.projectDirectory.dir("publications/Linux-x86_64"))
 }

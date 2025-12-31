@@ -16,7 +16,7 @@ cmake -S . -B "${BUILD_DIR}" \
   -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=BOTH \
   -DCMAKE_BUILD_TYPE=Release \
   -DSDL_SHARED=ON \
-  -DSDL_STATIC=ON \
+  -DSDL_STATIC=OFF \
   -DSDL_ENABLE_PCH=OFF \
   -DSDL_VIDEO_WINDOWS=ON \
   -DSDL_VIDEO_X11=OFF \
@@ -28,4 +28,3 @@ cmake -S . -B "${BUILD_DIR}" \
 cmake --build "${BUILD_DIR}" -- -j$(nproc)
 
 cmake --install "${BUILD_DIR}"
-
