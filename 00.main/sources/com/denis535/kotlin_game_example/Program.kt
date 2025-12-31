@@ -69,6 +69,16 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 return engine
             }
         }
+        this.Engine.Mouse.let { mouse ->
+            if (clazz.isInstance(mouse)) {
+                return mouse
+            }
+        }
+        this.Engine.Keyboard.let { keyboard ->
+            if (clazz.isInstance(keyboard)) {
+                return keyboard
+            }
+        }
         this.Engine.Window?.let { window ->
             if (clazz.isInstance(window)) {
                 return window
@@ -77,16 +87,6 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Engine.Window?.Cursor?.let { cursor ->
             if (clazz.isInstance(cursor)) {
                 return cursor
-            }
-        }
-        this.Engine.Window?.Mouse?.let { mouse ->
-            if (clazz.isInstance(mouse)) {
-                return mouse
-            }
-        }
-        this.Engine.Window?.Keyboard?.let { keyboard ->
-            if (clazz.isInstance(keyboard)) {
-                return keyboard
             }
         }
         return null

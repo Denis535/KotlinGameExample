@@ -143,29 +143,16 @@ public abstract class MainWindow : AutoCloseable {
             return field
         }
 
-    public val Mouse: Mouse
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
-    public val Keyboard: Keyboard
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
     @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
     public constructor(desc: MainWindowDesc) {
         this._NativeWindow = run {
             when (desc) {
                 is MainWindowDesc.FullScreen -> {
-                    var flags = 0UL
-                    flags = flags or SDL_WINDOW_FULLSCREEN
+                    var flags = SDL_WINDOW_VULKAN or SDL_WINDOW_FULLSCREEN
                     SDL_CreateWindow(desc.Title, 0, 0, flags).also { Sdl.ThrowErrorIfNeeded() }
                 }
                 is MainWindowDesc.Window -> {
-                    var flags = 0UL
+                    var flags = SDL_WINDOW_VULKAN
                     if (desc.IsResizable) flags = flags or SDL_WINDOW_RESIZABLE
                     SDL_CreateWindow(desc.Title, desc.Width, desc.Height, flags).also { Sdl.ThrowErrorIfNeeded() }.also {
                         SDL_SetWindowPosition(it, SDL_WINDOWPOS_CENTERED.toInt(), SDL_WINDOWPOS_CENTERED.toInt()).also { Sdl.ThrowErrorIfNeeded() }
@@ -174,15 +161,11 @@ public abstract class MainWindow : AutoCloseable {
             }
         }
         this.Cursor = Cursor(this)
-        this.Mouse = Mouse()
-        this.Keyboard = Keyboard()
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
-        this.Keyboard.close()
-        this.Mouse.close()
         this.Cursor.close()
         this._NativeWindow = run {
             SDL_DestroyWindow(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }

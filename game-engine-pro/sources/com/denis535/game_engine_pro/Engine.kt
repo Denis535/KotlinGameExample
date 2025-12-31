@@ -30,6 +30,18 @@ public abstract class Engine : AutoCloseable {
             field = value
         }
 
+    public val Mouse: Mouse
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
+    public val Keyboard: Keyboard
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
+
     public var Window: MainWindow? = null
         get() {
             check(!this.IsClosed)
@@ -46,12 +58,16 @@ public abstract class Engine : AutoCloseable {
         SDL_Init(SDL_INIT_VIDEO).also { Sdl.ThrowErrorIfNeeded() }
         SDL_SetAppMetadata(name, version, id).also { Sdl.ThrowErrorIfNeeded() }
         SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, creator).also { Sdl.ThrowErrorIfNeeded() }
+        this.Mouse = Mouse()
+        this.Keyboard = Keyboard()
     }
 
     @OptIn(ExperimentalForeignApi::class)
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
+        this.Keyboard.close()
+        this.Mouse.close()
         SDL_Quit().also { Sdl.ThrowErrorIfNeeded() }
     }
 
