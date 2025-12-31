@@ -51,82 +51,78 @@ public abstract class ClientEngine : Engine {
         if (super.ProcessEvent(event)) {
             return true
         }
-        this.Window!!.let { window ->
-            if (event.pointed.window.windowID == SDL_GetWindowID(window.NativeWindowInternal).also { Sdl.ThrowErrorIfNeeded() }) {
-                when (event.pointed.type) {
-                    SDL_EVENT_MOUSE_MOTION -> {
-                        val motionEvent = event.pointed.motion
-                        val cursorX = motionEvent.x
-                        val cursorY = motionEvent.y
-                        val cursorDeltaX = motionEvent.xrel
-                        val cursorDeltaY = motionEvent.yrel
-                        this.OnMouseCursorMove(MouseCursorMoveEvent(cursorX, cursorY, cursorDeltaX, cursorDeltaY))
-                    }
-                    SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
-                        val buttonEvent = event.pointed.button
-                        val cursorX = buttonEvent.x
-                        val cursorY = buttonEvent.y
-                        val isButtonPressed = buttonEvent.down
-                        val button = MouseButton.FromNativeValue(buttonEvent.button)
-                        val clicks = buttonEvent.clicks.toInt()
-                        if (button != null) {
-                            if (isButtonPressed) {
-                                this.OnMouseButtonPress(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
-                            } else {
-                                this.OnMouseButtonRelease(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
-                            }
-                        }
-                    }
-                    SDL_EVENT_MOUSE_WHEEL -> {
-                        val wheelEvent = event.pointed.wheel
-                        val cursorX = wheelEvent.mouse_x
-                        val cursorY = wheelEvent.mouse_y
-                        val isDirectionNormal = wheelEvent.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
-                        val scrollX: Float
-                        val scrollY: Float
-                        val scrollIntegerX: Int
-                        val scrollIntegerY: Int
-                        if (isDirectionNormal) {
-                            scrollX = wheelEvent.x
-                            scrollY = wheelEvent.y
-                            scrollIntegerX = wheelEvent.integer_x
-                            scrollIntegerY = wheelEvent.integer_y
-                        } else {
-                            scrollX = -wheelEvent.x
-                            scrollY = -wheelEvent.y
-                            scrollIntegerX = -wheelEvent.integer_x
-                            scrollIntegerY = -wheelEvent.integer_y
-                        }
-                        this.OnMouseWheelScroll(MouseWheelScrollEvent(cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
-                    }
-                    SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
-                        val keyEvent = event.pointed.key
-                        val isKeyPressed = keyEvent.down
-                        val isKeyRepeated = keyEvent.repeat
-                        val key = KeyboardKey.FromNativeValue(keyEvent.scancode)
-                        if (key != null) {
-                            if (isKeyPressed) {
-                                if (!isKeyRepeated) {
-                                    this.OnKeyboardKeyPress(KeyboardKeyActionEvent(key))
-                                } else {
-                                    this.OnKeyboardKeyRepeat(KeyboardKeyActionEvent(key))
-                                }
-                            } else {
-                                this.OnKeyboardKeyRelease(KeyboardKeyActionEvent(key))
-                            }
-                        }
-                    }
-                    SDL_EVENT_TEXT_INPUT -> {
-                        val textEvent = event.pointed.text
-                        val text = textEvent.text?.toKStringFromUtf8()
-                        if (text != null) {
-                            this.OnTextInput(text)
-                        }
-                    }
-                    SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
-                        return true
+        when (event.pointed.type) {
+            SDL_EVENT_MOUSE_MOTION -> {
+                val motionEvent = event.pointed.motion
+                val cursorX = motionEvent.x
+                val cursorY = motionEvent.y
+                val cursorDeltaX = motionEvent.xrel
+                val cursorDeltaY = motionEvent.yrel
+                this.OnMouseCursorMove(MouseCursorMoveEvent(cursorX, cursorY, cursorDeltaX, cursorDeltaY))
+            }
+            SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP -> {
+                val buttonEvent = event.pointed.button
+                val cursorX = buttonEvent.x
+                val cursorY = buttonEvent.y
+                val isButtonPressed = buttonEvent.down
+                val button = MouseButton.FromNativeValue(buttonEvent.button)
+                val clicks = buttonEvent.clicks.toInt()
+                if (button != null) {
+                    if (isButtonPressed) {
+                        this.OnMouseButtonPress(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
+                    } else {
+                        this.OnMouseButtonRelease(MouseButtonActionEvent(cursorX, cursorY, button, clicks))
                     }
                 }
+            }
+            SDL_EVENT_MOUSE_WHEEL -> {
+                val wheelEvent = event.pointed.wheel
+                val cursorX = wheelEvent.mouse_x
+                val cursorY = wheelEvent.mouse_y
+                val isDirectionNormal = wheelEvent.direction == SDL_MouseWheelDirection.SDL_MOUSEWHEEL_NORMAL
+                val scrollX: Float
+                val scrollY: Float
+                val scrollIntegerX: Int
+                val scrollIntegerY: Int
+                if (isDirectionNormal) {
+                    scrollX = wheelEvent.x
+                    scrollY = wheelEvent.y
+                    scrollIntegerX = wheelEvent.integer_x
+                    scrollIntegerY = wheelEvent.integer_y
+                } else {
+                    scrollX = -wheelEvent.x
+                    scrollY = -wheelEvent.y
+                    scrollIntegerX = -wheelEvent.integer_x
+                    scrollIntegerY = -wheelEvent.integer_y
+                }
+                this.OnMouseWheelScroll(MouseWheelScrollEvent(cursorX, cursorY, scrollX, scrollY, scrollIntegerX, scrollIntegerY))
+            }
+            SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP -> {
+                val keyEvent = event.pointed.key
+                val isKeyPressed = keyEvent.down
+                val isKeyRepeated = keyEvent.repeat
+                val key = KeyboardKey.FromNativeValue(keyEvent.scancode)
+                if (key != null) {
+                    if (isKeyPressed) {
+                        if (!isKeyRepeated) {
+                            this.OnKeyboardKeyPress(KeyboardKeyActionEvent(key))
+                        } else {
+                            this.OnKeyboardKeyRepeat(KeyboardKeyActionEvent(key))
+                        }
+                    } else {
+                        this.OnKeyboardKeyRelease(KeyboardKeyActionEvent(key))
+                    }
+                }
+            }
+            SDL_EVENT_TEXT_INPUT -> {
+                val textEvent = event.pointed.text
+                val text = textEvent.text?.toKStringFromUtf8()
+                if (text != null) {
+                    this.OnTextInput(text)
+                }
+            }
+            SDL_EVENT_WINDOW_CLOSE_REQUESTED -> {
+                return true
             }
         }
         return false
