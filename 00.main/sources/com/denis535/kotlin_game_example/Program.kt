@@ -191,7 +191,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 return cursor
             }
         }
-        this.Engine.Window?.Input?.let { input ->
+        this.Engine.Window?.Mouse?.let { input ->
             if (clazz.isInstance(input)) {
                 return input
             }
