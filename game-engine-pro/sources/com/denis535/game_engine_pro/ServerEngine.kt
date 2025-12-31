@@ -6,7 +6,7 @@ import kotlinx.cinterop.*
 public abstract class ServerEngine : Engine {
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest) : super() {
+    public constructor(manifest: Manifest) {
         SDL_Init(0U).also { Sdl.ThrowErrorIfNeeded() }
         SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { Sdl.ThrowErrorIfNeeded() }
         SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { Sdl.ThrowErrorIfNeeded() }

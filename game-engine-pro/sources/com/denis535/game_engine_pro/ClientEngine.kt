@@ -29,7 +29,7 @@ public abstract class ClientEngine : Engine {
         }
 
     @OptIn(ExperimentalForeignApi::class)
-    public constructor(manifest: Manifest) : super() {
+    public constructor(manifest: Manifest) {
         SDL_Init(SDL_INIT_VIDEO).also { Sdl.ThrowErrorIfNeeded() }
         SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { Sdl.ThrowErrorIfNeeded() }
         SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { Sdl.ThrowErrorIfNeeded() }

@@ -32,7 +32,7 @@ public abstract class Engine : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     internal constructor() {
-        check(SDL_WasInit(SDL_INIT_VIDEO) == 0U)
+        check(SDL_WasInit(0U) == 0U)
     }
 
     @OptIn(ExperimentalForeignApi::class)
