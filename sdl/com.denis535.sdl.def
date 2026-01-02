@@ -2,9 +2,9 @@ package = com.denis535.sdl
 
 headers.mingw = SDL3/SDL.h
 staticLibraries.mingw = libSDL3.dll.a
-libraryPaths.mingw = SDL-3.2.28/x86_64-w64-mingw32/lib
-compilerOpts.mingw = -ISDL-3.2.28/x86_64-w64-mingw32/include
+libraryPaths.mingw = SDL/x86_64-w64-mingw32/lib
+compilerOpts.mingw = -ISDL/x86_64-w64-mingw32/include
 
 headers.linux = SDL3/SDL.h
-compilerOpts.linux = -ISDL-3.2.28/x86_64-linux-gnu/include
-linkerOpts.linux = sdl/SDL-3.2.28/x86_64-linux-gnu/lib/libSDL3.so
+compilerOpts.linux = -ISDL/x86_64-linux-gnu/include
+linkerOpts.linux = sdl/SDL/x86_64-linux-gnu/lib/libSDL3.so
