@@ -69,7 +69,7 @@ tasks.register("publish") {
 }
 
 tasks.register<Delete>("publish-clean") {
-    this.delete(layout.projectDirectory.dir("publications"))
+    this.delete(layout.projectDirectory.dir("dist"))
 }
 
 tasks.register<Copy>("publish-windows-x86_64") {
@@ -79,7 +79,7 @@ tasks.register<Copy>("publish-windows-x86_64") {
     this.from(executable.outputDirectory)
     this.from("../sdl/SDL/x86_64-w64-mingw32/bin/SDL3.dll")
     this.from("../sdl/SDL/x86_64-w64-mingw32/share")
-    this.into(layout.projectDirectory.dir("publications/Windows-x86_64"))
+    this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
 tasks.register<Copy>("publish-linux-x86_64") {
@@ -88,7 +88,7 @@ tasks.register<Copy>("publish-linux-x86_64") {
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
     this.from("../sdl/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
-    this.from("../sdl/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.2.28")
+    this.from("../sdl/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
     this.from("../sdl/SDL/x86_64-linux-gnu/share")
-    this.into(layout.projectDirectory.dir("publications/Linux-x86_64"))
+    this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
 }
