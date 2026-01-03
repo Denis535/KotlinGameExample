@@ -9,12 +9,6 @@ public class Cursor : AutoCloseable {
     private val Window: MainWindow
 
     @OptIn(ExperimentalForeignApi::class)
-    private val NativeWindow: CPointer<SDL_Window>
-        get() {
-            return this.Window.NativeWindowInternal
-        }
-
-    @OptIn(ExperimentalForeignApi::class)
     private var NativeCursor: CPointer<SDL_Cursor>? = null
 
     @OptIn(ExperimentalForeignApi::class)
@@ -51,16 +45,16 @@ public class Cursor : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public var IsGrabbed: Boolean
         get() {
-            return SDL_GetWindowMouseGrab(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            return SDL_GetWindowMouseGrab(this.Window.NativeWindowInternal).also { Sdl.ThrowErrorIfNeeded() }
         }
         set(value) {
-            SDL_SetWindowMouseGrab(this.NativeWindow, value).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_SetWindowMouseGrab(this.Window.NativeWindowInternal, value).also { Sdl.ThrowErrorIfNeeded() }
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public var IsCaptured: Boolean
         get() {
-            val flags = SDL_GetWindowFlags(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            val flags = SDL_GetWindowFlags(this.Window.NativeWindowInternal).also { Sdl.ThrowErrorIfNeeded() }
             return flags and SDL_WINDOW_MOUSE_CAPTURE != 0uL
         }
         set(value) {
@@ -70,10 +64,10 @@ public class Cursor : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public var IsLocked: Boolean
         get() {
-            return SDL_GetWindowRelativeMouseMode(this.NativeWindow).also { Sdl.ThrowErrorIfNeeded() }
+            return SDL_GetWindowRelativeMouseMode(this.Window.NativeWindowInternal).also { Sdl.ThrowErrorIfNeeded() }
         }
         set(value) {
-            SDL_SetWindowRelativeMouseMode(this.NativeWindow, value).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_SetWindowRelativeMouseMode(this.Window.NativeWindowInternal, value).also { Sdl.ThrowErrorIfNeeded() }
         }
 
     internal constructor(window: MainWindow) {

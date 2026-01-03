@@ -9,7 +9,7 @@ public abstract class Engine : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public val IsClosed: Boolean
         get() {
-            return SDL_WasInit(0U) == 0U
+            return SDL_WasInit(0U).also { Sdl.ThrowErrorIfNeeded() } == 0U
         }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -32,7 +32,7 @@ public abstract class Engine : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     internal constructor() {
-        check(SDL_WasInit(0U) == 0U)
+        check(SDL_WasInit(0U).also { Sdl.ThrowErrorIfNeeded() } == 0U)
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -62,7 +62,7 @@ public abstract class Engine : AutoCloseable {
     private fun ProcessEvents(): Boolean {
         memScoped {
             val event = this.alloc<SDL_Event>()
-            while (SDL_PollEvent(event.ptr)) {
+            while (SDL_PollEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }) {
                 if (this@Engine.ProcessEvent(event.ptr)) {
                     return true
                 }
