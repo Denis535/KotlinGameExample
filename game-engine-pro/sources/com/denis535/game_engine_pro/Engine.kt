@@ -9,14 +9,14 @@ public abstract class Engine : AutoCloseable {
     @OptIn(ExperimentalForeignApi::class)
     public val IsClosed: Boolean
         get() {
-            return SDL_WasInit(0U).also { Sdl.ThrowErrorIfNeeded() } == 0U
+            return SDL_WasInit(0U).also { SDL.ThrowErrorIfNeeded() } == 0U
         }
 
     @OptIn(ExperimentalForeignApi::class)
     public val Time: Double
         get() {
             check(!this.IsClosed)
-            val ticks = SDL_GetTicks().also { Sdl.ThrowErrorIfNeeded() }
+            val ticks = SDL_GetTicks().also { SDL.ThrowErrorIfNeeded() }
             return ticks.toDouble() / 1000.0
         }
 
@@ -32,7 +32,7 @@ public abstract class Engine : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     internal constructor() {
-        check(SDL_WasInit(0U).also { Sdl.ThrowErrorIfNeeded() } == 0U)
+        check(SDL_WasInit(0U).also { SDL.ThrowErrorIfNeeded() } == 0U)
     }
 
     @OptIn(ExperimentalForeignApi::class)
@@ -62,7 +62,7 @@ public abstract class Engine : AutoCloseable {
     private fun ProcessEvents(): Boolean {
         memScoped {
             val event = this.alloc<SDL_Event>()
-            while (SDL_PollEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }) {
+            while (SDL_PollEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }) {
                 if (this@Engine.ProcessEvent(event.ptr)) {
                     return true
                 }
@@ -110,7 +110,7 @@ public abstract class Engine : AutoCloseable {
         memScoped {
             val event = this.alloc<SDL_Event>()
             event.type = SDL_EVENT_QUIT
-            SDL_PushEvent(event.ptr).also { Sdl.ThrowErrorIfNeeded() }
+            SDL_PushEvent(event.ptr).also { SDL.ThrowErrorIfNeeded() }
         }
     }
 

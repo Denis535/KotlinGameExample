@@ -8,7 +8,9 @@ kotlin {
             this.executable {
                 this.baseName = "Launcher"
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
-                this.linkerOpts("-Wl,-subsystem,windows")
+                this.linkerOpts(
+                    "-Wl,-subsystem,windows"
+                )
             }
         }
     }
@@ -17,7 +19,12 @@ kotlin {
             this.executable {
                 this.baseName = "Launcher"
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
-                this.linkerOpts("-Wl,--allow-shlib-undefined", "-Wl,-rpath,\$ORIGIN")
+                this.linkerOpts(
+                    "-Wl,--allow-shlib-undefined",
+                    "-Wl,-rpath,\$ORIGIN",
+                    "-Llibs/SDL/x86_64-linux-gnu/lib",
+                    "-lSDL3",
+                )
             }
         }
     }
@@ -45,7 +52,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "PATH", listOfNotNull(
-                "../sdl/SDL/x86_64-w64-mingw32/bin", System.getenv("PATH")
+                "../libs/SDL/x86_64-w64-mingw32/bin", System.getenv("PATH")
             ).joinToString(";")
         )
         this.commandLine(executable.outputFile)
@@ -57,7 +64,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "LD_LIBRARY_PATH", listOfNotNull(
-                "../sdl/SDL/x86_64-linux-gnu/lib", System.getenv("LD_LIBRARY_PATH")
+                "../libs/SDL/x86_64-linux-gnu/lib", System.getenv("LD_LIBRARY_PATH")
             ).joinToString(":")
         )
         this.commandLine(executable.outputFile)
@@ -77,8 +84,8 @@ tasks.register<Copy>("publish-windows-x86_64") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../sdl/SDL/x86_64-w64-mingw32/bin/SDL3.dll")
-    this.from("../sdl/SDL/x86_64-w64-mingw32/share")
+    this.from("../libs/SDL/x86_64-w64-mingw32/bin/SDL3.dll")
+    this.from("../libs/SDL/x86_64-w64-mingw32/share")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
@@ -87,8 +94,8 @@ tasks.register<Copy>("publish-linux-x86_64") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../sdl/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
-    this.from("../sdl/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
-    this.from("../sdl/SDL/x86_64-linux-gnu/share")
+    this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
+    this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
+    this.from("../libs/SDL/x86_64-linux-gnu/share")
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
 }

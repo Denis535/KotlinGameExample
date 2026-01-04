@@ -30,9 +30,9 @@ public abstract class ClientEngine : Engine {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor(manifest: Manifest) {
-        SDL_Init(SDL_INIT_VIDEO).also { Sdl.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { Sdl.ThrowErrorIfNeeded() }
-        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { Sdl.ThrowErrorIfNeeded() }
+        SDL_Init(SDL_INIT_VIDEO).also { SDL.ThrowErrorIfNeeded() }
+        SDL_SetAppMetadata(manifest.Name, manifest.Version, manifest.Id).also { SDL.ThrowErrorIfNeeded() }
+        SDL_SetAppMetadataProperty(SDL_PROP_APP_METADATA_CREATOR_STRING, manifest.Creator).also { SDL.ThrowErrorIfNeeded() }
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
     }
@@ -43,7 +43,7 @@ public abstract class ClientEngine : Engine {
         check(!this.IsRunning)
         this.Keyboard.close()
         this.Mouse.close()
-        SDL_Quit().also { Sdl.ThrowErrorIfNeeded() }
+        SDL_Quit().also { SDL.ThrowErrorIfNeeded() }
     }
 
     @OptIn(ExperimentalForeignApi::class)

@@ -13,7 +13,7 @@ public class Keyboard : AutoCloseable {
 
     @OptIn(ExperimentalForeignApi::class)
     public fun IsKeyPressed(key: KeyboardKey): Boolean {
-        val state = SDL_GetKeyboardState(null).also { Sdl.ThrowErrorIfNeeded() }!!
+        val state = SDL_GetKeyboardState(null).also { SDL.ThrowErrorIfNeeded() }!!
         return state[key.ToNativeValue().toInt()].value
     }
 
