@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/00.main" />
+            <option value="$PROJECT_DIR$/01.ui" />
+            <option value="$PROJECT_DIR$/02.app" />
+            <option value="$PROJECT_DIR$/03.game" />
+            <option value="$PROJECT_DIR$/10.common" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

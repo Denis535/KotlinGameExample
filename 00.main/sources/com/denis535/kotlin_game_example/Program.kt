@@ -1,6 +1,7 @@
 package com.denis535.kotlin_game_example
 
 import com.denis535.game_engine_pro.*
+import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.windows.*
 import com.denis535.game_framework_pro.*
 import kotlinx.cinterop.*
@@ -97,6 +98,14 @@ private class ClientEngine2 : ClientEngine {
     private val Program: Program
 
     public constructor(program: Program) : super(Manifest("Kotlin Game Example")) {
+        this.Mouse.OnCursorMove = this::OnMouseCursorMove
+        this.Mouse.OnButtonPress = this::OnMouseButtonPress
+        this.Mouse.OnButtonRelease = this::OnMouseButtonRelease
+        this.Mouse.OnWheelScroll = this::OnMouseWheelScroll
+        this.Keyboard.OnKeyPress = this::OnKeyboardKeyPress
+        this.Keyboard.OnKeyRepeat = this::OnKeyboardKeyRepeat
+        this.Keyboard.OnKeyRelease = this::OnKeyboardKeyRelease
+        this.Keyboard.OnTextInput = this::OnTextInput
         this.Window = MainWindow2()
         this.Program = program
     }
@@ -113,28 +122,19 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnStop(info: FrameInfo) {
     }
 
-    protected override fun OnFixedUpdate(info: FrameInfo) {
+    private fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
     }
 
-    protected override fun OnUpdate(info: FrameInfo) {
+    private fun OnMouseButtonPress(event: MouseButtonActionEvent) {
     }
 
-    protected override fun OnDraw(info: FrameInfo) {
+    private fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
     }
 
-    protected override fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
+    private fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
     }
 
-    protected override fun OnMouseButtonPress(event: MouseButtonActionEvent) {
-    }
-
-    protected override fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
-    }
-
-    protected override fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
-    }
-
-    protected override fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
+    private fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
         if (event.Key == KeyboardKey.F1) {
             this.Window!!.IsFullScreen = !this.Window!!.IsFullScreen
         }
@@ -192,13 +192,22 @@ private class ClientEngine2 : ClientEngine {
         }
     }
 
-    protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
+    private fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
     }
 
-    protected override fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
+    private fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
     }
 
-    protected override fun OnTextInput(text: String) {
+    private fun OnTextInput(text: String) {
+    }
+
+    protected override fun OnFixedUpdate(info: FrameInfo) {
+    }
+
+    protected override fun OnUpdate(info: FrameInfo) {
+    }
+
+    protected override fun OnDraw(info: FrameInfo) {
     }
 
 }

@@ -23,7 +23,6 @@ include("ui")
 include("app")
 include("game")
 include("common")
-include("game-engine-pro")
 
 project(":main").projectDir = File("00.main")
 project(":ui").projectDir = File("01.ui")
