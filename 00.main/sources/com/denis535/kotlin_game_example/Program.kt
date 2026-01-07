@@ -68,6 +68,16 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 return engine
             }
         }
+        this.Engine.Window.let { window ->
+            if (clazz.isInstance(window)) {
+                return window
+            }
+        }
+        this.Engine.Window.Cursor.let { cursor ->
+            if (clazz.isInstance(cursor)) {
+                return cursor
+            }
+        }
         this.Engine.Mouse.let { mouse ->
             if (clazz.isInstance(mouse)) {
                 return mouse
@@ -76,16 +86,6 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Engine.Keyboard.let { keyboard ->
             if (clazz.isInstance(keyboard)) {
                 return keyboard
-            }
-        }
-        this.Engine.Window?.let { window ->
-            if (clazz.isInstance(window)) {
-                return window
-            }
-        }
-        this.Engine.Window?.Cursor?.let { cursor ->
-            if (clazz.isInstance(cursor)) {
-                return cursor
             }
         }
         return null
@@ -97,22 +97,11 @@ private class ClientEngine2 : ClientEngine {
 
     private val Program: Program
 
-    public constructor(program: Program) : super(Manifest("Kotlin Game Example")) {
-        this.Mouse.OnCursorMove = this::OnMouseCursorMove
-        this.Mouse.OnButtonPress = this::OnMouseButtonPress
-        this.Mouse.OnButtonRelease = this::OnMouseButtonRelease
-        this.Mouse.OnWheelScroll = this::OnMouseWheelScroll
-        this.Keyboard.OnKeyPress = this::OnKeyboardKeyPress
-        this.Keyboard.OnKeyRepeat = this::OnKeyboardKeyRepeat
-        this.Keyboard.OnKeyRelease = this::OnKeyboardKeyRelease
-        this.Keyboard.OnTextInput = this::OnTextInput
-        this.Window = MainWindow2()
+    public constructor(program: Program) : super(Manifest("Kotlin Game Example"), { MainWindow2() }) {
         this.Program = program
     }
 
     public override fun close() {
-        check(!this.IsClosed)
-        this.Window!!.close()
         super.close()
     }
 
@@ -122,83 +111,91 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnStop(info: FrameInfo) {
     }
 
-    private fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
+    protected override fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
+        super.OnMouseCursorMove(event)
     }
 
-    private fun OnMouseButtonPress(event: MouseButtonActionEvent) {
+    protected override fun OnMouseButtonPress(event: MouseButtonActionEvent) {
+        super.OnMouseButtonPress(event)
     }
 
-    private fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
+    protected override fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
+        super.OnMouseButtonRelease(event)
     }
 
-    private fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
+    protected override fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
+        super.OnMouseWheelScroll(event)
     }
 
-    private fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
+    protected override fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
         if (event.Key == KeyboardKey.F1) {
-            this.Window!!.IsFullScreen = !this.Window!!.IsFullScreen
+            this.Window.IsFullScreen = !this.Window.IsFullScreen
         }
         if (event.Key == KeyboardKey.F2) {
-            this.Window!!.IsResizable = !this.Window!!.IsResizable
+            this.Window.IsResizable = !this.Window.IsResizable
         }
         if (event.Key == KeyboardKey.F3) {
-            this.Window!!.Cursor.IsVisible = !this.Window!!.Cursor.IsVisible
+            this.Window.Cursor.IsVisible = !this.Window.Cursor.IsVisible
         }
         if (event.Key == KeyboardKey.F4) {
-            this.Window!!.Cursor.IsGrabbed = !this.Window!!.Cursor.IsGrabbed
+            this.Window.Cursor.IsGrabbed = !this.Window.Cursor.IsGrabbed
         }
         if (event.Key == KeyboardKey.F5) {
-            this.Window!!.Cursor.IsCaptured = !this.Window!!.Cursor.IsCaptured
+            this.Window.Cursor.IsCaptured = !this.Window.Cursor.IsCaptured
         }
         if (event.Key == KeyboardKey.F6) {
-            this.Window!!.Cursor.IsLocked = !this.Window!!.Cursor.IsLocked
+            this.Window.Cursor.IsLocked = !this.Window.Cursor.IsLocked
         }
 
         if (event.Key == KeyboardKey.Digit_1) {
-            this.Window!!.Cursor.Style = CursorStyle.Arrow
+            this.Window.Cursor.Style = CursorStyle.Arrow
         }
         if (event.Key == KeyboardKey.Digit_2) {
-            this.Window!!.Cursor.Style = CursorStyle.Text
+            this.Window.Cursor.Style = CursorStyle.Text
         }
         if (event.Key == KeyboardKey.Digit_3) {
-            this.Window!!.Cursor.Style = CursorStyle.Pointer
+            this.Window.Cursor.Style = CursorStyle.Pointer
         }
         if (event.Key == KeyboardKey.Digit_4) {
-            this.Window!!.Cursor.Style = CursorStyle.Crosshair
+            this.Window.Cursor.Style = CursorStyle.Crosshair
         }
         if (event.Key == KeyboardKey.Digit_5) {
-            this.Window!!.Cursor.Style = CursorStyle.Progress
+            this.Window.Cursor.Style = CursorStyle.Progress
         }
         if (event.Key == KeyboardKey.Digit_6) {
-            this.Window!!.Cursor.Style = CursorStyle.Wait
+            this.Window.Cursor.Style = CursorStyle.Wait
         }
         if (event.Key == KeyboardKey.Digit_7) {
-            this.Window!!.Cursor.Style = CursorStyle.NotAllowed
+            this.Window.Cursor.Style = CursorStyle.NotAllowed
         }
         if (event.Key == KeyboardKey.Keypad_0) {
-            this.Window!!.Cursor.Style = CursorStyle.Move
+            this.Window.Cursor.Style = CursorStyle.Move
         }
         if (event.Key == KeyboardKey.Keypad_1) {
-            this.Window!!.Cursor.Style = CursorStyle.SingleArrowResize_N
+            this.Window.Cursor.Style = CursorStyle.SingleArrowResize_N
         }
         if (event.Key == KeyboardKey.Keypad_2) {
-            this.Window!!.Cursor.Style = CursorStyle.SingleArrowResize_N_W
+            this.Window.Cursor.Style = CursorStyle.SingleArrowResize_N_W
         }
         if (event.Key == KeyboardKey.Keypad_3) {
-            this.Window!!.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
+            this.Window.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
         }
         if (event.Key == KeyboardKey.Keypad_4) {
-            this.Window!!.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
+            this.Window.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
         }
+        super.OnKeyboardKeyPress(event)
     }
 
-    private fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
+    protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
+        super.OnKeyboardKeyRepeat(event)
     }
 
-    private fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
+    protected override fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
+        super.OnKeyboardKeyRelease(event)
     }
 
-    private fun OnTextInput(text: String) {
+    protected override fun OnTextInput(text: String) {
+        super.OnTextInput(text)
     }
 
     protected override fun OnFixedUpdate(info: FrameInfo) {
@@ -214,7 +211,7 @@ private class ClientEngine2 : ClientEngine {
 
 private class MainWindow2 : MainWindow {
 
-    public constructor() : super(Desc.Window("Kotlin Game Example")) {
+    public constructor() : super(Description.Window("Kotlin Game Example")) {
         this.Raise()
     }
 
