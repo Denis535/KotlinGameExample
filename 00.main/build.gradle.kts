@@ -22,7 +22,7 @@ kotlin {
                 this.linkerOpts(
                     "-Wl,--allow-shlib-undefined",
                     "-Wl,-rpath,\$ORIGIN",
-                    "-Llibs/SDL/x86_64-linux-gnu/lib",
+                    "-Lcontent/x86_64-linux-gnu",
                     "-lSDL3",
                 )
             }
