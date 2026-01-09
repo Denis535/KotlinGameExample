@@ -52,7 +52,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "PATH", listOfNotNull(
-                "../libs/SDL/x86_64-w64-mingw32/bin", System.getenv("PATH")
+                "../content/x86_64-w64-mingw32", System.getenv("PATH")
             ).joinToString(";")
         )
         this.commandLine(executable.outputFile)
@@ -64,7 +64,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "LD_LIBRARY_PATH", listOfNotNull(
-                "../libs/SDL/x86_64-linux-gnu/lib", System.getenv("LD_LIBRARY_PATH")
+                "../content/x86_64-linux-gnu", System.getenv("LD_LIBRARY_PATH")
             ).joinToString(":")
         )
         this.commandLine(executable.outputFile)
@@ -84,8 +84,8 @@ tasks.register<Copy>("publish-windows-x86_64") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../libs/SDL/x86_64-w64-mingw32/bin/SDL3.dll")
-    this.from("../libs/SDL/x86_64-w64-mingw32/share")
+    this.from("../content/common")
+    this.from("../content/x86_64-w64-mingw32")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
@@ -94,8 +94,7 @@ tasks.register<Copy>("publish-linux-x86_64") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
-    this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
-    this.from("../libs/SDL/x86_64-linux-gnu/share")
+    this.from("../content/common")
+    this.from("../content/x86_64-linux-gnu")
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
 }
