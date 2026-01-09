@@ -52,7 +52,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "PATH", listOfNotNull(
-                "../content/x86_64-w64-mingw32", System.getenv("PATH")
+                "../content/00.main/x86_64-w64-mingw32", System.getenv("PATH")
             ).joinToString(";")
         )
         this.commandLine(executable.outputFile)
@@ -64,7 +64,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "LD_LIBRARY_PATH", listOfNotNull(
-                "../content/x86_64-linux-gnu", System.getenv("LD_LIBRARY_PATH")
+                "../content/00.main/x86_64-linux-gnu", System.getenv("LD_LIBRARY_PATH")
             ).joinToString(":")
         )
         this.commandLine(executable.outputFile)
@@ -84,8 +84,8 @@ tasks.register<Copy>("publish-windows-x86_64") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../content/common")
-    this.from("../content/x86_64-w64-mingw32")
+    this.from("../content/00.main/common")
+    this.from("../content/00.main/x86_64-w64-mingw32")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
@@ -94,7 +94,7 @@ tasks.register<Copy>("publish-linux-x86_64") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../content/common")
-    this.from("../content/x86_64-linux-gnu")
+    this.from("../content/00.main/common")
+    this.from("../content/00.main/x86_64-linux-gnu")
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
 }
