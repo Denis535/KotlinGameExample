@@ -72,14 +72,14 @@ if (OperationSystem.lowercase().contains("windows")) {
 }
 
 tasks.register("publish") {
-    this.dependsOn(tasks.named("publish-clean"), tasks.named("publish-windows-x86_64"), tasks.named("publish-linux-x86_64"))
+    this.dependsOn(tasks.named("publish-clean"), tasks.named("publish-x86_64-w64-mingw32"), tasks.named("publish-x86_64-linux-gnu"))
 }
 
 tasks.register<Delete>("publish-clean") {
     this.delete(layout.projectDirectory.dir("dist"))
 }
 
-tasks.register<Copy>("publish-windows-x86_64") {
+tasks.register<Copy>("publish-x86_64-w64-mingw32") {
     val target = kotlin.mingwX64()
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
@@ -93,7 +93,7 @@ tasks.register<Copy>("publish-windows-x86_64") {
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
-tasks.register<Copy>("publish-linux-x86_64") {
+tasks.register<Copy>("publish-x86_64-linux-gnu") {
     val target = kotlin.linuxX64()
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
