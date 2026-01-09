@@ -86,6 +86,10 @@ tasks.register<Copy>("publish-windows-x86_64") {
     this.from(executable.outputDirectory)
     this.from("../content/00.main/common")
     this.from("../content/00.main/x86_64-w64-mingw32")
+    this.from("../content/01.ui") { into("content/ui") }
+    this.from("../content/02.app") { into("content/app") }
+    this.from("../content/03.game") { into("content/game") }
+    this.from("../content/10.common") { into("content/common") }
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
@@ -96,5 +100,9 @@ tasks.register<Copy>("publish-linux-x86_64") {
     this.from(executable.outputDirectory)
     this.from("../content/00.main/common")
     this.from("../content/00.main/x86_64-linux-gnu")
+    this.from("../content/01.ui") { into("content/ui") }
+    this.from("../content/02.app") { into("content/app") }
+    this.from("../content/03.game") { into("content/game") }
+    this.from("../content/10.common") { into("content/common") }
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
 }
