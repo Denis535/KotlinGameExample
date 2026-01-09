@@ -86,11 +86,11 @@ tasks.register<Copy>("publish-x86_64-w64-mingw32") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../content/00.main")
-    this.from("../content/01.ui") { into("content/ui") }
-    this.from("../content/02.app") { into("content/app") }
-    this.from("../content/03.game") { into("content/game") }
-    this.from("../content/10.common") { into("content/common") }
+//    this.from("../content/00.main")
+//    this.from("../content/01.ui") { into("content/ui") }
+//    this.from("../content/02.app") { into("content/app") }
+//    this.from("../content/03.game") { into("content/game") }
+//    this.from("../content/10.common") { into("content/common") }
     this.from("../libs/SDL/x86_64-w64-mingw32/bin")
     this.from("../libs/SDL/x86_64-w64-mingw32/share")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
@@ -101,11 +101,11 @@ tasks.register<Copy>("publish-x86_64-linux-gnu") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../content/00.main")
-    this.from("../content/01.ui") { into("content/ui") }
-    this.from("../content/02.app") { into("content/app") }
-    this.from("../content/03.game") { into("content/game") }
-    this.from("../content/10.common") { into("content/common") }
+//    this.from("../content/00.main")
+//    this.from("../content/01.ui") { into("content/ui") }
+//    this.from("../content/02.app") { into("content/app") }
+//    this.from("../content/03.game") { into("content/game") }
+//    this.from("../content/10.common") { into("content/common") }
     this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
     this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
     this.from("../libs/SDL/x86_64-linux-gnu/share")
