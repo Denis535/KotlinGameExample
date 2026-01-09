@@ -9,6 +9,7 @@ kotlin {
                 this.baseName = "Launcher"
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
                 this.linkerOpts(
+//                    "-Wl,--verbose",
                     "-Wl,-subsystem,windows"
                 )
             }
@@ -20,9 +21,10 @@ kotlin {
                 this.baseName = "Launcher"
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
                 this.linkerOpts(
+//                    "-Wl,--verbose",
                     "-Wl,--allow-shlib-undefined",
                     "-Wl,-rpath,\$ORIGIN",
-                    "-Lcontent/x86_64-linux-gnu",
+                    "-Llibs/SDL/x86_64-linux-gnu/lib",
                     "-lSDL3",
                 )
             }
@@ -52,7 +54,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "PATH", listOfNotNull(
-                "../content/00.main/x86_64-w64-mingw32", System.getenv("PATH")
+                "../content/x86_64-w64-mingw32", System.getenv("PATH")
             ).joinToString(";")
         )
         this.commandLine(executable.outputFile)
@@ -64,7 +66,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "LD_LIBRARY_PATH", listOfNotNull(
-                "../content/00.main/x86_64-linux-gnu", System.getenv("LD_LIBRARY_PATH")
+                "../content/x86_64-linux-gnu", System.getenv("LD_LIBRARY_PATH")
             ).joinToString(":")
         )
         this.commandLine(executable.outputFile)
@@ -84,12 +86,12 @@ tasks.register<Copy>("publish-x86_64-w64-mingw32") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../content/00.main/common")
-    this.from("../content/00.main/x86_64-w64-mingw32")
+    this.from("../content/00.main")
     this.from("../content/01.ui") { into("content/ui") }
     this.from("../content/02.app") { into("content/app") }
     this.from("../content/03.game") { into("content/game") }
     this.from("../content/10.common") { into("content/common") }
+    this.from("../content/x86_64-w64-mingw32")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
@@ -98,11 +100,11 @@ tasks.register<Copy>("publish-x86_64-linux-gnu") {
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../content/00.main/common")
-    this.from("../content/00.main/x86_64-linux-gnu")
+    this.from("../content/00.main")
     this.from("../content/01.ui") { into("content/ui") }
     this.from("../content/02.app") { into("content/app") }
     this.from("../content/03.game") { into("content/game") }
     this.from("../content/10.common") { into("content/common") }
+    this.from("../content/x86_64-linux-gnu")
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
 }
