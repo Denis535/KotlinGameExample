@@ -10,7 +10,8 @@ kotlin {
             this.kotlin.srcDir("sources")
             this.resources.srcDir("resources")
             this.dependencies {
-                this.implementation(this.project(":common"))
+                this.implementation(this.project(":project.game"))
+                this.implementation(this.project(":project.common"))
             }
         }
         val mingwX64Main by getting {}
