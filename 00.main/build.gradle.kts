@@ -54,7 +54,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "PATH", listOfNotNull(
-                "../content/x86_64-w64-mingw32", System.getenv("PATH")
+                "../libs/SDL/x86_64-w64-mingw32/lib", System.getenv("PATH")
             ).joinToString(";")
         )
         this.commandLine(executable.outputFile)
@@ -66,7 +66,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "LD_LIBRARY_PATH", listOfNotNull(
-                "../content/x86_64-linux-gnu", System.getenv("LD_LIBRARY_PATH")
+                "../libs/SDL/x86_64-linux-gnu/lib", System.getenv("LD_LIBRARY_PATH")
             ).joinToString(":")
         )
         this.commandLine(executable.outputFile)
@@ -91,7 +91,8 @@ tasks.register<Copy>("publish-x86_64-w64-mingw32") {
     this.from("../content/02.app") { into("content/app") }
     this.from("../content/03.game") { into("content/game") }
     this.from("../content/10.common") { into("content/common") }
-    this.from("../content/x86_64-w64-mingw32")
+    this.from("../libs/SDL/x86_64-w64-mingw32/bin")
+    this.from("../libs/SDL/x86_64-w64-mingw32/share")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
@@ -105,6 +106,8 @@ tasks.register<Copy>("publish-x86_64-linux-gnu") {
     this.from("../content/02.app") { into("content/app") }
     this.from("../content/03.game") { into("content/game") }
     this.from("../content/10.common") { into("content/common") }
-    this.from("../content/x86_64-linux-gnu")
+    this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
+    this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
+    this.from("../libs/SDL/x86_64-linux-gnu/share")
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
 }
