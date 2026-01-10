@@ -74,40 +74,49 @@ if (OperationSystem.lowercase().contains("windows")) {
 }
 
 tasks.register("publish") {
-    this.dependsOn(tasks.named("publish-clean"), tasks.named("publish-x86_64-w64-mingw32"), tasks.named("publish-x86_64-linux-gnu"))
+    this.dependsOn(tasks.named("publish-clean"))
+    this.dependsOn(tasks.named("publish-build-x86_64-w64-mingw32"))
+    this.dependsOn(tasks.named("publish-build-x86_64-linux-gnu"))
+    this.dependsOn(tasks.named("publish-content"))
 }
 
 tasks.register<Delete>("publish-clean") {
     this.delete(layout.projectDirectory.dir("dist"))
 }
 
-tasks.register<Copy>("publish-x86_64-w64-mingw32") {
+tasks.register<Copy>("publish-build-x86_64-w64-mingw32") {
+    this.mustRunAfter("publish-clean")
     val target = kotlin.mingwX64()
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-//    this.from("../content/00.main")
-//    this.from("../content/01.ui") { into("content/ui") }
-//    this.from("../content/02.app") { into("content/app") }
-//    this.from("../content/03.game") { into("content/game") }
-//    this.from("../content/10.common") { into("content/common") }
+    this.from("../content")
     this.from("../libs/SDL/x86_64-w64-mingw32/bin")
     this.from("../libs/SDL/x86_64-w64-mingw32/share")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
-tasks.register<Copy>("publish-x86_64-linux-gnu") {
+tasks.register<Copy>("publish-build-x86_64-linux-gnu") {
+    this.mustRunAfter("publish-clean")
     val target = kotlin.linuxX64()
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-//    this.from("../content/00.main")
-//    this.from("../content/01.ui") { into("content/ui") }
-//    this.from("../content/02.app") { into("content/app") }
-//    this.from("../content/03.game") { into("content/game") }
-//    this.from("../content/10.common") { into("content/common") }
+    this.from("../content")
     this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
     this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
     this.from("../libs/SDL/x86_64-linux-gnu/share")
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
+}
+
+tasks.register<Tar>("publish-content") {
+    this.mustRunAfter("publish-clean")
+    this.destinationDirectory = layout.projectDirectory.dir("dist")
+    this.archiveBaseName = "Content"
+    this.archiveVersion = ""
+    this.compression = Compression.BZIP2
+    this.from("../content.10.ui") { this.into("UI") }
+    this.from("../content.20.app") { this.into("App") }
+    this.from("../content.50.game") { this.into("Game") }
+    this.from("../content.60.common") { this.into("Common") }
 }
