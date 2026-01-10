@@ -6,7 +6,7 @@ kotlin {
     this.mingwX64 {
         this.binaries {
             this.executable {
-                this.baseName = "Launcher"
+                this.baseName = "KotlinGameExample"
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
                 this.linkerOpts(
 //                    "-Wl,--verbose",
@@ -18,7 +18,7 @@ kotlin {
     this.linuxX64 {
         this.binaries {
             this.executable {
-                this.baseName = "Launcher"
+                this.baseName = "KotlinGameExample"
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
                 this.linkerOpts(
 //                    "-Wl,--verbose",
@@ -74,35 +74,28 @@ if (OperationSystem.lowercase().contains("windows")) {
 }
 
 tasks.register("publish") {
-    this.dependsOn(tasks.named("publish-clean"))
     this.dependsOn(tasks.named("publish-build-x86_64-w64-mingw32"))
     this.dependsOn(tasks.named("publish-build-x86_64-linux-gnu"))
     this.dependsOn(tasks.named("publish-content"))
 }
 
-tasks.register<Delete>("publish-clean") {
-    this.delete(layout.projectDirectory.dir("dist"))
-}
-
 tasks.register<Copy>("publish-build-x86_64-w64-mingw32") {
-    this.mustRunAfter("publish-clean")
     val target = kotlin.mingwX64()
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../content")
+    this.from("../content/Icon.png")
     this.from("../libs/SDL/x86_64-w64-mingw32/bin")
     this.from("../libs/SDL/x86_64-w64-mingw32/share")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
 tasks.register<Copy>("publish-build-x86_64-linux-gnu") {
-    this.mustRunAfter("publish-clean")
     val target = kotlin.linuxX64()
     val executable = target.binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
-    this.from("../content")
+    this.from("../content/Icon.png")
     this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
     this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
     this.from("../libs/SDL/x86_64-linux-gnu/share")
@@ -110,13 +103,9 @@ tasks.register<Copy>("publish-build-x86_64-linux-gnu") {
 }
 
 tasks.register<Tar>("publish-content") {
-    this.mustRunAfter("publish-clean")
     this.destinationDirectory = layout.projectDirectory.dir("dist")
-    this.archiveBaseName = "content"
+    this.archiveBaseName = "Content"
     this.archiveVersion = ""
     this.compression = Compression.BZIP2
-    this.from("../content.10.ui") { this.into("ui") }
-    this.from("../content.20.app") { this.into("app") }
-    this.from("../content.50.game") { this.into("game") }
-    this.from("../content.60.common") { this.into("common") }
+    this.from("../content/bundle")
 }
