@@ -112,11 +112,11 @@ tasks.register<Copy>("publish-build-x86_64-linux-gnu") {
 tasks.register<Tar>("publish-content") {
     this.mustRunAfter("publish-clean")
     this.destinationDirectory = layout.projectDirectory.dir("dist")
-    this.archiveBaseName = "Content"
+    this.archiveBaseName = "content"
     this.archiveVersion = ""
     this.compression = Compression.BZIP2
-    this.from("../content.10.ui") { this.into("UI") }
-    this.from("../content.20.app") { this.into("App") }
-    this.from("../content.50.game") { this.into("Game") }
-    this.from("../content.60.common") { this.into("Common") }
+    this.from("../content.10.ui") { this.into("ui") }
+    this.from("../content.20.app") { this.into("app") }
+    this.from("../content.50.game") { this.into("game") }
+    this.from("../content.60.common") { this.into("common") }
 }
