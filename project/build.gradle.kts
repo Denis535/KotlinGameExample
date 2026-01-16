@@ -107,5 +107,5 @@ tasks.register<Tar>("publish-content") {
     this.archiveBaseName = "Content"
     this.archiveVersion = ""
     this.compression = Compression.BZIP2
-    this.from("../content/bundle")
+    this.from("../content/content")
 }
