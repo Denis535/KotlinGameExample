@@ -111,8 +111,8 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnStop(info: FrameInfo) {
     }
 
-    protected override fun OnMouseCursorMove(event: MouseCursorMoveEvent) {
-        super.OnMouseCursorMove(event)
+    protected override fun OnMouseMove(event: MouseMoveEvent) {
+        super.OnMouseMove(event)
     }
 
     protected override fun OnMouseButtonPress(event: MouseButtonActionEvent) {
@@ -128,6 +128,10 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
+//        if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.LeftAlt)) {
+//            this.Window.IsFullScreen = !this.Window.IsFullScreen
+//        }
+
         if (event.Key == KeyboardKey.F1) {
             this.Window.IsFullScreen = !this.Window.IsFullScreen
         }

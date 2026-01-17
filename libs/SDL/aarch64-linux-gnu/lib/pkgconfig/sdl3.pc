@@ -1,4 +1,4 @@
-prefix=/SDL/aarch64-linux-gnu
+prefix=/usr/local
 exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include
