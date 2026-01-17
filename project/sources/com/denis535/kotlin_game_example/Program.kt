@@ -105,10 +105,10 @@ private class ClientEngine2 : ClientEngine {
         super.close()
     }
 
-    protected override fun OnStart(info: FrameInfo) {
+    protected override fun OnStart(time: Time) {
     }
 
-    protected override fun OnStop(info: FrameInfo) {
+    protected override fun OnStop(time: Time) {
     }
 
     protected override fun OnMouseMove(event: MouseMoveEvent) {
@@ -128,9 +128,9 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
-//        if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.LeftAlt)) {
-//            this.Window.IsFullScreen = !this.Window.IsFullScreen
-//        }
+        if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
+            this.Window.IsFullScreen = !this.Window.IsFullScreen
+        }
 
         if (event.Key == KeyboardKey.F1) {
             this.Window.IsFullScreen = !this.Window.IsFullScreen
@@ -202,13 +202,13 @@ private class ClientEngine2 : ClientEngine {
         super.OnTextInput(text)
     }
 
-    protected override fun OnFixedUpdate(info: FrameInfo) {
+    protected override fun OnFixedUpdate(time: Time) {
     }
 
-    protected override fun OnUpdate(info: FrameInfo) {
+    protected override fun OnUpdate(time: Time) {
     }
 
-    protected override fun OnDraw(info: FrameInfo) {
+    protected override fun OnDraw(time: Time) {
     }
 
 }
