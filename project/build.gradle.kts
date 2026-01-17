@@ -49,8 +49,7 @@ kotlin {
 val OperationSystem = System.getProperty("os.name")!!
 if (OperationSystem.lowercase().contains("windows")) {
     tasks.register<Exec>("run") {
-        val target = kotlin.mingwX64()
-        val executable = target.binaries.getExecutable("DEBUG")
+        val executable = kotlin.mingwX64().binaries.getExecutable("DEBUG")
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "PATH", listOfNotNull(
@@ -61,8 +60,7 @@ if (OperationSystem.lowercase().contains("windows")) {
     }
 } else if (OperationSystem.lowercase().contains("linux")) {
     tasks.register<Exec>("run") {
-        val target = kotlin.linuxX64()
-        val executable = target.binaries.getExecutable("DEBUG")
+        val executable = kotlin.linuxX64().binaries.getExecutable("DEBUG")
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "LD_LIBRARY_PATH", listOfNotNull(
