@@ -105,29 +105,37 @@ private class ClientEngine2 : ClientEngine {
         super.close()
     }
 
-    protected override fun OnStart(time: Time) {
+    protected override fun OnStart() {
     }
 
-    protected override fun OnStop(time: Time) {
+    protected override fun OnStop() {
+    }
+
+    protected override fun OnMouseFocus(event: MouseFocusEvent) {
+    }
+
+    protected override fun OnMouseFocusLost(event: MouseFocusLostEvent) {
+    }
+
+    protected override fun OnKeyboardFocus(event: KeyboardFocusEvent) {
+    }
+
+    protected override fun OnKeyboardFocusLost(event: KeyboardFocusLostEvent) {
     }
 
     protected override fun OnMouseMove(event: MouseMoveEvent) {
-        super.OnMouseMove(event)
     }
 
-    protected override fun OnMouseButtonPress(event: MouseButtonActionEvent) {
-        super.OnMouseButtonPress(event)
+    protected override fun OnMouseButtonPress(event: MouseButtonEvent) {
     }
 
-    protected override fun OnMouseButtonRelease(event: MouseButtonActionEvent) {
-        super.OnMouseButtonRelease(event)
+    protected override fun OnMouseButtonRelease(event: MouseButtonEvent) {
     }
 
     protected override fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
-        super.OnMouseWheelScroll(event)
     }
 
-    protected override fun OnKeyboardKeyPress(event: KeyboardKeyActionEvent) {
+    protected override fun OnKeyboardKeyPress(event: KeyboardKeyEvent) {
         if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
             this.Window.IsFullScreen = !this.Window.IsFullScreen
         }
@@ -187,28 +195,24 @@ private class ClientEngine2 : ClientEngine {
         if (event.Key == KeyboardKey.Keypad_4) {
             this.Window.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
         }
-        super.OnKeyboardKeyPress(event)
     }
 
-    protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyActionEvent) {
-        super.OnKeyboardKeyRepeat(event)
+    protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyEvent) {
     }
 
-    protected override fun OnKeyboardKeyRelease(event: KeyboardKeyActionEvent) {
-        super.OnKeyboardKeyRelease(event)
+    protected override fun OnKeyboardKeyRelease(event: KeyboardKeyEvent) {
     }
 
-    protected override fun OnTextInput(text: String) {
-        super.OnTextInput(text)
+    protected override fun OnTextInput(event: TextInputEvent) {
     }
 
-    protected override fun OnFixedUpdate(time: Time) {
+    protected override fun OnFixedUpdate() {
     }
 
-    protected override fun OnUpdate(time: Time) {
+    protected override fun OnUpdate() {
     }
 
-    protected override fun OnDraw(time: Time) {
+    protected override fun OnDraw() {
     }
 
 }
