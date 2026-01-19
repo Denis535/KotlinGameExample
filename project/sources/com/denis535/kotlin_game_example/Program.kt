@@ -106,9 +106,23 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnStart() {
+        println("OnStart")
     }
 
     protected override fun OnStop() {
+        println("OnStop")
+    }
+
+    protected override fun OnDraw() {
+//        println("OnDraw: " + this.Time.Time)
+    }
+
+    protected override fun OnUpdate() {
+//        println("OnUpdate: " + this.Time.Time)
+    }
+
+    protected override fun OnFixedUpdate() {
+//        println("OnFixedUpdate: " + this.Time.Time)
     }
 
     protected override fun OnMouseFocus(event: MouseFocusEvent) {
@@ -204,15 +218,6 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnTextInput(event: TextInputEvent) {
-    }
-
-    protected override fun OnFixedUpdate() {
-    }
-
-    protected override fun OnUpdate() {
-    }
-
-    protected override fun OnDraw() {
     }
 
 }
