@@ -73,7 +73,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 return window
             }
         }
-        this.Engine.Window.Cursor.let { cursor ->
+        this.Engine.Cursor.let { cursor ->
             if (clazz.isInstance(cursor)) {
                 return cursor
             }
@@ -106,11 +106,11 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnStart() {
-        println("OnStart")
+//        println("OnStart")
     }
 
     protected override fun OnStop() {
-        println("OnStop")
+//        println("OnStop")
     }
 
     protected override fun OnDraw() {
@@ -153,61 +153,57 @@ private class ClientEngine2 : ClientEngine {
         if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
             this.Window.IsFullScreen = !this.Window.IsFullScreen
         }
-
         if (event.Key == KeyboardKey.F1) {
-            this.Window.IsFullScreen = !this.Window.IsFullScreen
-        }
-        if (event.Key == KeyboardKey.F2) {
             this.Window.IsResizable = !this.Window.IsResizable
         }
+        if (event.Key == KeyboardKey.F2) {
+            this.Window.IsMouseGrabbed = !this.Window.IsMouseGrabbed
+        }
         if (event.Key == KeyboardKey.F3) {
-            this.Window.Cursor.IsVisible = !this.Window.Cursor.IsVisible
+            this.Window.IsMouseCaptured = !this.Window.IsMouseCaptured
         }
         if (event.Key == KeyboardKey.F4) {
-            this.Window.Cursor.IsGrabbed = !this.Window.Cursor.IsGrabbed
-        }
-        if (event.Key == KeyboardKey.F5) {
-            this.Window.Cursor.IsCaptured = !this.Window.Cursor.IsCaptured
-        }
-        if (event.Key == KeyboardKey.F6) {
-            this.Window.Cursor.IsLocked = !this.Window.Cursor.IsLocked
+            this.Window.IsMouseLocked = !this.Window.IsMouseLocked
         }
 
+        if (event.Key == KeyboardKey.F3) {
+            this.Cursor.IsVisible = !this.Cursor.IsVisible
+        }
         if (event.Key == KeyboardKey.Digit_1) {
-            this.Window.Cursor.Style = CursorStyle.Arrow
+            this.Cursor.Style = CursorStyle.Arrow
         }
         if (event.Key == KeyboardKey.Digit_2) {
-            this.Window.Cursor.Style = CursorStyle.Text
+            this.Cursor.Style = CursorStyle.Text
         }
         if (event.Key == KeyboardKey.Digit_3) {
-            this.Window.Cursor.Style = CursorStyle.Pointer
+            this.Cursor.Style = CursorStyle.Pointer
         }
         if (event.Key == KeyboardKey.Digit_4) {
-            this.Window.Cursor.Style = CursorStyle.Crosshair
+            this.Cursor.Style = CursorStyle.Crosshair
         }
         if (event.Key == KeyboardKey.Digit_5) {
-            this.Window.Cursor.Style = CursorStyle.Progress
+            this.Cursor.Style = CursorStyle.Progress
         }
         if (event.Key == KeyboardKey.Digit_6) {
-            this.Window.Cursor.Style = CursorStyle.Wait
+            this.Cursor.Style = CursorStyle.Wait
         }
         if (event.Key == KeyboardKey.Digit_7) {
-            this.Window.Cursor.Style = CursorStyle.NotAllowed
+            this.Cursor.Style = CursorStyle.NotAllowed
         }
         if (event.Key == KeyboardKey.Keypad_0) {
-            this.Window.Cursor.Style = CursorStyle.Move
+            this.Cursor.Style = CursorStyle.Move
         }
         if (event.Key == KeyboardKey.Keypad_1) {
-            this.Window.Cursor.Style = CursorStyle.SingleArrowResize_N
+            this.Cursor.Style = CursorStyle.SingleArrowResize_N
         }
         if (event.Key == KeyboardKey.Keypad_2) {
-            this.Window.Cursor.Style = CursorStyle.SingleArrowResize_N_W
+            this.Cursor.Style = CursorStyle.SingleArrowResize_N_W
         }
         if (event.Key == KeyboardKey.Keypad_3) {
-            this.Window.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
+            this.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
         }
         if (event.Key == KeyboardKey.Keypad_4) {
-            this.Window.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
+            this.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
         }
     }
 
