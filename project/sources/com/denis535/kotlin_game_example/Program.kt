@@ -1,8 +1,8 @@
 package com.denis535.kotlin_game_example
 
 import com.denis535.game_engine_pro.*
+import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
-import com.denis535.game_engine_pro.windows.*
 import com.denis535.game_framework_pro.*
 import kotlinx.cinterop.*
 import kotlin.reflect.*
@@ -137,6 +137,9 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnKeyboardFocusLost(event: KeyboardFocusLostEvent) {
     }
 
+    protected override fun OnTextInput(event: TextInputEvent) {
+    }
+
     protected override fun OnMouseMove(event: MouseMoveEvent) {
     }
 
@@ -211,9 +214,6 @@ private class ClientEngine2 : ClientEngine {
     }
 
     protected override fun OnKeyboardKeyRelease(event: KeyboardKeyEvent) {
-    }
-
-    protected override fun OnTextInput(event: TextInputEvent) {
     }
 
 }
