@@ -128,13 +128,7 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnMouseFocus(event: MouseFocusEvent) {
     }
 
-    protected override fun OnMouseFocusLost(event: MouseFocusLostEvent) {
-    }
-
     protected override fun OnKeyboardFocus(event: KeyboardFocusEvent) {
-    }
-
-    protected override fun OnKeyboardFocusLost(event: KeyboardFocusLostEvent) {
     }
 
     protected override fun OnTextInput(event: TextInputEvent) {
@@ -143,77 +137,75 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnMouseMove(event: MouseMoveEvent) {
     }
 
-    protected override fun OnMouseButtonPress(event: MouseButtonEvent) {
-    }
-
-    protected override fun OnMouseButtonRelease(event: MouseButtonEvent) {
+    protected override fun OnMouseButtonAction(event: MouseButtonActionEvent) {
     }
 
     protected override fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
     }
 
-    protected override fun OnKeyboardKeyPress(event: KeyboardKeyEvent) {
-        if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
-            this.Window.IsFullScreen = !this.Window.IsFullScreen
-        }
-        if (event.Key == KeyboardKey.F1) {
-            this.Window.IsResizable = !this.Window.IsResizable
-        }
-        if (event.Key == KeyboardKey.F2) {
-            this.Window.IsMouseGrabbed = !this.Window.IsMouseGrabbed
-        }
-        if (event.Key == KeyboardKey.F3) {
-            this.Window.IsMouseCaptured = !this.Window.IsMouseCaptured
-        }
-        if (event.Key == KeyboardKey.F4) {
-            this.Window.IsMouseLocked = !this.Window.IsMouseLocked
-        }
+    protected override fun OnKeyboardKeyAction(event: KeyboardKeyActionEvent) {
+        if (event.IsPressed) {
+            if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
+                this.Window.IsFullScreen = !this.Window.IsFullScreen
+            }
 
-        if (event.Key == KeyboardKey.F3) {
-            this.Cursor.IsVisible = !this.Cursor.IsVisible
-        }
-        if (event.Key == KeyboardKey.Digit_1) {
-            this.Cursor.Style = CursorStyle.Arrow
-        }
-        if (event.Key == KeyboardKey.Digit_2) {
-            this.Cursor.Style = CursorStyle.Text
-        }
-        if (event.Key == KeyboardKey.Digit_3) {
-            this.Cursor.Style = CursorStyle.Pointer
-        }
-        if (event.Key == KeyboardKey.Digit_4) {
-            this.Cursor.Style = CursorStyle.Crosshair
-        }
-        if (event.Key == KeyboardKey.Digit_5) {
-            this.Cursor.Style = CursorStyle.Progress
-        }
-        if (event.Key == KeyboardKey.Digit_6) {
-            this.Cursor.Style = CursorStyle.Wait
-        }
-        if (event.Key == KeyboardKey.Digit_7) {
-            this.Cursor.Style = CursorStyle.NotAllowed
-        }
-        if (event.Key == KeyboardKey.Keypad_0) {
-            this.Cursor.Style = CursorStyle.Move
-        }
-        if (event.Key == KeyboardKey.Keypad_1) {
-            this.Cursor.Style = CursorStyle.SingleArrowResize_N
-        }
-        if (event.Key == KeyboardKey.Keypad_2) {
-            this.Cursor.Style = CursorStyle.SingleArrowResize_N_W
-        }
-        if (event.Key == KeyboardKey.Keypad_3) {
-            this.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
-        }
-        if (event.Key == KeyboardKey.Keypad_4) {
-            this.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
+            if (event.Key == KeyboardKey.F1) {
+                this.Window.IsMouseLocked = !this.Window.IsMouseLocked
+            }
+            if (event.Key == KeyboardKey.F2) {
+                this.Window.IsMouseGrabbed = !this.Window.IsMouseGrabbed
+            }
+            if (event.Key == KeyboardKey.F3) {
+                this.Window.IsMouseCaptured = !this.Window.IsMouseCaptured
+            }
+
+            if (event.Key == KeyboardKey.Digit_0) {
+                this.Cursor.Style = null
+            }
+            if (event.Key == KeyboardKey.Digit_1) {
+                this.Cursor.Style = CursorStyle.Arrow
+            }
+            if (event.Key == KeyboardKey.Digit_2) {
+                this.Cursor.Style = CursorStyle.Text
+            }
+            if (event.Key == KeyboardKey.Digit_3) {
+                this.Cursor.Style = CursorStyle.Pointer
+            }
+            if (event.Key == KeyboardKey.Digit_4) {
+                this.Cursor.Style = CursorStyle.Crosshair
+            }
+            if (event.Key == KeyboardKey.Digit_5) {
+                this.Cursor.Style = CursorStyle.Progress
+            }
+            if (event.Key == KeyboardKey.Digit_6) {
+                this.Cursor.Style = CursorStyle.Wait
+            }
+            if (event.Key == KeyboardKey.Digit_7) {
+                this.Cursor.Style = CursorStyle.NotAllowed
+            }
+
+            if (event.Key == KeyboardKey.Keypad_0) {
+                this.Cursor.Style = CursorStyle.Move
+            }
+            if (event.Key == KeyboardKey.Keypad_1) {
+                this.Cursor.Style = CursorStyle.SingleArrowResize_N
+            }
+            if (event.Key == KeyboardKey.Keypad_2) {
+                this.Cursor.Style = CursorStyle.SingleArrowResize_N_W
+            }
+            if (event.Key == KeyboardKey.Keypad_3) {
+                this.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
+            }
+            if (event.Key == KeyboardKey.Keypad_4) {
+                this.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
+            }
         }
     }
 
-    protected override fun OnKeyboardKeyRepeat(event: KeyboardKeyEvent) {
+    protected override fun OnGamepadButtonAction(event: GamepadButtonActionEvent) {
     }
 
-    protected override fun OnKeyboardKeyRelease(event: KeyboardKeyEvent) {
+    protected override fun OnGamepadAxisChange(event: GamepadAxisChangeEvent) {
     }
 
 }

@@ -77,34 +77,34 @@ tasks.register("publish") {
 }
 
 tasks.register<Copy>("publish-build-x86_64-w64-mingw32") {
-    this.dependsOn("pack-content")
+//    this.dependsOn("pack-content")
     val executable = kotlin.mingwX64().binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
     this.from("../content/Icon.png")
-    this.from("../content/Content.Bundle.tbz2")
     this.from("../content/Licenses") { this.into("Licenses") }
+    this.from("../content-bundle") { this.into("Content") }
     this.from("../libs/SDL/x86_64-w64-mingw32/bin/SDL3.dll")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
 tasks.register<Copy>("publish-build-x86_64-linux-gnu") {
-    this.dependsOn("pack-content")
+//    this.dependsOn("pack-content")
     val executable = kotlin.linuxX64().binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
     this.from("../content/Icon.png")
-    this.from("../content/Content.Bundle.tbz2")
     this.from("../content/Licenses") { this.into("Licenses") }
+    this.from("../content-bundle") { this.into("Content") }
     this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
     this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
 }
 
-tasks.register<Tar>("pack-content") {
-    this.destinationDirectory = File("../content")
-    this.archiveBaseName = "Content.Bundle"
-    this.archiveVersion = ""
-    this.compression = Compression.BZIP2
-    this.from("../content/Content.Bundle")
-}
+//tasks.register<Tar>("pack-content") {
+//    this.destinationDirectory = File("../content")
+//    this.archiveBaseName = "Content.Bundle"
+//    this.archiveVersion = ""
+//    this.compression = Compression.BZIP2
+//    this.from("../content/Content.Bundle")
+//}
