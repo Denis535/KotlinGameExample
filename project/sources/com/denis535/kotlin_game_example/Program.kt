@@ -97,7 +97,7 @@ private class ClientEngine2 : ClientEngine {
 
     private val Program: Program
 
-    public constructor(program: Program) : super(Manifest("Kotlin Game Example"), { MainWindow2() }) {
+    public constructor(program: Program) : super(Description("Kotlin Game Example"), { Window2() }) {
         this.Program = program
     }
 
@@ -210,7 +210,7 @@ private class ClientEngine2 : ClientEngine {
 
 }
 
-private class MainWindow2 : MainWindow {
+private class Window2 : Window {
 
     public constructor() : super(Description.Window("Kotlin Game Example")) {
         this.Raise()
