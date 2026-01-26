@@ -12,7 +12,7 @@
             <option value="$PROJECT_DIR$/project.10.ui" />
             <option value="$PROJECT_DIR$/project.20.app" />
             <option value="$PROJECT_DIR$/project.50.game" />
-            <option value="$PROJECT_DIR$/project.60.common" />
+            <option value="$PROJECT_DIR$/project.90.common" />
           </set>
         </option>
       </GradleProjectSettings>
