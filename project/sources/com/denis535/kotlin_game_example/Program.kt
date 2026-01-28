@@ -63,30 +63,35 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 return game
             }
         }
-        this.Engine.let { engine ->
-            if (clazz.isInstance(engine)) {
-                return engine
-            }
+        if (clazz == com.denis535.game_engine_pro.Engine::class) {
+            return this.Engine
         }
-        this.Engine.Window.let { window ->
-            if (clazz.isInstance(window)) {
-                return window
-            }
+        if (clazz == com.denis535.game_engine_pro.ClientEngine::class) {
+            return this.Engine
         }
-        this.Engine.Cursor.let { cursor ->
-            if (clazz.isInstance(cursor)) {
-                return cursor
-            }
+        if (clazz == ClientEngine2::class) {
+            return this.Engine
         }
-        this.Engine.Mouse.let { mouse ->
-            if (clazz.isInstance(mouse)) {
-                return mouse
-            }
+        if (clazz == Window::class) {
+            return this.Engine.Window
         }
-        this.Engine.Keyboard.let { keyboard ->
-            if (clazz.isInstance(keyboard)) {
-                return keyboard
-            }
+        if (clazz == Window2::class) {
+            return this.Engine.Window
+        }
+        if (clazz == Cursor::class) {
+            return this.Engine.Cursor
+        }
+        if (clazz == Touchscreen::class) {
+            return this.Engine.Touchscreen
+        }
+        if (clazz == Mouse::class) {
+            return this.Engine.Mouse
+        }
+        if (clazz == Keyboard::class) {
+            return this.Engine.Keyboard
+        }
+        if (clazz == Gamepad::class) {
+            return this.Engine.Gamepads.getOrNull(argument as Int)
         }
         return null
     }
@@ -125,13 +130,19 @@ private class ClientEngine2 : ClientEngine {
 //        println("OnFixedUpdate: " + this.Time.Time)
     }
 
-    protected override fun OnMouseFocus(event: MouseFocusEvent) {
+    protected override fun OnFocus(event: MouseFocusEvent) {
     }
 
-    protected override fun OnKeyboardFocus(event: KeyboardFocusEvent) {
+    protected override fun OnFocus(event: KeyboardFocusEvent) {
     }
 
-    protected override fun OnTextInput(event: TextInputEvent) {
+    protected override fun OnTouch(event: TouchEvent) {
+    }
+
+    protected override fun OnZoom(event: ZoomEvent) {
+    }
+
+    protected override fun OnText(event: TextEvent) {
     }
 
     protected override fun OnMouseMove(event: MouseMoveEvent) {
@@ -205,7 +216,7 @@ private class ClientEngine2 : ClientEngine {
     protected override fun OnGamepadButtonAction(event: GamepadButtonActionEvent) {
     }
 
-    protected override fun OnGamepadAxisChange(event: GamepadAxisChangeEvent) {
+    protected override fun OnGamepadAxisAction(event: GamepadAxisActionEvent) {
     }
 
 }
