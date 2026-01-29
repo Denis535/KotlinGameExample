@@ -6,6 +6,7 @@ import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.utils.*
 import com.denis535.game_framework_pro.*
 import kotlinx.cinterop.*
+import kotlin.experimental.*
 import kotlin.reflect.*
 
 public fun Main(args: Array<String>) {
@@ -132,8 +133,13 @@ private class ClientEngine2 : ClientEngine {
     public val Content: Content
     public val Storage: Storage
 
+    @OptIn(ExperimentalNativeApi::class)
     public constructor(manifest: Manifest) : super(manifest) {
-        this.Content = Content("content")
+        this.Content = if (Platform.isDebugBinary) {
+            Content("../content-bundle")
+        } else {
+            Content("Content")
+        }
         this.Storage = Storage(manifest.Group, manifest.Name)
     }
 
