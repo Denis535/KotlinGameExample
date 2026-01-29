@@ -3,6 +3,7 @@ package com.denis535.kotlin_game_example
 import com.denis535.game_engine_pro.*
 import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
+import com.denis535.game_engine_pro.utils.*
 import com.denis535.game_framework_pro.*
 import kotlinx.cinterop.*
 import kotlin.reflect.*
@@ -35,7 +36,34 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Engine = ClientEngine2(this)
+        this.Engine = ClientEngine2(Manifest("Kotlin Game Example", "com.denis535", "example", null, "Denis535")).apply {
+            this.Window = Window2(WindowDescription.Window("Kotlin Game Example", IsResizable = true))
+            this.Window!!.Show()
+            this.Window!!.Raise()
+            this.OnDrawCallback = {
+                Utils.Delay(10U)
+            }
+            this.OnUpdateCallback = {
+//            println("Frame: " + Frame.Number)
+            }
+            this.OnFixedUpdateCallback = {
+//            println("FixedFrame: " + FixedFrame.Number)
+            }
+            this.OnMouseMoveCallback = { event ->
+//            println(event.Cursor)
+            }
+            this.OnMouseButtonActionCallback = { event ->
+//            println(event.Button)
+            }
+            this.OnMouseWheelScrollCallback = { event ->
+//            println(event.Scroll.Y)
+            }
+            this.OnKeyboardKeyActionCallback = { event ->
+                if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
+                    this.Window!!.IsFullScreen = !this.Window!!.IsFullScreen
+                }
+            }
+        }
         this.Application = Application()
         this.Router = Router()
         this.Screen = Screen()
@@ -44,7 +72,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
     }
 
     protected override fun OnClose() {
-        check(!this.Engine.IsRunning)
+        check(!this.IsClosed)
         this.Theme!!.close()
         this.Screen!!.close()
         this.Router!!.close()
@@ -54,6 +82,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
     }
 
     public override fun GetDependencyInternal(clazz: KClass<*>, argument: Any?): Any? {
+        check(!this.IsClosed)
         val result = super.GetDependencyInternal(clazz, argument)
         if (result != null) {
             return result
@@ -100,131 +129,27 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
 private class ClientEngine2 : ClientEngine {
 
-    private val Program: Program
+    public val Content: Content
+    public val Storage: Storage
 
-    public constructor(program: Program) : super(Description("Kotlin Game Example"), { Window2() }) {
-        this.Program = program
+    public constructor(manifest: Manifest) : super(manifest) {
+        this.Content = Content("content")
+        this.Storage = Storage(manifest.Group, manifest.Name)
     }
 
     public override fun close() {
+        check(!this.IsClosed)
+        check(!this.IsRunning)
+        this.Storage.close()
+        this.Content.close()
         super.close()
-    }
-
-    protected override fun OnStart() {
-//        println("OnStart")
-    }
-
-    protected override fun OnStop() {
-//        println("OnStop")
-    }
-
-    protected override fun OnDraw() {
-//        println("OnDraw: " + this.Time.Time)
-    }
-
-    protected override fun OnUpdate() {
-//        println("OnUpdate: " + this.Time.Time)
-    }
-
-    protected override fun OnFixedUpdate() {
-//        println("OnFixedUpdate: " + this.Time.Time)
-    }
-
-    protected override fun OnFocus(event: MouseFocusEvent) {
-    }
-
-    protected override fun OnFocus(event: KeyboardFocusEvent) {
-    }
-
-    protected override fun OnTouch(event: TouchEvent) {
-    }
-
-    protected override fun OnZoom(event: ZoomEvent) {
-    }
-
-    protected override fun OnText(event: TextEvent) {
-    }
-
-    protected override fun OnMouseMove(event: MouseMoveEvent) {
-    }
-
-    protected override fun OnMouseButtonAction(event: MouseButtonActionEvent) {
-    }
-
-    protected override fun OnMouseWheelScroll(event: MouseWheelScrollEvent) {
-    }
-
-    protected override fun OnKeyboardKeyAction(event: KeyboardKeyActionEvent) {
-        if (event.IsPressed) {
-            if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
-                this.Window.IsFullScreen = !this.Window.IsFullScreen
-            }
-
-            if (event.Key == KeyboardKey.F1) {
-                this.Window.IsMouseLocked = !this.Window.IsMouseLocked
-            }
-            if (event.Key == KeyboardKey.F2) {
-                this.Window.IsMouseGrabbed = !this.Window.IsMouseGrabbed
-            }
-            if (event.Key == KeyboardKey.F3) {
-                this.Window.IsMouseCaptured = !this.Window.IsMouseCaptured
-            }
-
-            if (event.Key == KeyboardKey.Digit_0) {
-                this.Cursor.Style = null
-            }
-            if (event.Key == KeyboardKey.Digit_1) {
-                this.Cursor.Style = CursorStyle.Arrow
-            }
-            if (event.Key == KeyboardKey.Digit_2) {
-                this.Cursor.Style = CursorStyle.Text
-            }
-            if (event.Key == KeyboardKey.Digit_3) {
-                this.Cursor.Style = CursorStyle.Pointer
-            }
-            if (event.Key == KeyboardKey.Digit_4) {
-                this.Cursor.Style = CursorStyle.Crosshair
-            }
-            if (event.Key == KeyboardKey.Digit_5) {
-                this.Cursor.Style = CursorStyle.Progress
-            }
-            if (event.Key == KeyboardKey.Digit_6) {
-                this.Cursor.Style = CursorStyle.Wait
-            }
-            if (event.Key == KeyboardKey.Digit_7) {
-                this.Cursor.Style = CursorStyle.NotAllowed
-            }
-
-            if (event.Key == KeyboardKey.Keypad_0) {
-                this.Cursor.Style = CursorStyle.Move
-            }
-            if (event.Key == KeyboardKey.Keypad_1) {
-                this.Cursor.Style = CursorStyle.SingleArrowResize_N
-            }
-            if (event.Key == KeyboardKey.Keypad_2) {
-                this.Cursor.Style = CursorStyle.SingleArrowResize_N_W
-            }
-            if (event.Key == KeyboardKey.Keypad_3) {
-                this.Cursor.Style = CursorStyle.DoubleArrowResize_N_S
-            }
-            if (event.Key == KeyboardKey.Keypad_4) {
-                this.Cursor.Style = CursorStyle.DoubleArrowResize_NW_SE
-            }
-        }
-    }
-
-    protected override fun OnGamepadButtonAction(event: GamepadButtonActionEvent) {
-    }
-
-    protected override fun OnGamepadAxisAction(event: GamepadAxisActionEvent) {
     }
 
 }
 
 private class Window2 : Window {
 
-    public constructor() : super(Description.Window("Kotlin Game Example")) {
-        this.Raise()
+    public constructor(description: WindowDescription) : super(description) {
     }
 
     public override fun close() {
