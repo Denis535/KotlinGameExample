@@ -21,7 +21,7 @@ kotlin {
                 this.baseName = "KotlinGameExample"
                 this.entryPoint = "com.denis535.kotlin_game_example.Main"
                 this.linkerOpts(
-                    "-Llibs/SDL/x86_64-linux-gnu/lib",
+                    "-Lcontent/libs/x86_64-linux-gnu/SDL/lib",
                     "-lSDL3",
 //                    "-Wl,--verbose",
                     "-Wl,--allow-shlib-undefined",
@@ -53,7 +53,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "PATH", listOfNotNull(
-                "../libs/SDL/x86_64-w64-mingw32/lib", System.getenv("PATH")
+                "../content/libs/x86_64-w64-mingw32/SDL/lib", System.getenv("PATH")
             ).joinToString(";")
         )
         this.commandLine(executable.outputFile)
@@ -64,7 +64,7 @@ if (OperationSystem.lowercase().contains("windows")) {
         this.dependsOn(executable.linkTaskProvider)
         this.environment(
             "LD_LIBRARY_PATH", listOfNotNull(
-                "../libs/SDL/x86_64-linux-gnu/lib", System.getenv("LD_LIBRARY_PATH")
+                "../content/libs/x86_64-linux-gnu/SDL/lib", System.getenv("LD_LIBRARY_PATH")
             ).joinToString(":")
         )
         this.commandLine(executable.outputFile)
@@ -72,39 +72,29 @@ if (OperationSystem.lowercase().contains("windows")) {
 }
 
 tasks.register("publish") {
-    this.dependsOn(tasks.named("publish-build-x86_64-w64-mingw32"))
-    this.dependsOn(tasks.named("publish-build-x86_64-linux-gnu"))
+    this.dependsOn(tasks.named("publish-x86_64-w64-mingw32"))
+    this.dependsOn(tasks.named("publish-x86_64-linux-gnu"))
 }
 
-tasks.register<Copy>("publish-build-x86_64-w64-mingw32") {
-//    this.dependsOn("pack-content")
+tasks.register<Copy>("publish-x86_64-w64-mingw32") {
     val executable = kotlin.mingwX64().binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
     this.from("../content/Icon.png")
     this.from("../content/Licenses") { this.into("Licenses") }
+    this.from("../content/libs/x86_64-w64-mingw32/SDL/bin/SDL3.dll")
     this.from("../content-bundle") { this.into("Content") }
-    this.from("../libs/SDL/x86_64-w64-mingw32/bin/SDL3.dll")
     this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
 }
 
-tasks.register<Copy>("publish-build-x86_64-linux-gnu") {
-//    this.dependsOn("pack-content")
+tasks.register<Copy>("publish-x86_64-linux-gnu") {
     val executable = kotlin.linuxX64().binaries.getExecutable("RELEASE")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
     this.from("../content/Icon.png")
     this.from("../content/Licenses") { this.into("Licenses") }
+    this.from("../content/libs/x86_64-linux-gnu/SDL/lib/libSDL3.so.0")
+    this.from("../content/libs/x86_64-linux-gnu/SDL/lib/libSDL3.so.0.4.0")
     this.from("../content-bundle") { this.into("Content") }
-    this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0")
-    this.from("../libs/SDL/x86_64-linux-gnu/lib/libSDL3.so.0.4.0")
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
 }
-
-//tasks.register<Tar>("pack-content") {
-//    this.destinationDirectory = File("../content")
-//    this.archiveBaseName = "Content.Bundle"
-//    this.archiveVersion = ""
-//    this.compression = Compression.BZIP2
-//    this.from("../content/Content.Bundle")
-//}
