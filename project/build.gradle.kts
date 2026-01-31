@@ -78,6 +78,7 @@ tasks.register("publish") {
 
 tasks.register<Copy>("publish-x86_64-w64-mingw32") {
     val executable = kotlin.mingwX64().binaries.getExecutable("RELEASE")
+    this.dependsOn("publish-clean")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
     this.from("../content/Icon.png")
@@ -89,6 +90,7 @@ tasks.register<Copy>("publish-x86_64-w64-mingw32") {
 
 tasks.register<Copy>("publish-x86_64-linux-gnu") {
     val executable = kotlin.linuxX64().binaries.getExecutable("RELEASE")
+    this.dependsOn("publish-clean")
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
     this.from("../content/Icon.png")
@@ -97,4 +99,8 @@ tasks.register<Copy>("publish-x86_64-linux-gnu") {
     this.from("../content/libs/x86_64-linux-gnu/SDL/lib/libSDL3.so.0.4.0")
     this.from("../content-bundle") { this.into("Content") }
     this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
+}
+
+tasks.register<Delete>("publish-clean") {
+    this.delete(layout.projectDirectory.dir("dist"))
 }

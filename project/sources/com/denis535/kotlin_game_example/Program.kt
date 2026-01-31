@@ -41,6 +41,14 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             this.Window = Window2(WindowDescription.Window("Kotlin Game Example", IsResizable = true))
             this.Window!!.Show()
             this.Window!!.Raise()
+            this.OnStartCallback = {
+//                this.Content.GetDirectoryContents("").forEach {
+//                    println(it)
+//                }
+            }
+            this.OnStopCallback = {
+
+            }
             this.OnDrawCallback = {
                 Utils.Delay(10U)
             }
