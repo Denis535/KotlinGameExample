@@ -159,6 +159,23 @@ private class ClientEngine2 : ClientEngine {
         super.close()
     }
 
+    protected override fun OnStart() {
+        super.OnStart()
+    }
+
+    protected override fun OnStop() {
+        super.OnStop()
+    }
+
+    protected override fun OnFrameBegin() {
+        super.OnFrameBegin()
+        this.Content.Process()
+    }
+
+    protected override fun OnFrameEnd() {
+        super.OnFrameEnd()
+    }
+
 }
 
 private class Window2 : Window {
