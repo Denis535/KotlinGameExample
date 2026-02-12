@@ -129,7 +129,11 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             return this.Engine.Keyboard
         }
         if (clazz == Gamepad::class) {
-            return this.Engine.Gamepads.getOrNull(argument as Int)
+            if (argument != null) {
+                return this.Engine.Gamepads.getOrNull(argument as Int)
+            } else {
+                return this.Engine.Gamepads.getOrNull(0)
+            }
         }
         return null
     }
