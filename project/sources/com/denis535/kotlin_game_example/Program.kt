@@ -11,23 +11,23 @@ import kotlin.reflect.*
 
 public fun Main(args: Array<String>) {
     Program().use {
-//        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
-//        it.RequireDependency<Program>(Program::class)
-//
-//        it.RequireDependency<AbstractTheme>(AbstractTheme::class)
-//        it.RequireDependency<Theme>(Theme::class)
-//
-//        it.RequireDependency<AbstractScreen>(AbstractScreen::class)
-//        it.RequireDependency<Screen>(Screen::class)
-//
-//        it.RequireDependency<AbstractRouter>(AbstractRouter::class)
-//        it.RequireDependency<Router>(Router::class)
-//
-//        it.RequireDependency<AbstractApplication>(AbstractApplication::class)
-//        it.RequireDependency<Application>(Application::class)
-//
-//        it.RequireDependency<AbstractGame>(AbstractGame::class)
-//        it.RequireDependency<Game>(Game::class)
+        it.RequireDependency<AbstractProgram>(AbstractProgram::class)
+        it.RequireDependency<Program>(Program::class)
+
+        it.RequireDependency<AbstractTheme>(AbstractTheme::class)
+        it.RequireDependency<Theme>(Theme::class)
+
+        it.RequireDependency<AbstractScreen>(AbstractScreen::class)
+        it.RequireDependency<Screen>(Screen::class)
+
+        it.RequireDependency<AbstractRouter>(AbstractRouter::class)
+        it.RequireDependency<Router>(Router::class)
+
+        it.RequireDependency<AbstractApplication>(AbstractApplication::class)
+        it.RequireDependency<Application>(Application::class)
+
+        it.RequireDependency<AbstractGame>(AbstractGame::class)
+        it.RequireDependency<Game>(Game::class)
     }
 }
 
@@ -37,19 +37,17 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Engine = ClientEngine2(Manifest("Kotlin Game Example", "com.denis535", "example", null, "Denis535")).apply {
-            this.Window = Window2(WindowDescription.Window("Kotlin Game Example", IsResizable = true))
-            this.Window!!.Show()
-            this.Window!!.Raise()
+        this.Engine = ClientEngine2(
+            Manifest("Kotlin Game Example", "com.denis535", "example", null, "Denis535"),
+            WindowDescription.Window("Kotlin Game Example", IsResizable = true),
+        ).apply {
             this.OnStartCallback = {
 //                this.Content.GetDirectoryContents("").forEach {
 //                    println(it)
 //                }
             }
-            this.OnStopCallback = {
-
-            }
-            this.OnDrawCallback = {
+            this.OnStopCallback = {}
+            this.OnRenderCallback = {
                 Utils.Delay(10U)
             }
             this.OnUpdateCallback = {
@@ -77,17 +75,14 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Router = Router()
         this.Screen = Screen()
         this.Theme = Theme()
-        this.Engine.Run()
+        run {
+            this.Engine.Run()
+        }
     }
 
     protected override fun OnClose() {
         check(!this.IsClosed)
-        this.Theme!!.close()
-        this.Screen!!.close()
-        this.Router!!.close()
-        this.Application!!.close()
         this.Engine.close()
-        super.OnClose()
     }
 
     public override fun GetDependencyInternal(clazz: KClass<*>, argument: Any?): Any? {
@@ -146,13 +141,18 @@ private class ClientEngine2 : ClientEngine {
     public val Storage: Storage
 
     @OptIn(ExperimentalNativeApi::class)
-    public constructor(manifest: Manifest) : super(manifest) {
+    public constructor(manifest: Manifest, windowDescription: WindowDescription) : super(manifest) {
+        this.Window = Window2(windowDescription)
         this.Content = if (Platform.isDebugBinary) {
             Content("../content-bundle")
         } else {
             Content("Content")
         }
         this.Storage = Storage(manifest.Group, manifest.Name)
+        run {
+            this.Window!!.Show()
+            this.Window!!.Raise()
+        }
     }
 
     public override fun close() {
