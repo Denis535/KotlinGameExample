@@ -34,6 +34,10 @@ public fun Main(args: Array<String>) {
 public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
     private val Engine: ClientEngine2
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
 
     @OptIn(ExperimentalForeignApi::class)
     public constructor() {
@@ -138,7 +142,15 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 private class ClientEngine2 : ClientEngine {
 
     public val Content: Content
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
     public val Storage: Storage
+        get() {
+            check(!this.IsClosed)
+            return field
+        }
 
     @OptIn(ExperimentalNativeApi::class)
     public constructor(manifest: Manifest, windowDescription: WindowDescription) : super(manifest) {
