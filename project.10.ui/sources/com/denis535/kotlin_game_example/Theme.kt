@@ -5,8 +5,8 @@ import com.denis535.game_framework_pro.*
 public class Theme : AbstractTheme2<Router, Application> {
 
     public constructor() {
-        this.Machine.SetRoot(MainPlayList().BaseObject, null, null)
-        this.Machine.SetRoot(GamePlayList().BaseObject, null, null)
+        this.Machine.SetRoot(MainPlayList().State, null)
+        this.Machine.SetRoot(GamePlayList().State, null)
     }
 
     protected override fun OnClose() {
