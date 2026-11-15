@@ -5,7 +5,6 @@ import com.denis535.game_engine_pro.display.*
 import com.denis535.game_engine_pro.input.*
 import com.denis535.game_engine_pro.storage.*
 import com.denis535.game_framework_pro.*
-import kotlinx.cinterop.*
 import kotlin.experimental.*
 import kotlin.reflect.*
 
@@ -39,40 +38,30 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             return field
         }
 
-    @OptIn(ExperimentalForeignApi::class)
     public constructor() {
-        this.Engine = ClientEngine2(
-            Manifest("Kotlin Game Example", "com.denis535", "example", null, "Denis535"),
-            WindowDescription.Window("Kotlin Game Example", IsResizable = true),
-        ).apply {
+        this.Engine = ClientEngine2().apply {
             this.OnStartCallback = {
-//                this.Content.GetDirectoryContents("").forEach {
-//                    println(it)
-//                }
+                this.Content!!.GetContents("").forEach {
+                    println(it)
+                }
             }
             this.OnStopCallback = {}
-            this.OnRenderCallback = {
-                Utils.Delay(10U)
+            this.Mouse?.OnMoveCallback = { event ->
             }
-            this.OnUpdateCallback = {
-//            println("Frame: " + Frame.Number)
+            this.Mouse?.OnButtonActionCallback = { event ->
+            }
+            this.Mouse?.OnWheelScrollCallback = { event ->
+            }
+            this.Keyboard?.OnKeyActionCallback = { event ->
+                if (event.Key == KeyboardKey.Enter && this.Keyboard!!.IsKeyPressed(KeyboardKey.RightAlt)) {
+                    this.Window.IsFullScreen = !this.Window.IsFullScreen
+                }
             }
             this.OnFixedUpdateCallback = {
-//            println("FixedFrame: " + FixedFrame.Number)
+//                println("FixedFrame: " + FixedFrame.Number)
             }
-            this.OnMouseMoveCallback = { event ->
-//            println(event.Cursor)
-            }
-            this.OnMouseButtonActionCallback = { event ->
-//            println(event.Button)
-            }
-            this.OnMouseWheelScrollCallback = { event ->
-//            println(event.Scroll.Y)
-            }
-            this.OnKeyboardKeyActionCallback = { event ->
-                if (event.Key == KeyboardKey.Enter && this.Keyboard.IsKeyPressed(KeyboardKey.RightAlt)) {
-                    this.Window!!.IsFullScreen = !this.Window!!.IsFullScreen
-                }
+            this.OnUpdateCallback = {
+//                println("Frame: " + Frame.Number)
             }
         }
         this.Application = Application()
@@ -80,6 +69,8 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         this.Screen = Screen()
         this.Theme = Theme()
         run {
+            this.Engine.Window.Show()
+            this.Engine.Window.Raise()
             this.Engine.Run()
         }
     }
@@ -112,9 +103,6 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         if (clazz == Window::class) {
             return this.Engine.Window
         }
-        if (clazz == Window2::class) {
-            return this.Engine.Window
-        }
         if (clazz == Cursor::class) {
             return this.Engine.Cursor
         }
@@ -128,10 +116,10 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
             return this.Engine.Keyboard
         }
         if (clazz == Gamepad::class) {
-            if (argument != null) {
-                return this.Engine.Gamepads.getOrNull(argument as Int)
+            return if (argument != null) {
+                this.Engine.Gamepads?.getOrNull(argument as Int)
             } else {
-                return this.Engine.Gamepads.getOrNull(0)
+                this.Engine.Gamepads?.getOrNull(0)
             }
         }
         return null
@@ -141,37 +129,32 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
 
 private class ClientEngine2 : ClientEngine {
 
-    public val Content: Content
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-    public val Storage: Storage
-        get() {
-            check(!this.IsClosed)
-            return field
-        }
-
     @OptIn(ExperimentalNativeApi::class)
-    public constructor(manifest: Manifest, windowDescription: WindowDescription) : super(manifest) {
-        this.Window = Window2(windowDescription)
-        this.Content = if (Platform.isDebugBinary) {
-            Content("../content-bundle")
-        } else {
-            Content("Content")
+    public constructor() : super(
+        manifest = Manifest("Kotlin Game Example", "com.denis535", "example", null, "Denis535"),
+        window = { Window("Kotlin Game Example", isResizable = true) },
+        cursor = { Cursor() },
+        video = null,
+        audio = null,
+        touchscreen = { Touchscreen() },
+        mouse = { Mouse() },
+        keyboard = { Keyboard() },
+        gamepads = { listOf(Gamepad()) },
+        content = {
+            if (Platform.isDebugBinary) {
+                Content("../content/Content")
+            } else {
+                Content("Content")
+            }
+        },
+        storage = {
+            Storage(it.Manifest.Group, it.Manifest.Name)
         }
-        this.Storage = Storage(manifest.Group, manifest.Name)
-        run {
-            this.Window!!.Show()
-            this.Window!!.Raise()
-        }
-    }
+    )
 
     public override fun close() {
         check(!this.IsClosed)
         check(!this.IsRunning)
-        this.Storage.close()
-        this.Content.close()
         super.close()
     }
 
@@ -185,22 +168,10 @@ private class ClientEngine2 : ClientEngine {
 
     protected override fun OnFrameBegin() {
         super.OnFrameBegin()
-        this.Content.Process()
     }
 
     protected override fun OnFrameEnd() {
         super.OnFrameEnd()
-    }
-
-}
-
-private class Window2 : Window {
-
-    public constructor(description: WindowDescription) : super(description) {
-    }
-
-    public override fun close() {
-        super.close()
     }
 
 }

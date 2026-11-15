@@ -82,10 +82,10 @@ tasks.register<Copy>("publish-x86_64-w64-mingw32") {
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
     this.from("../content/Icon.png")
+    this.from("../content/Content") { this.into("Content") }
     this.from("../content/Licenses") { this.into("Licenses") }
     this.from("../content/libs/x86_64-w64-mingw32/SDL/bin/SDL3.dll")
-    this.from("../content-bundle") { this.into("Content") }
-    this.into(layout.projectDirectory.dir("dist/Windows-x86_64"))
+    this.into(layout.projectDirectory.dir("build/dist/Windows-x86_64"))
 }
 
 tasks.register<Copy>("publish-x86_64-linux-gnu") {
@@ -94,13 +94,13 @@ tasks.register<Copy>("publish-x86_64-linux-gnu") {
     this.dependsOn(executable.linkTaskProvider)
     this.from(executable.outputDirectory)
     this.from("../content/Icon.png")
+    this.from("../content/Content") { this.into("Content") }
     this.from("../content/Licenses") { this.into("Licenses") }
     this.from("../content/libs/x86_64-linux-gnu/SDL/lib/libSDL3.so.0")
     this.from("../content/libs/x86_64-linux-gnu/SDL/lib/libSDL3.so.0.4.0")
-    this.from("../content-bundle") { this.into("Content") }
-    this.into(layout.projectDirectory.dir("dist/Linux-x86_64"))
+    this.into(layout.projectDirectory.dir("build/dist/Linux-x86_64"))
 }
 
 tasks.register<Delete>("publish-clean") {
-    this.delete(layout.projectDirectory.dir("dist"))
+    this.delete(layout.projectDirectory.dir("build/dist"))
 }
