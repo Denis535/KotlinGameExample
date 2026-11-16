@@ -91,6 +91,7 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 return game
             }
         }
+
         if (clazz == com.denis535.game_engine_pro.Engine::class) {
             return this.Engine
         }
@@ -100,12 +101,14 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
         if (clazz == ClientEngine2::class) {
             return this.Engine
         }
+
         if (clazz == Window::class) {
             return this.Engine.Window
         }
         if (clazz == Cursor::class) {
             return this.Engine.Cursor
         }
+
         if (clazz == Touchscreen::class) {
             return this.Engine.Touchscreen
         }
@@ -122,6 +125,14 @@ public class Program : AbstractProgram2<Theme, Screen, Router, Application> {
                 this.Engine.Gamepads?.getOrNull(0)
             }
         }
+
+        if (clazz == Content::class) {
+            return this.Engine.Content
+        }
+        if (clazz == Storage::class) {
+            return this.Engine.Storage
+        }
+
         return null
     }
 
@@ -133,24 +144,20 @@ private class ClientEngine2 : ClientEngine {
     public constructor() : super(
         manifest = Manifest("Kotlin Game Example", "com.denis535", "example", null, "Denis535"),
         window = { Window("Kotlin Game Example", isResizable = true) },
-        cursor = { Cursor() },
         video = null,
-        audio = null,
-        touchscreen = { Touchscreen() },
-        mouse = { Mouse() },
-        keyboard = { Keyboard() },
-        gamepads = { listOf(Gamepad()) },
-        content = {
-            if (Platform.isDebugBinary) {
-                Content("../content/Content")
-            } else {
-                Content("Content")
-            }
-        },
-        storage = {
-            Storage(it.Manifest.Group, it.Manifest.Name)
+        audio = null
+    ) {
+        this.Touchscreen = Touchscreen()
+        this.Mouse = Mouse()
+        this.Keyboard = Keyboard()
+        this.Gamepads = listOf(Gamepad())
+        this.Content = if (Platform.isDebugBinary) {
+            Content("../content/Content")
+        } else {
+            Content("Content")
         }
-    )
+        this.Storage = Storage(this.Manifest.Group, this.Manifest.Name)
+    }
 
     public override fun close() {
         check(!this.IsClosed)
