@@ -24,8 +24,9 @@ kotlin {
                     "-Lcontent/libs/x86_64-linux-gnu/SDL/lib",
                     "-lSDL3",
 //                    "-Wl,--verbose",
-                    "-Wl,--allow-shlib-undefined",
+                    "-Wl,--enable-new-dtags",
                     "-Wl,-rpath,\$ORIGIN",
+                    "-Wl,--allow-shlib-undefined",
                 )
             }
         }
