@@ -97,7 +97,7 @@ tasks.register<Copy>("publish-x86_64-linux-gnu") {
     this.from("../content/Content") { this.into("Content") }
     this.from("../content/Licenses") { this.into("Licenses") }
     this.from("../content/libs/x86_64-linux-gnu/SDL/lib/libSDL3.so.0")
-    this.from("../content/libs/x86_64-linux-gnu/SDL/lib/libSDL3.so.0.4.0")
+    this.from("../content/libs/x86_64-linux-gnu/SDL/lib/libSDL3.so.0.4.18")
     this.into(layout.projectDirectory.dir("build/dist/Linux-x86_64"))
 }
 
