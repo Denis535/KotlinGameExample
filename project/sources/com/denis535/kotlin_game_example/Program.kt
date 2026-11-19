@@ -7,6 +7,7 @@ import com.denis535.game_engine_pro.storage.*
 import com.denis535.game_framework_pro.*
 import kotlin.experimental.*
 import kotlin.reflect.*
+import sdl.*
 
 public fun Main(args: Array<String>) {
     Program().use {
@@ -147,6 +148,8 @@ private class ClientEngine2 : ClientEngine {
         video = null,
         audio = null
     ) {
+        println("SDL Version: " + SDL.Version)
+        println("SDL Version (Compiled): " + SDL.VersionCompiled)
         this.Touchscreen = Touchscreen()
         this.Mouse = Mouse()
         this.Keyboard = Keyboard()
